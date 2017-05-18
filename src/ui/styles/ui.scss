@@ -1,0 +1,9 @@
+@import '~normalize.css';
+@import "./sanitize.scss";
+@import "./range-slider.scss";
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+#analyze-properties {
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+}

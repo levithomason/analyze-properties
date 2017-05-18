@@ -1,0 +1,122 @@
+$track-color: #E9EDF0;
+$thumb-color: #999;
+
+$thumb-radius: 999px;
+$thumb-height: 16px;
+$thumb-width: 16px;
+$thumb-border-width: 0;
+$thumb-border-color: none;
+
+$track-width: 100%;
+$track-height: 4px;
+$track-border-width: 0;
+$track-border-color: none;
+
+$track-radius: 0;
+$focus-contrast: 5%;
+
+@mixin track {
+  cursor: pointer;
+  height: $track-height;
+  width: $track-width;
+  border-radius: $track-radius;
+}
+
+@mixin thumb {
+  background: lighten($thumb-color, 5);
+  border: $thumb-border-width solid $thumb-border-color;
+  border-radius: $thumb-radius;
+  cursor: pointer;
+  height: $track-height;
+  width: $thumb-width;
+  transform: translateY($thumb-height / 2 - $track-height / 2);
+  overflow: visible;
+}
+
+[type='range'] {
+  -webkit-appearance: none;
+  margin: $thumb-height / 2 0;
+  width: $track-width;
+
+  &:focus,
+  &:hover {
+    outline: 0;
+
+    &::-webkit-slider-thumb {
+      background: darken($thumb-color, $focus-contrast);
+      height: $thumb-height;
+      transform: translateY(0);
+    }
+
+    &::-moz-range-thumb {
+      background: darken($thumb-color, $focus-contrast);
+      height: $thumb-height;
+    }
+
+    &::-ms-thumb {
+      background: darken($thumb-color, $focus-contrast);
+      height: $thumb-height;
+    }
+
+    &::-webkit-slider-runnable-track {
+      background: darken($track-color, $focus-contrast);
+    }
+
+    &::-ms-fill-lower {
+      background: $track-color;
+    }
+
+    &::-ms-fill-upper {
+      background: darken($track-color, $focus-contrast);
+    }
+  }
+
+  &::-webkit-slider-runnable-track {
+    @include track;
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius;
+  }
+
+  &::-webkit-slider-thumb {
+    @include thumb;
+    -webkit-appearance: none;
+    margin-top: ((-$track-border-width * 2 + $track-height) / 2) - ($thumb-height / 2);
+  }
+
+  &::-moz-range-track {
+    @include track;
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius;
+  }
+
+  &::-moz-range-thumb {
+    @include thumb;
+  }
+
+  &::-ms-track {
+    @include track;
+    background: transparent;
+    border-color: transparent;
+    border-width: ($thumb-height / 2);
+    color: transparent;
+  }
+
+  &::-ms-fill-lower {
+    background: darken($track-color, $focus-contrast);
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius * 2;
+  }
+
+  &::-ms-fill-upper {
+    background: $track-color;
+    border: $track-border-width solid $track-border-color;
+    border-radius: $track-radius * 2;
+  }
+
+  &::-ms-thumb {
+    @include thumb;
+    margin-top: 0;
+  }
+}
