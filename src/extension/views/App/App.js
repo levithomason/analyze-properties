@@ -2,11 +2,12 @@ import _ from 'lodash/fp'
 import Textarea from 'react-textarea-autosize'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS, pathToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
 
 import Button from '../../../ui/components/Button'
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'
+import Header from '../../../ui/components/Header'
 import Loader from '../../../ui/components/Loader'
 import Slider from '../../../ui/components/Slider'
 import Stat from '../../../ui/components/Stat'
@@ -242,7 +243,7 @@ class App extends Component {
           <Divider thick fitted />
 
           <div style={{ padding: '1em' }}>
-            <h4>Price</h4>
+            <Header textAlign="center">Price</Header>
             <Slider
               unit="usd"
               label="Purchase"
@@ -272,7 +273,7 @@ class App extends Component {
             {/*/>*/}
           </div>
           <div style={{ padding: '1em' }}>
-            <h4>Income</h4>
+            <Header textAlign="center">Income</Header>
             <Slider
               unit="usd"
               label="Rent"
@@ -293,7 +294,7 @@ class App extends Component {
             />
           </div>
           <div style={{ padding: '1em' }}>
-            <h4>Costs</h4>
+            <Header textAlign="center">Costs</Header>
             <Slider
               unit="usd"
               label="Rehab"
@@ -314,7 +315,7 @@ class App extends Component {
             />
           </div>
           <div style={{ padding: '1em' }}>
-            <h4>Expenses</h4>
+            <Header textAlign="center">Expenses</Header>
             <div style={{ textAlign: 'center' }}>
               <sup>{percent(operatingExpenseRate)} of income</sup>
             </div>
@@ -374,7 +375,7 @@ class App extends Component {
             />
           </div>
           <div style={{ padding: '1em' }}>
-            <h4>Assumptions</h4>
+            <Header textAlign="center">Assumptions</Header>
             <Slider
               unit="percent"
               label="Vacancy"
@@ -422,7 +423,7 @@ class App extends Component {
             />
           </div>
           <div style={{ padding: '1em' }}>
-            <h4>Financing</h4>
+            <Header textAlign="center">Financing</Header>
             <div style={{ textAlign: 'center' }}>
               <sup>{perMonth(usd(debtService))}</sup>
             </div>
