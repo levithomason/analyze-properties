@@ -163,7 +163,7 @@ export const getDefaultAnalysis = propertyId => {
 
       // financing
       isFinanced: true,
-      downRate: 0.25,
+      downRate: 0.2,
       downAmount: 0,
       rate: 0.045,
       term: 30,
