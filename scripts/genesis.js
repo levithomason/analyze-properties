@@ -90,6 +90,10 @@ const distPublic = path.resolve(config.basePath, config.outDir)
 // go!
 Promise.resolve()
   .then(() => {
+    // clean build dir
+    return sh(`rm -rf ${config.outDir}`)
+  })
+  .then(() => {
     // copy common/public to <app>/public
     return Promise.all([sh(`mkdir -p ${appPublic}`), sh(`cp -RL ${commonPublic}/* ${appPublic}`)])
   })

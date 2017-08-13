@@ -34,6 +34,7 @@ class Root extends Component {
   componentDidMount() {
     waitForPropertyId()
       .then(propertyId => {
+        console.debug('REI: got property id', propertyId)
         this.setState((prevState, props) => ({ propertyId }))
       })
       .catch(err => {
@@ -45,11 +46,14 @@ class Root extends Component {
     const { propertyId } = this.state
     const { auth, authError, profile } = this.props
 
-    if (!isLoaded(auth)) return <Loader active />
+    console.debug('RENDER state', this.state)
+    console.debug('RENDER props', this.props)
 
-    if (isEmpty(auth)) return <Login />
+    // if (!isLoaded(auth)) return <Loader active>Waiting for auth...</Loader>
 
-    if (!propertyId) return <Loader active />
+    // if (isEmpty(auth)) return <Login />
+
+    if (!propertyId) return <Loader active>Waiting for property id...</Loader>
 
     return <App propertyId={propertyId} />
   }

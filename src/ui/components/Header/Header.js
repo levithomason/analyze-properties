@@ -2,7 +2,7 @@ import React from 'react'
 import createComponent from '../../lib/createComponent'
 
 const rules = {
-  root: ({ theme, color }) => {
+  root: ({ theme, color, textAlign }) => {
     return Object.assign(
       {
         margin: `1em 0 0.5em`,
@@ -11,12 +11,15 @@ const rules = {
       color && {
         color: theme.textColors[color].hex(),
       },
+      textAlign && {
+        textAlign,
+      },
     )
   },
 }
 
 const Header = props => {
-  const { ElementType, styles, theme, color, ...rest } = props
+  const { ElementType, styles, theme, color, textAlign, ...rest } = props
 
   return <ElementType {...rest} />
 }

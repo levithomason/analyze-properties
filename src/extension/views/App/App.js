@@ -104,14 +104,18 @@ class App extends Component {
     console.info('renderAnalyze()')
     const { analysis, settings } = this.props
 
-    if (!settings || !isLoaded(settings)) return <Loader active>Waiting for settings...</Loader>
+    if (!isLoaded(settings)) return <Loader active>Waiting for settings...</Loader>
 
-    if (!analysis || !isLoaded(analysis)) {
+    if (!isLoaded(analysis)) {
       return <Loader active>Waiting for analysis...</Loader>
     } else if (!analysis) {
       return (
         <p style={{ textAlign: 'center' }}>
-          <Button onClick={this.createDefaultAnalysis}>New Analysis</Button>
+          <Divider hidden section />
+          <Button color="green" onClick={this.createDefaultAnalysis}>
+            New Analysis
+          </Button>
+          <Divider hidden section />
         </p>
       )
     }
@@ -312,9 +316,7 @@ class App extends Component {
           <div style={{ padding: '1em' }}>
             <h4>Expenses</h4>
             <div style={{ textAlign: 'center' }}>
-              <sup>
-                {percent(operatingExpenseRate)} of income
-              </sup>
+              <sup>{percent(operatingExpenseRate)} of income</sup>
             </div>
             <Slider
               unit="usd"
@@ -422,9 +424,7 @@ class App extends Component {
           <div style={{ padding: '1em' }}>
             <h4>Financing</h4>
             <div style={{ textAlign: 'center' }}>
-              <sup>
-                {perMonth(usd(debtService))}
-              </sup>
+              <sup>{perMonth(usd(debtService))}</sup>
             </div>
             <Slider
               unit="percent"
@@ -457,14 +457,17 @@ class App extends Component {
 
           <Divider section />
 
-          {Object.keys(analysis).sort().map(key =>
+          {/*
+          DEBUG
+          {Object.keys(analysis).sort().map(key => (
             <div key={key}>
               {key}
               <div style={{ float: 'right', textAlign: 'right' }}>
                 {('' + analysis[key]).substr(0, 9)}
               </div>
-            </div>,
-          )}
+            </div>
+          ))}
+          */}
         </div>
       </div>
     )

@@ -12,7 +12,10 @@ const Root = ({ auth, authError, profile }) => {
 
   if (isEmpty(auth)) return <Login />
 
-  return <Analyses />
+  return <Loader active>Under construction...</Loader>
+
+  // TODO, get extension auth working, re-enable auth then the web app
+  // return <Analyses />
 }
 
 export default _.flow(

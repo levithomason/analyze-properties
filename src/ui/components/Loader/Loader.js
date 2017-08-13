@@ -31,7 +31,7 @@ const rules = {
 
 class Loader extends Component {
   render() {
-    const { ElementType, styles, theme, children, ...rest } = this.props
+    const { ElementType, styles, theme, children, active, ...rest } = this.props
 
     return (
       <ElementType {...rest}>

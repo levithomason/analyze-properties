@@ -5,9 +5,8 @@ const rules = {
   root: ({ theme, border, circular, color, fluid, inverted, padded, radius, shadow }) => {
     return Object.assign(
       {
-        display: 'inline-block',
-        padding: '0.5em 1em',
-        marginRight: '0.5em',
+        display: 'flex',
+        flexDirection: 'column',
       },
       border && {
         border: theme.borders[border]({ color }),

@@ -10,9 +10,8 @@ import Header from '../../ui/components/Header'
 import Message from '../../ui/components/Message'
 import Box from '../../ui/components/Box'
 
-import { appStyle } from '../../extension/views/App/App'
-
-import firebaseui from 'firebaseui'
+// TODO pending react-redux-firebase 2.x
+// import firebaseui from 'firebaseui'
 
 class Login extends Component {
   state = {
@@ -23,32 +22,32 @@ class Login extends Component {
     uiShownCalled: null,
   }
 
-  componentDidMount() {
-    const { firebase } = this.props
+  // componentDidMount() {
+  //   const { firebase } = this.props
+  //
+  //   this.authUI = new firebaseui.auth.AuthUI(firebase.auth())
+  //
+  //   this.authUI.start('#firebaseui-auth', {
+  //     signInFlow: 'popup',
+  //     callbacks: {
+  //       signInSuccess: user => {
+  //         this.setState(() => ({ user, signInSuccessCalled: true }))
+  //         return false
+  //       },
+  //       uiShown: () => {
+  //         this.setState(() => ({ uiShownCalled: true }))
+  //       },
+  //     },
+  //     signInOptions: [
+  //       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+  //       firebase.auth.EmailAuthProvider.PROVIDER_ID,
+  //     ],
+  //   })
+  // }
 
-    this.authUI = new firebaseui.auth.AuthUI(firebase.auth())
-
-    this.authUI.start('#firebaseui-auth', {
-      signInFlow: 'popup',
-      callbacks: {
-        signInSuccess: user => {
-          this.setState(() => ({ user, signInSuccessCalled: true }))
-          return false
-        },
-        uiShown: () => {
-          this.setState(() => ({ uiShownCalled: true }))
-        },
-      },
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      ],
-    })
-  }
-
-  componentWillUnmount() {
-    this.authUI.reset()
-  }
+  // componentWillUnmount() {
+  //   this.authUI.reset()
+  // }
 
   logout = () => {
     const { firebase } = this.props
@@ -73,31 +72,43 @@ class Login extends Component {
   render() {
     const { authError } = this.props
 
+    // TODO remove once auth is enabled
     return (
-      <Container style={appStyle}>
-        <div id="firebaseui-auth" />
-        <Box padded style={{ alignSelf: 'top', margin: '0 auto', width: 290 }}>
-          <Header as="h3" color="gray">
-            Analyze Properties
-          </Header>
-
-          {authError && <Message status="error">{authError.message}</Message>}
-          <Divider hidden section />
-
-          <Button fluid onClick={this.handleOAuthLogin('google')} inverted color="red">
-            Sign in with Google
-          </Button>
-          <Divider hidden />
-          <Button fluid onClick={this.handleOAuthLogin('facebook')} inverted color="blue">
-            Sign in with Facebook
-          </Button>
-          {/*<pre><code>{JSON.stringify(this.props, null, 2)}</code></pre>*/}
-          <pre>
-            <code>{JSON.stringify(this.state, null, 2)}</code>
-          </pre>
-        </Box>
+      <Container
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}
+      >
+        <Header as="h1" color="gray" textAlign="center">
+          Under Construction
+        </Header>
       </Container>
     )
+
+    // TODO restore once auth is enabled
+    // return (
+    //   <Container>
+    //     {/* <div id="firebaseui-auth" /> */}
+    //     <Box padded style={{ margin: '0 auto', width: 290 }}>
+    //       <Header as="h3" color="gray">
+    //         Analyze Properties
+    //       </Header>
+    //
+    //       {authError && <Message status="error">{authError.message}</Message>}
+    //       <Divider hidden section />
+    //
+    //       <Button fluid onClick={this.handleOAuthLogin('google')} inverted color="red">
+    //         Sign in with Google
+    //       </Button>
+    //       <Divider hidden />
+    //       <Button fluid onClick={this.handleOAuthLogin('facebook')} inverted color="blue">
+    //         Sign in with Facebook
+    //       </Button>
+    //       {/*<pre><code>{JSON.stringify(this.props, null, 2)}</code></pre>*/}
+    //       <pre>
+    //         <code>{JSON.stringify(this.state, null, 2)}</code>
+    //       </pre>
+    //     </Box>
+    //   </Container>
+    // )
   }
 }
 

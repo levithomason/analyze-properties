@@ -8,7 +8,7 @@ import Divider from '../../ui/components/Divider'
 // import Dropdown from '../../ui/components/Dropdown'
 import Header from '../../ui/components/Header'
 import Image from '../../ui/components/Image'
-import Menu from '../../ui/components/Menu'
+import Button from '../../ui/components/Button'
 
 import AnalysesTable from '../../common/components/AnalysesTable'
 
@@ -23,12 +23,10 @@ class Analysis extends Component {
 
     return (
       <Container>
-        <Menu>
-          <Menu.Item onClick={this.handleLogout}>
-            <Image bordered avatar src={profile.avatarUrl} /> {profile.displayName}
-            Logout
-          </Menu.Item>
-        </Menu>
+        <Button onClick={this.handleLogout()}>
+          <Image bordered avatar src={profile.avatarUrl} /> {profile.displayName}
+        </Button>
+
         <Divider hidden section />
         <Divider hidden />
 
