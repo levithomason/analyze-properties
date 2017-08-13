@@ -249,7 +249,7 @@ class App extends Component {
               value={purchasePrice}
               min={10000}
               max={500000}
-              step={5000}
+              step={1000}
               onChange={this.handleAnalysisNumberChange('purchasePrice')}
             />
             {/*<Slider*/}
