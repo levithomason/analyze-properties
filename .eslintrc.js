@@ -16,8 +16,11 @@ module.exports = {
     browser: true,
     es6: true,
     node: true,
+    jest: true,
   },
-  globals: {},
+  globals: {
+    __DEV__: false,
+  },
   rules: {
     // 'no-console': 'off',
     // 'no-constant-condition': ['error', { checkLoops: false }],

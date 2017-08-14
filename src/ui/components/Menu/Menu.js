@@ -10,7 +10,7 @@ const rules = {
     margin: 0,
     textAlign: 'center',
     textTransform: 'uppercase',
-    background: theme.backgroundColors.gray.hex(),
+    background: theme.grayscale.lighterGray.hex(),
     fontWeight: 'bold',
     listStyle: 'none',
   }),

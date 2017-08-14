@@ -9,7 +9,7 @@ const rules = {
         display: 'block',
         padding: '1em',
         cursor: 'pointer',
-        color: theme.grayscale.lighterGray.hex(),
+        color: theme.grayscale.gray.hex(),
       },
       active && {
         color: theme.textColors.gray.hex(),

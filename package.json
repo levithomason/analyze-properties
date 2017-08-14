@@ -30,7 +30,7 @@
     "redux": "^3.6.0"
   },
   "devDependencies": {
-    "@technologyadvice/genesis-core": "0.4.0",
+    "@technologyadvice/genesis-core": "^0.13.0",
     "babel-eslint": "^7.2.3",
     "chalk": "^2.1.0",
     "eslint": "^4.4.1",
@@ -74,6 +74,7 @@
     "start:extension": "node scripts/genesis start extension",
     "start:mobile": "node scripts/genesis start mobile",
     "start:ui": "node scripts/genesis start ui",
-    "start:web": "node scripts/genesis start web"
+    "start:web": "node scripts/genesis start web",
+    "test:extension": "NODE_ENV=test node scripts/genesis test extension"
   }
 }

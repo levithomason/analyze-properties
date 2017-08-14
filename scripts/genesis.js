@@ -8,29 +8,21 @@ const [cmd, app] = argv._
 
 /////////////////////////////////////////////////////////
 
-const genesis = require('@technologyadvice/genesis-core').default
+const genesis = require('@technologyadvice/genesis-core')
+
+const rootPath = path.resolve(__dirname, '..')
+
+const srcPath = path.resolve(rootPath, 'src')
+const entry = path.resolve(__dirname, `../src/${app}/index.js`)
+const outDir = path.resolve(rootPath, `dist/${app}`)
+const commonPublic = path.resolve(srcPath, 'common/public')
+const appPublic = path.resolve(srcPath, app, 'public')
 
 const baseConfig = {
-  // The environment to use when compiling the project
-  env: process.env.NODE_ENV,
-  // The full path to the project's root directory
-  basePath: path.resolve(__dirname, '../src'),
-  // The name of the project's source code directory
-  srcDir: app,
-  // The name of the directory in which to emit compiled code
-  outDir: `../dist/${app}`,
-  // The file name of the project's main entry point. Defaults to main.{js,ts}
-  main: 'index.js',
-  // The full path to the HTML template to use with the project
-  // templatePath: path.resolve(__dirname, '../public/index.html'),
-  // The base path for all projects assets (relative to the document root)
-  // publicPath: '',
-
-  // A hash map of modules to replace with external global references
-  // externals: {},
-  // A hash map of variables and their values to expose globally
-  // globals: {},
-  // The list of modules to compile separately from the core project code
+  entry,
+  globals: {
+    __DEV__: process.env.NODE_ENV !== 'production',
+  },
   vendors: [
     'classnames',
     'color',
@@ -55,15 +47,8 @@ const baseConfig = {
     'react-textarea-autosize',
     'redux',
   ],
-  // Whether to run the compiler with verbose logging
   verbose: true,
-  // Whether to generate sourcemaps
   sourcemaps: true,
-  // TypeScript-specific configuration
-  // typescript: {
-  //   // The full path to the tsconfig.json file to use
-  //   configPath: '',
-  // }
 }
 
 const appConfig = {
@@ -79,31 +64,28 @@ const appConfig = {
   },
 }[app]
 
-const config = Object.assign({}, baseConfig, appConfig)
-
-const compiler = genesis(config)
-
-const commonPublic = path.resolve(config.basePath, 'common/public')
-const appPublic = path.resolve(config.basePath, app, 'public')
-const distPublic = path.resolve(config.basePath, config.outDir)
+const compiler = genesis(Object.assign({}, baseConfig, appConfig))
 
 // go!
 Promise.resolve()
   .then(() => {
     // clean build dir
-    return sh(`rm -rf ${config.outDir}`)
+    if (cmd === 'build') return sh(`rm -rf ${outDir}`)
   })
   .then(() => {
     // copy common/public to <app>/public
     return Promise.all([sh(`mkdir -p ${appPublic}`), sh(`cp -RL ${commonPublic}/* ${appPublic}`)])
   })
   .then(() => {
-    return compiler[cmd]()
+    return compiler[cmd]({
+      out: cmd === 'build' ? outDir : undefined,
+      watch: cmd === 'test' && process.env.NODE_ENV !== 'production',
+    })
   })
   .then(() => {
     // TODO remove once genesis copies public
     // copy <app>/public to dist/<app>
-    return sh(`cp ${appPublic}/* ${distPublic}`)
+    return sh(`cp ${appPublic}/* ${outDir}`)
   })
   .then(() => {
     if (cmd === 'build' && app === 'extension') {
