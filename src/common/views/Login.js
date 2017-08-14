@@ -3,12 +3,12 @@ import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect, pathToJS } from 'react-redux-firebase'
 
-import Button from '../../ui/components/Button'
+// import Button from '../../ui/components/Button'
 import Container from '../../ui/components/Container'
-import Divider from '../../ui/components/Divider'
+// import Divider from '../../ui/components/Divider'
 import Header from '../../ui/components/Header'
-import Message from '../../ui/components/Message'
-import Box from '../../ui/components/Box'
+// import Message from '../../ui/components/Message'
+// import Box from '../../ui/components/Box'
 
 // TODO pending react-redux-firebase 2.x
 // import firebaseui from 'firebaseui'

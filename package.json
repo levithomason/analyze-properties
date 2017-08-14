@@ -44,6 +44,7 @@
     "nodemon": "^1.11.0",
     "prettier": "github:prettier/prettier#02639da9a9a31133ae85b047d565c00fe16fc052",
     "prettier-eslint": "^6.4.2",
+    "prop-types": "^15.5.10",
     "react-addons-perf": "^15.4.2",
     "satisfied": "^1.1.1",
     "utf": "^1.0.0",

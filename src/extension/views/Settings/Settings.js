@@ -1,11 +1,17 @@
 import _ from 'lodash/fp'
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 
-import Slider from '../../ui/components/Slider'
+import Slider from '../../../ui/components/Slider'
 
 class Settings extends Component {
+  static propTypes = {
+    settings: PropTypes.object,
+    firebase: PropTypes.object,
+  }
+
   static defaultProps = {
     settings: {
       // criteria

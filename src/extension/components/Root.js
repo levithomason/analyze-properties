@@ -3,13 +3,13 @@ import { firebaseConnect, isEmpty, isLoaded, pathToJS } from 'react-redux-fireba
 import { connect as reduxConnect } from 'react-redux'
 
 import Loader from '../../ui/components/Loader'
-import Login from '../../common/views/Login'
+// import Login from '../../common/views/Login'
 import App from '../views/App'
 
 // TODO this should live somewhere else :/
 const waitForPropertyId = () =>
   new Promise((resolve, reject) => {
-    console.debug('REI: waitForProperty()')
+    console.debug('waitForPropertyId()')
 
     const getPropertyId = () => {
       // first propertyid element on the page contains the actual id
@@ -17,7 +17,7 @@ const waitForPropertyId = () =>
       const propertyId = $id && $id.getAttribute('data-propertyid')
 
       if (!propertyId) {
-        console.debug('REI: waiting for property id')
+        console.debug('waitingForPropertyId()')
         setTimeout(getPropertyId, 100)
         return
       }
@@ -34,7 +34,7 @@ class Root extends Component {
   componentDidMount() {
     waitForPropertyId()
       .then(propertyId => {
-        console.debug('REI: got property id', propertyId)
+        console.debug('Root.componentDidMount:propertyId', propertyId)
         this.setState((prevState, props) => ({ propertyId }))
       })
       .catch(err => {
@@ -46,8 +46,8 @@ class Root extends Component {
     const { propertyId } = this.state
     const { auth, authError, profile } = this.props
 
-    console.debug('RENDER state', this.state)
-    console.debug('RENDER props', this.props)
+    console.debug('Root.render() state', this.state)
+    console.debug('Root.render() props', this.props)
 
     // if (!isLoaded(auth)) return <Loader active>Waiting for auth...</Loader>
 
