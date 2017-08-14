@@ -114,8 +114,22 @@ export const suggest = input => {
   return request(`https://parser-external.geo.moveaws.com/suggest`, params)
 }
 
-// TODO trend
-// https://mapi-ng.rdc.moveaws.com/api/v1/area/trend?lat=47.449667&lon=-117.136135&client_id=rdc_mobile_native,8.3.3,android%20HTTP/1.1
+export const trend = (lat, lon) => {
+  const params = {
+    lat,
+    lon,
+    client_id: 'rdc_mobile_native,8.3.3,android%20HTTP/1.1',
+  }
+
+  return request(`https://mapi-ng.rdc.moveaws.com/api/v1/area/trend`, params).then(res => res.trend)
+
+  // TODO
+  // Full Chart Data, need to stream body, also has CORS issues outside of realtor.com
+  // (state, city, neighborhood) => {}
+  // const type = neighborhood ? 'neighborhood' : 'city'
+  // const query = [neighborhood, city, state].filter(Boolean).join('_')
+  // return request(`http://www.realtor.com/local/markettrends/${type}/${query}`).then(res => JSON.parse(res))
+}
 
 // ============================================================
 // Firebase

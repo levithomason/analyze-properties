@@ -17,6 +17,8 @@ import FavoriteButton from '../../../common/components/FavoriteButton'
 import { usd, percent, perMonth, ratio } from '../../../common/lib'
 import * as rei from '../../../common/resources/rei'
 
+import Trend from '../../../extension/components/Trend'
+
 const textAreaStyle = {
   display: 'block',
   margin: 0,
@@ -194,6 +196,8 @@ class Analyze extends Component {
             </Grid.Column>
           </Grid>
         </div>
+
+        <Trend propertyId={propertyId} />
 
         <FavoriteButton propertyId={propertyId} fluid />
 
