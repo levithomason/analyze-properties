@@ -43,7 +43,7 @@ const bgForText = (bgColor, textColor) => {
   return isLightText
     ? contrasted
         .saturate(textContrast * (1 - contrasted.saturationv() / 100))
-        .darken(textContrast * 0.1)
+        .darken(textContrast * 0.5)
     : contrasted
         // .saturate(textContrast * (1 - (contrasted.saturationv() / 100)))
         // .desaturate(textContrast * (1 - (contrasted.saturationv() / 100)))

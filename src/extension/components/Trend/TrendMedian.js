@@ -22,6 +22,8 @@ import Loader from '../../../ui/components/Loader'
 import Header from '../../../ui/components/Header'
 import Box from '../../../ui/components/Box'
 
+import theme from '../../../ui/styles/theme.js'
+
 import * as rei from '../../../common/resources/rei'
 import { usd } from '../../../common/lib/index'
 
@@ -46,54 +48,113 @@ class Trend extends Component {
     const { analysis = {} } = this.props
     const { trend = {} } = this.state
 
-    // if (!isLoaded(analysis) || !trend) return <Loader active />
+    if (!isLoaded(analysis) || !trend || !trend.price || !trend.price_sqft) return null
 
     return (
       <div>
         <Header textAlign="center" color="gray">
-          {trend.type} Median
+          {trend.name} Trend
         </Header>
-        <Box
-          style={{
-            position: 'relative',
-            height: '10rem',
-            fontSize: '0.75rem',
-            background: '#eee',
-          }}
-        >
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+          {/*
+
+           Price
+
+           */}
           <Box
-            inverted
-            color="green"
             style={{
-              position: 'absolute',
-              margin: 'auto',
-              width: '25%',
-              height: 50 * analysis.purchasePrice / trend.price + '%',
-              lineHeight: 2,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              textAlign: 'center',
+              position: 'relative',
+              flex: '0 0 auto',
+              width: '50%',
+              height: '10rem',
+              fontSize: '0.75rem',
+              background: theme.grayscale.lightestGray.hex(),
+              borderRight: '1px solid #fff',
             }}
           >
-            {usd(analysis.purchasePrice / 1000)}k
+            <Box
+              inverted
+              color="green"
+              style={{
+                position: 'absolute',
+                margin: 'auto',
+                width: '50%',
+                height: 50 * analysis.purchasePrice / trend.price + '%',
+                lineHeight: 2,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+              }}
+            >
+              {usd(analysis.purchasePrice / 1000)}k
+            </Box>
+            <div
+              style={{
+                position: 'absolute',
+                height: '0.75rem',
+                bottom: '50%',
+                left: 0,
+                right: 0,
+                lineHeight: 1,
+                color: theme.grayscale.gray.hex(),
+                textAlign: 'left',
+                borderBottom: `1px dashed ${theme.grayscale.lightGray.hex()}`,
+              }}
+            >
+              {usd(trend.price / 1000)}k
+            </div>
           </Box>
-          <div
+          {/*
+
+          Price / SqFt
+
+          */}
+          <Box
             style={{
-              position: 'absolute',
-              height: '0.75rem',
-              bottom: '50%',
-              left: 0,
-              right: 0,
-              borderBottom: '1px dashed rgba(0, 0, 0, 0.25)',
-              lineHeight: 1,
-              textShadow: '0 0 1px #fff',
-              textAlign: 'left',
+              position: 'relative',
+              flex: '0 0 auto',
+              width: '50%',
+              height: '10rem',
+              fontSize: '0.75rem',
+              background: theme.grayscale.lightestGray.hex(),
+              borderLeft: '1px solid #fff',
             }}
           >
-            {usd(trend.price / 1000)}k
-          </div>
-        </Box>
+            <Box
+              inverted
+              color="orange"
+              style={{
+                position: 'absolute',
+                margin: 'auto',
+                width: '50%',
+                height: 50 * (analysis.purchasePrice / analysis.sqft) / trend.price_sqft + '%',
+                lineHeight: 2,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                textAlign: 'center',
+              }}
+            >
+              {usd(analysis.purchasePrice / analysis.sqft)}/sf
+            </Box>
+            <div
+              style={{
+                position: 'absolute',
+                height: '0.75rem',
+                bottom: '50%',
+                left: 0,
+                right: 0,
+                lineHeight: 1,
+                color: theme.grayscale.gray.hex(),
+                textAlign: 'left',
+                borderBottom: `1px dashed ${theme.grayscale.lightGray.hex()}`,
+              }}
+            >
+              {usd(trend.price_sqft)}/sf
+            </div>
+          </Box>
+        </div>
       </div>
     )
   }
