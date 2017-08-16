@@ -19,6 +19,9 @@ import {
 } from 'recharts'
 
 import Loader from '../../../ui/components/Loader'
+import Header from '../../../ui/components/Header'
+import Box from '../../../ui/components/Box'
+import TrendMedian from './TrendMedian'
 
 import * as rei from '../../../common/resources/rei'
 import { usd } from '../../../common/lib/index'
@@ -31,7 +34,7 @@ const TaxHistoryLabel = ({ x, y, stroke, value }) => (
 
 const PriceLineLabel = ({ x, y, stroke, value }) => (
   <Text x={x} y={y} dy={-6} fill={stroke} fontSize={10} textAnchor="middle">
-    {usd(value)}
+    {usd(value / 1000) + 'k'}
   </Text>
 )
 
@@ -44,6 +47,20 @@ const PriceXLabel = ({ x, y, stroke, value }) => {
   )
 }
 
+const TooltipProps = {
+  animationDuration: 100,
+  wrapperStyle: {
+    padding: '2px',
+    color: '#333',
+    fontSize: '12px',
+    background: '#eee',
+    border: 'none',
+  },
+  labelStyle: { padding: '1px', lineHeight: 1, border: 'none' },
+  itemStyle: { padding: '1px', lineHeight: 1, border: 'none' },
+  formatter: usd,
+}
+
 class Trend extends Component {
   state = {}
 
@@ -54,12 +71,12 @@ class Trend extends Component {
   }
 
   componentDidMount() {
-    const { analysis } = this.props
+    const { analysis, propertyId } = this.props
     rei.trend(analysis.lat, analysis.lon).then(trend => {
       this.setState(() => ({ trend }))
     })
 
-    rei.getPropertyInfo(analysis.propertyId).then(info => {
+    rei.getPropertyInfo(propertyId).then(info => {
       this.setState(() => ({
         propertyHistory: _.map(_.mapKeys(_.camelCase), info.property_history),
         taxHistory: info.tax_history || [],
@@ -69,10 +86,8 @@ class Trend extends Component {
 
   render() {
     console.debug('Trend.renderAnalyze()')
-    const { analysis = {} } = this.props
+    const { propertyId } = this.props
     const { propertyHistory = [], taxHistory = [], trend = {} } = this.state
-
-    // if (!isLoaded(analysis) || !trend) return <Loader active />
 
     const propertyHistoryData = _.sortBy(
       'date',
@@ -90,9 +105,13 @@ class Trend extends Component {
           <ResponsiveContainer width="100%" height={100}>
             <LineChart
               data={propertyHistoryData}
-              margin={{ top: 15, right: 25, bottom: 15, left: 25 }}
+              margin={{ top: 15, right: 15, bottom: 15, left: 15 }}
             >
-              <Tooltip formatter={usd} />
+              <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+              <Tooltip
+                {...TooltipProps}
+                labelFormatter={label => `date : ${new Date(label).toLocaleDateString()}`}
+              />
               <XAxis
                 type="number"
                 dataKey="date"
@@ -101,8 +120,8 @@ class Trend extends Component {
                 tick={({ x, y, stroke, payload }) => {
                   const d = new Date(payload.value)
                   return (
-                    <g transform={`translate(${x},${y})`}>
-                      <text x={0} y={0} dy={16} textAnchor="middle" fill="#666">
+                    <g transform={`translate(${x},${y}) scale(0.8)`}>
+                      <text x={0} y={0} dy={16} textAnchor="middle" fill="#999">
                         {d.getMonth() + 1}/{`${d.getFullYear()}`.substr(2)}
                       </text>
                     </g>
@@ -116,17 +135,18 @@ class Trend extends Component {
         )}
         {taxHistoryData.length > 1 && (
           <ResponsiveContainer width="100%" height={100}>
-            <LineChart data={taxHistoryData} margin={{ top: 15, right: 25, bottom: 15, left: 25 }}>
-              <Tooltip format={usd} />
+            <LineChart data={taxHistoryData} margin={{ top: 15, right: 15, bottom: 15, left: 15 }}>
+              <CartesianGrid horizontal={false} strokeDasharray="3 3" />
+              <Tooltip {...TooltipProps} labelFormatter={label => `year : ${label}`} />
               <XAxis
                 type="number"
                 dataKey="year"
                 allowDecimals={false}
                 domain={['dataMin', 'dataMax']}
                 tick={({ x, y, stroke, payload }) => (
-                  <g transform={`translate(${x},${y})`}>
-                    <text x={0} y={0} dy={16} textAnchor="middle" fill="#666">
-                      {payload.value}
+                  <g transform={`translate(${x},${y}) scale(0.8)`}>
+                    <text x={0} y={0} dy={16} textAnchor="middle" fill="#999">
+                      {('' + payload.value).substring(2) + "'"}
                     </text>
                   </g>
                 )}
@@ -141,10 +161,7 @@ class Trend extends Component {
             </LineChart>
           </ResponsiveContainer>
         )}
-        TODO trend $ and $/sf compare
-        {/*<pre>*/}
-        {/*<code> {JSON.stringify(this.state, null, 2)}</code>*/}
-        {/*</pre>*/}
+        <TrendMedian propertyId={propertyId} />
       </div>
     )
   }
