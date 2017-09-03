@@ -71,11 +71,11 @@ const hoverFocus = {
 const rangeSlider = {
   '[type="range"]': {
     WebkitAppearance: 'none',
-    margin: `${thumbHeight / 2} 0`,
+    margin: `${parseInt(thumbHeight, 10) / 2}px 0`,
     width: trackWidth,
 
-    '&:focus': hoverFocus,
-    '&:hover': hoverFocus,
+    onFocus: hoverFocus,
+    onHover: hoverFocus,
     '&::-webkit-slider-runnable-track': {
       ...track,
       background: trackColor,
@@ -124,10 +124,24 @@ const rules = {
   root: props => ({
     ...rangeSlider,
   }),
-  value: props => ({ float: 'right' }),
+  value: props => ({
+    float: 'right',
+  }),
+  input: props => ({
+    float: 'right',
+    padding: 0,
+    maxWidth: '4rem',
+    textAlign: 'right',
+    border: 'none',
+    onFocus: {
+      outline: 'none',
+    },
+  }),
 }
 
 class Slider extends Component {
+  state = {}
+
   static defaultProps = {
     value: 0,
   }
@@ -137,8 +151,38 @@ class Slider extends Component {
     if (onChange) onChange(e)
   }
 
+  handleInputKeyDown = e => {
+    const { keyCode } = e
+    if (keyCode === 13 || keyCode === 27) {
+      e.nativeEvent.stopImmediatePropagation()
+      e.preventDefault()
+      e.stopPropagation()
+      this.hideInput()
+    }
+  }
+
+  handleSliderKeyDown = e => {
+    const { keyCode, target: { value } } = e
+    // number row keys
+    if (keyCode >= 48 && keyCode <= 57) {
+      this.handleChange(e)
+      this.showInput()
+    }
+  }
+
+  handleInputRef = ref => {
+    if (!ref) return
+    this.inputRef = ref
+    this.inputRef.focus()
+    this.inputRef.select()
+  }
+
+  showInput = e => this.setState(() => ({ showInput: true }))
+  hideInput = e => this.setState(() => ({ showInput: false }))
+
   render() {
     const { ElementType, styles, theme, label, onChange, unit, value, ...rest } = this.props
+    const { showInput } = this.state
 
     let readout = value
     if (unit === 'usd') readout = usd(value)
@@ -148,8 +192,27 @@ class Slider extends Component {
     return (
       <ElementType>
         {label}
-        <div className={styles.value}>{readout}</div>
-        <input {...rest} type="range" onChange={this.handleChange} value={value} />
+        {showInput ? (
+          <input
+            ref={this.handleInputRef}
+            onBlur={this.hideInput}
+            onKeyDown={this.handleInputKeyDown}
+            onChange={this.handleChange}
+            value={value}
+            className={styles.input}
+          />
+        ) : (
+          <div onClick={this.showInput} className={styles.value}>
+            {readout}
+          </div>
+        )}
+        <input
+          {...rest}
+          type="range"
+          onKeyDown={this.handleSliderKeyDown}
+          onChange={this.handleChange}
+          value={value}
+        />
       </ElementType>
     )
   }

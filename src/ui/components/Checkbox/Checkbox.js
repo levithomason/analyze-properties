@@ -3,10 +3,10 @@ import createComponent from '../../lib/createComponent'
 
 const rules = {
   root: ({ theme }) => ({
-    transition: 'border 0.1s, box-shadow 0.1s',
-    padding: '0.5em 1em',
-    border: '1px solid rgba(0, 0, 0, 0.2)',
-    borderRadius: '0.25em',
+    userSelect: 'none',
+  }),
+  input: ({ theme }) => ({
+    marginRight: '0.25em',
     onFocus: {
       border: '1px solid #8af',
       boxShadow: '0 0 0 0.25em rgba(0, 128, 255, 0.1)',
@@ -21,10 +21,15 @@ class Input extends Component {
   focus = () => this.ref.focus()
 
   render() {
-    const { ElementType, styles, theme, ...rest } = this.props
+    const { ElementType, styles, theme, label, ...rest } = this.props
 
-    return <ElementType {...rest} ref={this.handleRef} />
+    return (
+      <ElementType {...rest}>
+        <input ref={this.handleRef} type="checkbox" className={styles.input} />
+        {label}
+      </ElementType>
+    )
   }
 }
 
-export default createComponent({ defaultElementType: 'input', rules })(Input)
+export default createComponent({ defaultElementType: 'label', rules })(Input)

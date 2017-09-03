@@ -37,13 +37,16 @@ const createComponent = (config = {}) => WrappedComponent => {
     render() {
       const { as, className, styles, theme, ...rest } = this.props
 
+      // make browser debug easier
+      rest[`data-ui-${displayName}`] = true
+
       return (
         <WrappedComponent
           {...rest}
+          className={this.getClassNames()}
           styles={styles}
           theme={theme}
           ElementType={this.getElementType()}
-          className={this.getClassNames()}
         />
       )
     }

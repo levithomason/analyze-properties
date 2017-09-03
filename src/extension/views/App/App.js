@@ -1,28 +1,29 @@
 import React, { Component } from 'react'
+import { connect as felaConnect } from 'react-fela'
 
 import Loader from '../../../ui/components/Loader'
 import Tabs from '../../../ui/components/Tabs'
 
 import LogoutButton from '../../../common/components/LogoutButton'
-import * as rei from '../../../common/resources/rei'
 
 import Analyze from '../Analyze'
 import Debug from '../Debug'
 import Settings from '../Settings'
 
-export const appStyle = {
-  position: 'fixed',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '23em',
-  height: '100%',
-  top: '0',
-  bottom: '0',
-  right: '0',
-  overflowY: 'scroll',
-  background: '#FFF',
-  boxShadow: '-0.5em 0 1em rgba(0, 0, 0, 0.25)',
-  zIndex: '999999',
+const rules = {
+  root: props => ({
+    position: 'fixed',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '23em',
+    top: '0',
+    bottom: '0',
+    right: '0',
+    overflowY: 'auto',
+    background: '#FFF',
+    boxShadow: '-0.5em 0 1em rgba(0, 0, 0, 0.25)',
+    zIndex: '999999',
+  }),
 }
 
 class App extends Component {
@@ -31,7 +32,7 @@ class App extends Component {
   componentDidMount() {
     document.addEventListener('keydown', this.handleDocumentKeyDown)
 
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       activeTab: 'Analyze',
       isOpen: true,
     }))
@@ -39,7 +40,7 @@ class App extends Component {
 
   handleDocumentKeyDown = e => {
     if (e.keyCode === 27) {
-      this.setState((prevState) => ({ isOpen: !prevState.isOpen }))
+      this.setState(prevState => ({ isOpen: !prevState.isOpen }))
     }
   }
 
@@ -50,13 +51,13 @@ class App extends Component {
 
   render() {
     const { isFetching, isOpen, activeTab } = this.state
-    const { propertyId } = this.props
+    const { propertyId, styles } = this.props
     console.debug('App.render()')
 
     if (!isOpen) return null
 
     return (
-      <div style={appStyle}>
+      <div className={styles.root}>
         <Loader active={isFetching} />
         <Tabs
           onTabChange={this.handleTabChange}
@@ -73,4 +74,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default felaConnect(rules)(App)

@@ -50,13 +50,13 @@ const bgForText = (bgColor, textColor) => {
         .lighten(textContrast * 0.4)
 }
 
-const lightestGray = Color.hsl(0, 0, 87)
-const lighterGray = Color.hsl(0, 0, 76)
-const lightGray = Color.hsl(0, 0, 65)
-const gray = Color.hsl(0, 0, 54)
-const darkGray = Color.hsl(0, 0, 43)
-const darkerGray = Color.hsl(0, 0, 32)
-const darkestGray = Color.hsl(0, 0, 23)
+const lightestGray = Color.hsl(0, 0, 90)
+const lighterGray = Color.hsl(0, 0, 80)
+const lightGray = Color.hsl(0, 0, 79)
+const gray = Color.hsl(0, 0, 60)
+const darkGray = Color.hsl(0, 0, 50)
+const darkerGray = Color.hsl(0, 0, 40)
+const darkestGray = Color.hsl(0, 0, 30)
 
 // RGB - primary, secondary, tertiary colors
 // https://en.wikipedia.org/wiki/Tertiary_color#RGB_or_CMY_primary.2C_secondary.2C_and_tertiary_colors

@@ -6,6 +6,7 @@ const rules = {
   root: ({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    flex: '0 0 auto',
     padding: 0,
     margin: 0,
     textAlign: 'center',

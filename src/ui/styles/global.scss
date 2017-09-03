@@ -1,4 +1,30 @@
-::selection {
-  background: cornflowerblue;
-  color: white;
+#analyze-properties {
+  //
+  // Font
+  //
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+
+  //
+  // Selection
+  //
+  ::selection {
+    background: cornflowerblue;
+    color: white;
+  }
+
+  //
+  // Scrollbars
+  //
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #eee;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, transparent, #ccc 10%, #ccc 90%, transparent);
+  }
 }

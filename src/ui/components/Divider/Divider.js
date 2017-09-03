@@ -8,14 +8,16 @@ const rules = {
         margin: '0.5em auto',
         borderColor: 'rgba(0, 0, 0, 0.1)',
         borderStyle: 'solid',
-        borderTop: '1px',
+        borderTopWidth: '1px',
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
         width: '100%',
       },
       fitted && { margin: '0 auto' },
       hidden && { opacity: 0 },
       relaxed && { width: '90%' },
       section && { margin: '2em auto' },
-      thick && { borderTop: '2px solid rgba(0, 0, 0, 0.1)' },
+      thick && { borderTopWidth: '2px' },
     ),
 }
 class Divider extends Component {

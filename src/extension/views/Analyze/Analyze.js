@@ -6,6 +6,7 @@ import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
 
 import Button from '../../../ui/components/Button'
+import Checkbox from '../../../ui/components/Checkbox'
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'
 import Header from '../../../ui/components/Header'
@@ -56,6 +57,14 @@ class Analyze extends Component {
       })
   }
 
+  handleAnalysisBooleanChange = key => e => {
+    console.debug('Analyze.handleAnalysisBooleanChange()')
+    const { checked } = e.target
+    const { analysis, firebase, propertyId } = this.props
+
+    firebase.set(`/analyses/${propertyId}`, rei.crunch({ ...analysis, [key]: !!checked }))
+  }
+
   handleAnalysisNumberChange = key => e => {
     console.debug('Analyze.handleAnalysisNumberChange()')
     const { value } = e.target
@@ -100,6 +109,7 @@ class Analyze extends Component {
       /* afterRepairValue, */
       rehabCosts,
       // financing
+      isFinanced,
       downRate,
       rate,
       term,
@@ -117,10 +127,10 @@ class Analyze extends Component {
       otherExpenses,
       // assumptions
       vacancyRate,
-      appreciationRate,
-      incomeIncreaseRate,
-      expenseIncreaseRate,
-      sellingCostRate,
+      // appreciationRate,
+      // incomeIncreaseRate,
+      // expenseIncreaseRate,
+      // sellingCostRate,
 
       // ANALYSIS
       // purchase
@@ -146,8 +156,8 @@ class Analyze extends Component {
     const check = rei.checkDeal(analysis, settings)
 
     return (
-      <div>
-        <div style={{ padding: '1em' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '0 0 auto', padding: '1em' }}>
           <Grid>
             <Grid.Column>
               <Stat label="Cash Flow" value={usd(cashFlow)} status={check.cashFlow} />
@@ -197,167 +207,175 @@ class Analyze extends Component {
           </Grid>
         </div>
 
-        <Trend propertyId={propertyId} />
+        <Divider thick fitted />
 
-        <FavoriteButton propertyId={propertyId} fluid />
+        {/* Scroll Container */}
+        <div style={{ flex: '1', overflow: 'auto' }}>
+          <Trend propertyId={propertyId} />
 
-        <div style={{ background: '#f8f8f8' }}>
-          <Divider thick fitted />
+          <FavoriteButton propertyId={propertyId} fluid />
 
-          <Textarea
-            minRows={3}
-            maxRows={10}
-            placeholder="Notes"
-            value={notes}
-            onChange={this.handleAnalysisTextChange('notes')}
-            style={textAreaStyle}
-          />
+          {/* Deal Values */}
+          <div style={{ background: '#f8f8f8' }}>
+            <Divider thick fitted />
 
-          <Divider thick fitted />
-
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Price</Header>
-            <Slider
-              unit="usd"
-              label="Purchase"
-              value={purchasePrice}
-              min={10000}
-              max={500000}
-              step={1000}
-              onChange={this.handleAnalysisNumberChange('purchasePrice')}
+            <Textarea
+              minRows={3}
+              maxRows={10}
+              placeholder="Notes"
+              value={notes}
+              onChange={this.handleAnalysisTextChange('notes')}
+              style={textAreaStyle}
             />
-            {/*<Slider*/}
-            {/*unit='usd'*/}
-            {/*label='ARV'*/}
-            {/*value={afterRepairValue}*/}
-            {/*min={10000}*/}
-            {/*max={500000}*/}
-            {/*step={5000}*/}
-            {/*onChange={this.handleChange('afterRepairValue')}*/}
-            {/*/>*/}
-            {/*<Slider*/}
-            {/*unit='usd'*/}
-            {/*label='Market Value'*/}
-            {/*value={marketValue}*/}
-            {/*min={10000}*/}
-            {/*max={500000}*/}
-            {/*step={5000}*/}
-            {/*onChange={this.handleChange('marketValue')}*/}
-            {/*/>*/}
-          </div>
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Income</Header>
+
+            <Divider thick fitted />
+
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Price</Header>
+              <Slider
+                unit="usd"
+                label="Purchase"
+                value={purchasePrice}
+                min={10000}
+                max={500000}
+                step={1000}
+                onChange={this.handleAnalysisNumberChange('purchasePrice')}
+              />
+              {/*
             <Slider
-              unit="usd"
-              label="Rent"
-              value={grossMonthlyRent}
-              min={500}
-              max={6000}
-              step={5}
-              onChange={this.handleAnalysisNumberChange('grossMonthlyRent')}
+            unit='usd'
+            label='ARV'
+            value={afterRepairValue}
+            min={10000}
+            max={500000}
+            step={5000}
+            onChange={this.handleChange('afterRepairValue')}
             />
             <Slider
-              unit="usd"
-              label="Other Income"
-              value={otherIncome}
-              min={0}
-              max={1000}
-              step={5}
-              onChange={this.handleAnalysisNumberChange('otherIncome')}
+            unit='usd'
+            label='Market Value'
+            value={marketValue}
+            min={10000}
+            max={500000}
+            step={5000}
+            onChange={this.handleChange('marketValue')}
             />
-          </div>
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Costs</Header>
-            <Slider
-              unit="usd"
-              label="Rehab"
-              value={rehabCosts}
-              min={0}
-              max={50000}
-              step={100}
-              onChange={this.handleAnalysisNumberChange('rehabCosts')}
-            />
-            <Slider
-              unit="percent"
-              label="Purchase"
-              value={purchaseCostsRate}
-              min={0}
-              max={0.1}
-              step={0.005}
-              onChange={this.handleAnalysisNumberChange('purchaseCostsRate')}
-            />
-          </div>
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Expenses</Header>
-            <div style={{ textAlign: 'center' }}>
-              <sup>{percent(operatingExpenseRate)} of income</sup>
+            */}
             </div>
-            <Slider
-              unit="usd"
-              label="Taxes"
-              value={taxes}
-              min={0}
-              max={5000}
-              step={5}
-              onChange={this.handleAnalysisNumberChange('taxes')}
-            />
-            <Slider
-              unit="usd"
-              label="Insurance"
-              value={insurance}
-              min={0}
-              max={1500}
-              step={5}
-              onChange={this.handleAnalysisNumberChange('insurance')}
-            />
-            <Slider
-              unit="percent"
-              label="Management"
-              value={managementRate}
-              min={0}
-              max={0.1}
-              step={0.01}
-              onChange={this.handleAnalysisNumberChange('managementRate')}
-            />
-            <Slider
-              unit="percent"
-              label="Maintenance"
-              value={maintenanceRate}
-              min={0}
-              max={0.2}
-              step={0.01}
-              onChange={this.handleAnalysisNumberChange('maintenanceRate')}
-            />
-            <Slider
-              unit="percent"
-              label="CapEx"
-              value={capitalExpendituresRate}
-              min={0}
-              max={0.2}
-              step={0.01}
-              onChange={this.handleAnalysisNumberChange('capitalExpendituresRate')}
-            />
-            <Slider
-              unit="usd"
-              label="Other"
-              value={otherExpenses}
-              min={0}
-              max={12000}
-              step={50}
-              onChange={this.handleAnalysisNumberChange('otherExpenses')}
-            />
-          </div>
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Assumptions</Header>
-            <Slider
-              unit="percent"
-              label="Vacancy"
-              value={vacancyRate}
-              min={0}
-              max={0.1}
-              step={0.01}
-              onChange={this.handleAnalysisNumberChange('vacancyRate')}
-            />
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Income</Header>
+              <Slider
+                unit="usd"
+                label="Rent"
+                value={grossMonthlyRent}
+                min={500}
+                max={6000}
+                step={5}
+                onChange={this.handleAnalysisNumberChange('grossMonthlyRent')}
+              />
+              <Slider
+                unit="usd"
+                label="Other Income"
+                value={otherIncome}
+                min={0}
+                max={1000}
+                step={5}
+                onChange={this.handleAnalysisNumberChange('otherIncome')}
+              />
+            </div>
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Costs</Header>
+              <Slider
+                unit="usd"
+                label="Rehab"
+                value={rehabCosts}
+                min={0}
+                max={100000}
+                step={100}
+                onChange={this.handleAnalysisNumberChange('rehabCosts')}
+              />
+              <Slider
+                unit="percent"
+                label="Purchase"
+                value={purchaseCostsRate}
+                min={0}
+                max={0.1}
+                step={0.005}
+                onChange={this.handleAnalysisNumberChange('purchaseCostsRate')}
+              />
+            </div>
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Expenses</Header>
+              <div style={{ textAlign: 'center' }}>
+                <sup>{percent(operatingExpenseRate)} of income</sup>
+              </div>
+              <Slider
+                unit="usd"
+                label="Taxes"
+                value={taxes}
+                min={0}
+                max={5000}
+                step={5}
+                onChange={this.handleAnalysisNumberChange('taxes')}
+              />
+              <Slider
+                unit="usd"
+                label="Insurance"
+                value={insurance}
+                min={0}
+                max={1500}
+                step={5}
+                onChange={this.handleAnalysisNumberChange('insurance')}
+              />
+              <Slider
+                unit="percent"
+                label="Management"
+                value={managementRate}
+                min={0}
+                max={0.1}
+                step={0.01}
+                onChange={this.handleAnalysisNumberChange('managementRate')}
+              />
+              <Slider
+                unit="percent"
+                label="Maintenance"
+                value={maintenanceRate}
+                min={0}
+                max={0.2}
+                step={0.01}
+                onChange={this.handleAnalysisNumberChange('maintenanceRate')}
+              />
+              <Slider
+                unit="percent"
+                label="CapEx"
+                value={capitalExpendituresRate}
+                min={0}
+                max={0.2}
+                step={0.01}
+                onChange={this.handleAnalysisNumberChange('capitalExpendituresRate')}
+              />
+              <Slider
+                unit="usd"
+                label="Other"
+                value={otherExpenses}
+                min={0}
+                max={12000}
+                step={50}
+                onChange={this.handleAnalysisNumberChange('otherExpenses')}
+              />
+            </div>
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Assumptions</Header>
+              <Slider
+                unit="percent"
+                label="Vacancy"
+                value={vacancyRate}
+                min={0}
+                max={0.1}
+                step={0.01}
+                onChange={this.handleAnalysisNumberChange('vacancyRate')}
+              />
+              {/*
             <Slider
               unit="percent"
               label="Appreciation"
@@ -394,39 +412,44 @@ class Analyze extends Component {
               step={0.01}
               onChange={this.handleAnalysisNumberChange('sellingCostRate')}
             />
-          </div>
-          <div style={{ padding: '1em' }}>
-            <Header textAlign="center">Financing</Header>
-            <div style={{ textAlign: 'center' }}>
-              <sup>{perMonth(usd(debtService))}</sup>
+            */}
             </div>
-            <Slider
-              unit="percent"
-              label="Down"
-              value={downRate}
-              min={0}
-              max={0.3}
-              step={0.01}
-              onChange={this.handleAnalysisNumberChange('downRate')}
-            />
-            <Slider
-              unit="percent"
-              label="Rate"
-              value={rate}
-              min={0.03}
-              max={0.1}
-              step={0.001}
-              onChange={this.handleAnalysisNumberChange('rate')}
-            />
-            <Slider
-              unit="year"
-              label="Term"
-              value={term}
-              min={5}
-              max={30}
-              step={1}
-              onChange={this.handleAnalysisNumberChange('term')}
-            />
+            <div style={{ padding: '1em' }}>
+              <Header textAlign="center">Financing</Header>
+              <Checkbox
+                checked={isFinanced}
+                label="Use financing" onClick={this.handleAnalysisBooleanChange('isFinanced')} />
+              <div style={{ textAlign: 'center' }}>
+                <sup>{perMonth(usd(debtService))}</sup>
+              </div>
+              <Slider
+                unit="percent"
+                label="Down"
+                value={downRate}
+                min={0}
+                max={0.3}
+                step={0.01}
+                onChange={this.handleAnalysisNumberChange('downRate')}
+              />
+              <Slider
+                unit="percent"
+                label="Rate"
+                value={rate}
+                min={0.03}
+                max={0.1}
+                step={0.001}
+                onChange={this.handleAnalysisNumberChange('rate')}
+              />
+              <Slider
+                unit="year"
+                label="Term"
+                value={term}
+                min={5}
+                max={30}
+                step={1}
+                onChange={this.handleAnalysisNumberChange('term')}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -3,35 +3,10 @@ import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 import { connect as felaConnect } from 'react-fela'
+import Button from '../../ui/components/Button'
 
 const rules = {
-  root: props => {
-    const { active, fluid, icon } = props
-
-    return Object.assign(
-      {
-        padding: '0.5em 1em',
-        margin: '0',
-        fontSize: '1em',
-        background: '#DDD',
-        border: 'none',
-        outline: 'none',
-        cursor: 'pointer',
-        opacity: '0.5',
-      },
-      fluid && {
-        display: 'block',
-        width: '100%',
-      },
-      active && {
-        opacity: 1,
-      },
-      icon && {
-        background: 'none',
-        padding: '0.5em',
-      },
-    )
-  },
+  root: props => ({}),
   image: props => ({
     marginRight: '0.325em',
     verticalAlign: 'middle',
@@ -53,7 +28,7 @@ class FavoriteButton extends Component {
   }
 
   render() {
-    const { active, propertyId, styles } = this.props
+    const { active, propertyId, styles, ...rest } = this.props
 
     if (!propertyId) return null
 
@@ -62,10 +37,10 @@ class FavoriteButton extends Component {
       : '//image.flaticon.com/icons/png/128/126/126471.png'
 
     return (
-      <button className={styles.root} onClick={this.handleClick}>
+      <Button className={styles.root} onClick={this.handleClick} {...rest}>
         <img className={styles.image} src={src} alt="Favorite button" />
         <span className={styles.text}>Favorite</span>
-      </button>
+      </Button>
     )
   }
 }

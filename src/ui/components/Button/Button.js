@@ -11,17 +11,19 @@ const rules = {
 
     return Object.assign(
       {
-        transitionProperty: 'background 0.1s',
+        flex: '0 0 auto',
+        transitionProperty: 'background',
         transitionDuration: '0.1s',
         padding: '0.5em 1em',
         margin: '0 0.25em 0 0',
+        width: 'auto',
+        fontSize: '1em',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        background: background.hex(),
         border: 'none',
         borderRadius: 0,
-        fontSize: '1em',
-        cursor: 'pointer',
-        width: 'auto',
         color: textColor.hex(),
-        background: background.hex(),
         onHover: {
           background: background.darken(0.1).hex(),
         },

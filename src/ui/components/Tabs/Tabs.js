@@ -2,6 +2,13 @@ import React, { Component } from 'react'
 import Menu from '../Menu'
 import createComponent from '../../lib/createComponent'
 
+const rules = {
+  root: props => ({
+    display: 'flex',
+    flexDirection: 'column',
+  }),
+}
+
 class Tabs extends Component {
   handleItemClick = (e, { activeItem }) => {
     const { onTabChange } = this.props
@@ -26,4 +33,4 @@ class Tabs extends Component {
   }
 }
 
-export default createComponent()(Tabs)
+export default createComponent({ rules })(Tabs)
