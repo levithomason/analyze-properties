@@ -155,7 +155,7 @@ class Slider extends Component {
       e.nativeEvent.stopImmediatePropagation()
       e.preventDefault()
       e.stopPropagation()
-      this.hideInput()
+      this.hideInput(e)
     }
   }
 
@@ -176,7 +176,11 @@ class Slider extends Component {
   }
 
   showInput = e => this.setState(() => ({ showInput: true }))
-  hideInput = e => this.setState(() => ({ showInput: false }))
+
+  hideInput = e => {
+    this.handleChange(e)
+    this.setState(() => ({ showInput: false }))
+  }
 
   render() {
     const { ElementType, styles, theme, label, onChange, unit, value, ...rest } = this.props
@@ -195,8 +199,7 @@ class Slider extends Component {
             ref={this.handleInputRef}
             onBlur={this.hideInput}
             onKeyDown={this.handleInputKeyDown}
-            onChange={this.handleChange}
-            value={value}
+            defaultValue={value}
             className={styles.input}
           />
         ) : (
