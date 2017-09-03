@@ -1694,22 +1694,27 @@
     "1539094112": "",
     "1691594388": "",
     "1806442858": "",
-    "1876535906": "2x 3/2 @ $900\nOther expense is for W/S/G.\nTaxes Kootenai Urban 1.39% of $95,615",
+    "1876535906":
+      "2x 3/2 @ $900\nOther expense is for W/S/G.\nTaxes Kootenai Urban 1.39% of $95,615",
     "1990789678": "",
     "2002938376": "Garden shed $30, garage $100",
     "2089210714": "",
     "2116450437": "",
     "2117903808": "",
-    "2224111744": "1/1 @ 0 (assume 450)\n4/2 @ 750\n2/1 @ 500\n\nEven bumping all rents 100 gets you no where, cash flow not here.",
+    "2224111744":
+      "1/1 @ 0 (assume 450)\n4/2 @ 750\n2/1 @ 500\n\nEven bumping all rents 100 gets you no where, cash flow not here.",
     "2247850150": "",
     "2322704468": "",
     "2337975401": "assuming rent, no tax available either",
-    "2402855164": "Has large shop.  Quonset hut needs flooring, paint, siding on flat ends, maybe restore bath/kitchen?  Might not need much there.",
+    "2402855164":
+      "Has large shop.  Quonset hut needs flooring, paint, siding on flat ends, maybe restore bath/kitchen?  Might not need much there.",
     "2573629018": "",
     "2695674980": "",
-    "2697091086": "3/2 $800, 3/2 $775\n\nClean, has appliances, w/d hookups, great rental history.  Betting could bump rents a bit.\n\nDan: little harder to rent out there (CDA 30min away), has 4 or 5.  Always rents, just not 22 calls first day, more like a few calls a week.  Dan/Sharon betting $950mo.",
+    "2697091086":
+      "3/2 $800, 3/2 $775\n\nClean, has appliances, w/d hookups, great rental history.  Betting could bump rents a bit.\n\nDan: little harder to rent out there (CDA 30min away), has 4 or 5.  Always rents, just not 22 calls first day, more like a few calls a week.  Dan/Sharon betting $950mo.",
     "2768269036": "",
-    "2789771485": "2x 2/1 @ $550 784sf   DW EH RO RF\n1x 3/1 @ $595 916sf   DW EH RO RF\n\nWould have to bump rents 100 ea to $1895 to cash flow, current deal shows this\n\nDrive by showing only, can only see inside with offer. crazy.",
+    "2789771485":
+      "2x 2/1 @ $550 784sf   DW EH RO RF\n1x 3/1 @ $595 916sf   DW EH RO RF\n\nWould have to bump rents 100 ea to $1895 to cash flow, current deal shows this\n\nDrive by showing only, can only see inside with offer. crazy.",
     "2790740400": "850 x 2 + 750",
     "2790777665": "850 x 3, $2,400mo... taxes are INSANE",
     "2815460773": "",
@@ -1734,14 +1739,16 @@
   },
   "users": {
     "vqSWLGNvWSeowj7C9IWy5jyZOBE2": {
-      "avatarUrl": "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
+      "avatarUrl":
+        "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
       "displayName": "Levi Thomason",
       "email": "me@levithomason.com",
       "providerData": [
         {
           "displayName": "Levi Thomason",
           "email": "me@levithomason.com",
-          "photoURL": "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
+          "photoURL":
+            "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
           "providerId": "google.com",
           "uid": "106858460904522417111"
         }

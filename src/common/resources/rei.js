@@ -124,7 +124,7 @@ export const trend = (lat, lon) => {
   return request(`https://mapi-ng.rdc.moveaws.com/api/v1/area/trend`, params).then(res => res.trend)
 
   // TODO
-  // Full Chart Data, need to stream body, also has CORS issues outside of realtor.com
+  // Full chart time series data, need to stream body, also has CORS issues outside of realtor.com
   // (state, city, neighborhood) => {}
   // const type = neighborhood ? 'neighborhood' : 'city'
   // const query = [neighborhood, city, state].filter(Boolean).join('_')
@@ -217,12 +217,15 @@ export const getDefaultAnalysis = propertyId => {
 }
 
 export const getAnalysis = propertyId => {
-  return db.ref('analyses/' + propertyId).once('value').then(snapshot => {
-    const analysis = snapshot.val()
-    const crunched = analysis ? crunch(analysis) : analysis
-    // console.debug('FIREBASE: getAnalysis()', crunched)
-    return crunched
-  })
+  return db
+    .ref('analyses/' + propertyId)
+    .once('value')
+    .then(snapshot => {
+      const analysis = snapshot.val()
+      const crunched = analysis ? crunch(analysis) : analysis
+      // console.debug('FIREBASE: getAnalysis()', crunched)
+      return crunched
+    })
 }
 
 export const setAnalysis = (propertyId, analysis) => {
@@ -243,11 +246,14 @@ export const offAnalysisChange = (propertyId, cb) => {
 // -------------------------------------
 export const getAnalyses = () => {
   // console.debug('FIREBASE: getAnalyses() start')
-  return db.ref('analyses/').once('value').then(snapshot => {
-    const analyses = snapshot.val()
-    // console.debug('FIREBASE: getAnalyses() done', analyses)
-    return analyses
-  })
+  return db
+    .ref('analyses/')
+    .once('value')
+    .then(snapshot => {
+      const analyses = snapshot.val()
+      // console.debug('FIREBASE: getAnalyses() done', analyses)
+      return analyses
+    })
 }
 
 export const onAnalysesChange = cb => {
@@ -262,11 +268,14 @@ export const offAnalysesChange = cb => {
 // Settings
 // -------------------------------------
 export const getSettings = () => {
-  return db.ref('settings/').once('value').then(snapshot => {
-    const settings = snapshot.val()
-    // console.debug('FIREBASE: getSettings()', settings)
-    return settings
-  })
+  return db
+    .ref('settings/')
+    .once('value')
+    .then(snapshot => {
+      const settings = snapshot.val()
+      // console.debug('FIREBASE: getSettings()', settings)
+      return settings
+    })
 }
 
 export const setSettings = settings => {

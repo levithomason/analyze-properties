@@ -70,57 +70,55 @@ const hoverFocus = {
 
 const rules = {
   root: props => {
-    return Object.assign(
-      {
-        WebkitAppearance: 'none',
-        margin: `${parseInt(thumbHeight, 10) / 2}px 0`,
-        width: trackWidth,
+    return Object.assign({
+      WebkitAppearance: 'none',
+      margin: `${parseInt(thumbHeight, 10) / 2}px 0`,
+      width: trackWidth,
 
-        onFocus: hoverFocus,
-        onHover: hoverFocus,
-        '&::-webkit-slider-runnable-track': {
-          ...track,
-          background: trackColor,
-          border: `${trackBorderWidth} solid ${trackBorderColor}`,
-          borderRadius: trackRadius,
-        },
-        '&::-webkit-slider-thumb': {
-          ...thumb,
-          WebkitAppearance: 'none',
-          marginTop: (-trackBorderWidth * 2 + trackHeight) / 2 - thumbHeight / 2,
-        },
-        '&::-moz-range-track': {
-          ...track,
-          background: trackColor,
-          border: `${trackBorderWidth} solid ${trackBorderColor}`,
-          borderRadius: trackRadius,
-        },
-        '&::-moz-range-thumb': {
-          ...thumb,
-        },
-        '&::-ms-track': {
-          ...track,
-          background: 'transparent',
-          borderColor: 'transparent',
-          borderWidth: thumbHeight / 2,
-          color: 'transparent',
-        },
-        '&::-ms-fill-lower': {
-          background: thumbHoverColor,
-          border: `${trackBorderWidth} solid ${trackBorderColor}`,
-          borderRadius: trackRadius * 2,
-        },
-        '&::-ms-fill-upper': {
-          background: trackColor,
-          border: `${trackBorderWidth} solid ${trackBorderColor}`,
-          borderRadius: trackRadius * 2,
-        },
-        '&::-ms-thumb': {
-          ...thumb,
-          marginTop: 0,
-        },
+      onFocus: hoverFocus,
+      onHover: hoverFocus,
+      '&::-webkit-slider-runnable-track': {
+        ...track,
+        background: trackColor,
+        border: `${trackBorderWidth} solid ${trackBorderColor}`,
+        borderRadius: trackRadius,
       },
-    )
+      '&::-webkit-slider-thumb': {
+        ...thumb,
+        WebkitAppearance: 'none',
+        marginTop: (-trackBorderWidth * 2 + trackHeight) / 2 - thumbHeight / 2,
+      },
+      '&::-moz-range-track': {
+        ...track,
+        background: trackColor,
+        border: `${trackBorderWidth} solid ${trackBorderColor}`,
+        borderRadius: trackRadius,
+      },
+      '&::-moz-range-thumb': {
+        ...thumb,
+      },
+      '&::-ms-track': {
+        ...track,
+        background: 'transparent',
+        borderColor: 'transparent',
+        borderWidth: thumbHeight / 2,
+        color: 'transparent',
+      },
+      '&::-ms-fill-lower': {
+        background: thumbHoverColor,
+        border: `${trackBorderWidth} solid ${trackBorderColor}`,
+        borderRadius: trackRadius * 2,
+      },
+      '&::-ms-fill-upper': {
+        background: trackColor,
+        border: `${trackBorderWidth} solid ${trackBorderColor}`,
+        borderRadius: trackRadius * 2,
+      },
+      '&::-ms-thumb': {
+        ...thumb,
+        marginTop: 0,
+      },
+    })
   },
   value: props => ({
     float: 'right',

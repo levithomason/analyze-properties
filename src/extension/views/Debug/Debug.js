@@ -24,12 +24,14 @@ const valueStyle = {
 
 const Debug = ({ analysis }) => (
   <div>
-    {Object.keys(analysis).sort().map(key => (
-      <div key={key} style={wrapperStyle}>
-        <div style={labelStyle}>{key}</div>
-        <div style={valueStyle}>{analysis[key]}</div>
-      </div>
-    ))}
+    {Object.keys(analysis)
+      .sort()
+      .map(key => (
+        <div key={key} style={wrapperStyle}>
+          <div style={labelStyle}>{key}</div>
+          <div style={valueStyle}>{analysis[key]}</div>
+        </div>
+      ))}
   </div>
 )
 

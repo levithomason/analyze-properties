@@ -606,7 +606,8 @@
       "term": 30,
       "totalCashNeeded": 43500,
       "type": "single_family",
-      "url": "http://www.realtor.com/realestateandhomes-detail/24311-E-Edgewood-Dr_Liberty-Lake_WA_99019_M18064-42858",
+      "url":
+        "http://www.realtor.com/realestateandhomes-detail/24311-E-Edgewood-Dr_Liberty-Lake_WA_99019_M18064-42858",
       "vacancyRate": 0.05,
       "year": 1985,
       "zip": "99019"
@@ -640,7 +641,8 @@
       "mortgageInsuranceRecurringRate": 0,
       "mortgageInsuranceUpfrontRate": 0,
       "netOperatingIncome": 11172.8,
-      "notes": "3/2 @ $650, 3/2 @ $750\nOther expense is for W/S/G.\nTaxes Kootenai Urban 1.39% of $95,615 ",
+      "notes":
+        "3/2 @ $650, 3/2 @ $750\nOther expense is for W/S/G.\nTaxes Kootenai Urban 1.39% of $95,615 ",
       "operatingExpenseAmount": 4787.2,
       "operatingExpenseRate": 0.2999498746867168,
       "operatingIncome": 15960,
@@ -770,7 +772,8 @@
       "term": 30,
       "totalCashNeeded": 113071,
       "type": "single_family",
-      "url": "http://www.realtor.com/realestateandhomes-detail/26031-N-Old-Highway-95_Athol_ID_83801_M20029-38376",
+      "url":
+        "http://www.realtor.com/realestateandhomes-detail/26031-N-Old-Highway-95_Athol_ID_83801_M20029-38376",
       "vacancyRate": 0.05,
       "year": 1996,
       "zip": "83801"
@@ -954,7 +957,8 @@
       "mortgageInsuranceRecurringRate": 0,
       "mortgageInsuranceUpfrontRate": 0,
       "netOperatingIncome": 12834.4,
-      "notes": "1/1 @ 0 (assume 450)\n4/2 @ 750\n2/1 @ 500\n\nEven bumping all rents 100 gets you no where, cash flow not here.",
+      "notes":
+        "1/1 @ 0 (assume 450)\n4/2 @ 750\n2/1 @ 500\n\nEven bumping all rents 100 gets you no where, cash flow not here.",
       "operatingExpenseAmount": 6545.6,
       "operatingExpenseRate": 0.337750257997936,
       "operatingIncome": 19380,
@@ -1154,7 +1158,8 @@
       "mortgageInsuranceRecurringRate": 0,
       "mortgageInsuranceUpfrontRate": 0,
       "netOperatingIncome": 10087.6,
-      "notes": "Has large shop.  Quonset hut needs flooring, paint, siding on flat ends, maybe restore bath/kitchen?  Might not need much there.",
+      "notes":
+        "Has large shop.  Quonset hut needs flooring, paint, siding on flat ends, maybe restore bath/kitchen?  Might not need much there.",
       "operatingExpenseAmount": 4732.4,
       "operatingExpenseRate": 0.31932523616734143,
       "operatingIncome": 14820,
@@ -1284,7 +1289,8 @@
       "term": 30,
       "totalCashNeeded": 76850,
       "type": "multi_family",
-      "url": "http://www.realtor.com/realestateandhomes-detail/1908-E-1st-Ave_Post-Falls_ID_83854_M26715-26649",
+      "url":
+        "http://www.realtor.com/realestateandhomes-detail/1908-E-1st-Ave_Post-Falls_ID_83854_M26715-26649",
       "vacancyRate": 0.05,
       "year": 1993,
       "zip": "83854"
@@ -1367,7 +1373,8 @@
       "mortgageInsuranceRecurringRate": 0,
       "mortgageInsuranceUpfrontRate": 0,
       "netOperatingIncome": 12693.4,
-      "notes": "3/2 $800, 3/2 $775\n\nClean, has appliances, w/d hookups, great rental history.  Betting could bump rents a bit.\n\nDan: little harder to rent out there (CDA 30min away), has 4 or 5.  Always rents, just not 22 calls first day, more like a few calls a week.  Dan/Sharon betting $950mo.",
+      "notes":
+        "3/2 $800, 3/2 $775\n\nClean, has appliances, w/d hookups, great rental history.  Betting could bump rents a bit.\n\nDan: little harder to rent out there (CDA 30min away), has 4 or 5.  Always rents, just not 22 calls first day, more like a few calls a week.  Dan/Sharon betting $950mo.",
       "operatingExpenseAmount": 5261.6,
       "operatingExpenseRate": 0.2930437204121415,
       "operatingIncome": 17955,
@@ -1467,7 +1474,8 @@
       "mortgageInsuranceRecurringRate": 0,
       "mortgageInsuranceUpfrontRate": 0,
       "netOperatingIncome": 14181.04,
-      "notes": "2x 2/1 @ $550 784sf   DW EH RO RF\n1x 3/1 @ $595 916sf   DW EH RO RF\n\nWould have to bump rents 100 ea to $1895 to cash flow, current deal shows this\n\nDrive by showing only, can only see inside with offer. crazy.",
+      "notes":
+        "2x 2/1 @ $550 784sf   DW EH RO RF\n1x 3/1 @ $595 916sf   DW EH RO RF\n\nWould have to bump rents 100 ea to $1895 to cash flow, current deal shows this\n\nDrive by showing only, can only see inside with offer. crazy.",
       "operatingExpenseAmount": 7421.96,
       "operatingExpenseRate": 0.3435615423783734,
       "operatingIncome": 21603,
@@ -1852,14 +1860,16 @@
   },
   "users": {
     "vqSWLGNvWSeowj7C9IWy5jyZOBE2": {
-      "avatarUrl": "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
+      "avatarUrl":
+        "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
       "displayName": "Levi Thomason",
       "email": "me@levithomason.com",
       "providerData": [
         {
           "displayName": "Levi Thomason",
           "email": "me@levithomason.com",
-          "photoURL": "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
+          "photoURL":
+            "https://lh3.googleusercontent.com/-8OB-evyJBxg/AAAAAAAAAAI/AAAAAAAABnc/SPi9moy4Apo/photo.jpg",
           "providerId": "google.com",
           "uid": "106858460904522417111"
         }
