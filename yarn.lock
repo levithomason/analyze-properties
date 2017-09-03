@@ -2090,6 +2090,12 @@ css-in-js-utils@^1.0.3:
   dependencies:
     hyphenate-style-name "^1.0.2"
 
+css-in-js-utils@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/css-in-js-utils/-/css-in-js-utils-2.0.0.tgz#5af1dd70f4b06b331f48d22a3d86e0786c0b9435"
+  dependencies:
+    hyphenate-style-name "^1.0.2"
+
 css-loader@^0.28.4:
   version "0.28.4"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.28.4.tgz#6cf3579192ce355e8b38d5f42dd7a1f2ec898d0f"
@@ -3200,6 +3206,12 @@ fela-plugin-friendly-pseudo-class@^5.0.0:
   dependencies:
     fela-utils "^5.0.5"
 
+fela-plugin-important@^5.0.7:
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/fela-plugin-important/-/fela-plugin-important-5.0.7.tgz#69fe9e4a940d62a266fa12233f8537ac019a2581"
+  dependencies:
+    fela-utils "^6.0.1"
+
 fela-plugin-lvha@^5.0.0:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/fela-plugin-lvha/-/fela-plugin-lvha-5.0.5.tgz#893d96a2852f091b2945a052f05634da3855ea28"
@@ -3247,6 +3259,12 @@ fela-utils@^5.0.5:
   resolved "https://registry.yarnpkg.com/fela-utils/-/fela-utils-5.0.5.tgz#6a89290c8aa6866d9a0b98f41408485edc454ada"
   dependencies:
     css-in-js-utils "^1.0.3"
+
+fela-utils@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/fela-utils/-/fela-utils-6.0.1.tgz#eb9c50a0fd984a194e2b984d176237ee349dcb7e"
+  dependencies:
+    css-in-js-utils "^2.0.0"
 
 fela@^5.0.0, fela@^5.1.0:
   version "5.1.0"

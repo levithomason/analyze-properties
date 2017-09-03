@@ -11,8 +11,10 @@ import friendlyPseudoClass from 'fela-plugin-friendly-pseudo-class'
 import placeholderPrefixer from 'fela-plugin-placeholder-prefixer'
 import prefixer from 'fela-plugin-prefixer'
 import fallbackValue from 'fela-plugin-fallback-value'
+import important from 'fela-plugin-important'
 import validator from 'fela-plugin-validator'
 import unit from 'fela-plugin-unit'
+
 // style renderer enhancers
 import layoutDebugger from 'fela-layout-debugger'
 
@@ -35,6 +37,7 @@ const createIndex = ({ styles = {}, importRoot }) => {
       prefixer(), // Adds all vendor prefixes to the styles
       fallbackValue(), // Resolves arrays of fallback values (required after prefixer)
       unit(), // Automatically adds units to values if needed
+      important(), // Adds !important to every declaration value (mostly for in-page extension)
     ],
   }
 

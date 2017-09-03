@@ -12,6 +12,7 @@
     "fela-plugin-dynamic-prefixer": "^5.0.0",
     "fela-plugin-fallback-value": "^5.0.0",
     "fela-plugin-friendly-pseudo-class": "^5.0.0",
+    "fela-plugin-important": "^5.0.7",
     "fela-plugin-lvha": "^5.0.0",
     "fela-plugin-placeholder-prefixer": "^5.0.0",
     "fela-plugin-prefixer": "^5.0.0",
