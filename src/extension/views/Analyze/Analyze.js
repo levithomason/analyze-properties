@@ -418,7 +418,9 @@ class Analyze extends Component {
               <Header textAlign="center">Financing</Header>
               <Checkbox
                 checked={isFinanced}
-                label="Use financing" onClick={this.handleAnalysisBooleanChange('isFinanced')} />
+                label="Use financing"
+                onChange={this.handleAnalysisBooleanChange('isFinanced')}
+              />
               <div style={{ textAlign: 'center' }}>
                 <sup>{perMonth(usd(debtService))}</sup>
               </div>
@@ -430,6 +432,7 @@ class Analyze extends Component {
                 max={0.3}
                 step={0.01}
                 onChange={this.handleAnalysisNumberChange('downRate')}
+                disabled={!isFinanced}
               />
               <Slider
                 unit="percent"
@@ -439,6 +442,7 @@ class Analyze extends Component {
                 max={0.1}
                 step={0.001}
                 onChange={this.handleAnalysisNumberChange('rate')}
+                disabled={!isFinanced}
               />
               <Slider
                 unit="year"
@@ -448,6 +452,7 @@ class Analyze extends Component {
                 max={30}
                 step={1}
                 onChange={this.handleAnalysisNumberChange('term')}
+                disabled={!isFinanced}
               />
             </div>
           </div>

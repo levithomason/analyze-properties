@@ -35,9 +35,7 @@ class Loader extends Component {
 
     return (
       <ElementType {...rest}>
-        <div className={styles.text}>
-          {children}
-        </div>
+        <div className={styles.text}>{children}</div>
       </ElementType>
     )
   }

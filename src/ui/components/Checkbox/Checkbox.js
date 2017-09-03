@@ -25,7 +25,7 @@ class Input extends Component {
 
     return (
       <ElementType {...rest}>
-        <input ref={this.handleRef} type="checkbox" className={styles.input} />
+        <input ref={this.handleRef} type="checkbox" {...rest} className={styles.input} />
         {label}
       </ElementType>
     )

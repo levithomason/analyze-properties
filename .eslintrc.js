@@ -35,6 +35,6 @@ module.exports = {
     // 'react/no-string-refs': 'off',
     // 'react/no-find-dom-node': 'off',
     // 'react/no-unescaped-entities': 'off',
-    // 'react/prop-types': 'off',
+    'react/prop-types': 'off',
   },
 }

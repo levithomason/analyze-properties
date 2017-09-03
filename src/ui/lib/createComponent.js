@@ -21,6 +21,16 @@ const createComponent = (config = {}) => WrappedComponent => {
     }
   }
 
+  rules.global = props => {
+    return Object.assign(
+      {},
+      props.disabled && {
+        opacity: '0.5',
+        pointerEvents: 'none',
+      },
+    )
+  }
+
   class BaseComponent extends Component {
     displayName = `createComponent(${displayName})`
 
@@ -31,7 +41,7 @@ const createComponent = (config = {}) => WrappedComponent => {
 
     getClassNames = () => {
       const { className, styles } = this.props
-      return cx(styles.root, className)
+      return cx(styles.global, styles.root, className)
     }
 
     render() {

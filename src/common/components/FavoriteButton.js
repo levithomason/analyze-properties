@@ -28,7 +28,7 @@ class FavoriteButton extends Component {
   }
 
   render() {
-    const { active, propertyId, styles, ...rest } = this.props
+    const { active, dispatch, firebase, propertyId, styles, ...rest } = this.props
 
     if (!propertyId) return null
 
