@@ -33,7 +33,7 @@ const bgForText = (bgColor, textColor) => {
   //
   const contrasted = muted.mix(isLightText ? lightener : darkener, textContrast)
 
-  // console.log(
+  // console.debug(
   //   'white', (contrast * 100).toFixed(),
   //   'black', (result.contrast(black) / 21 * 100).toFixed(),
   //   'contrastWhite', contrast,
@@ -50,9 +50,9 @@ const bgForText = (bgColor, textColor) => {
         .lighten(textContrast * 0.4)
 }
 
-const lightestGray = Color.hsl(0, 0, 90)
+const lightestGray = Color.hsl(0, 0, 95)
 const lighterGray = Color.hsl(0, 0, 80)
-const lightGray = Color.hsl(0, 0, 79)
+const lightGray = Color.hsl(0, 0, 70)
 const gray = Color.hsl(0, 0, 60)
 const darkGray = Color.hsl(0, 0, 50)
 const darkerGray = Color.hsl(0, 0, 40)

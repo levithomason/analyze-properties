@@ -36,7 +36,7 @@ const rules = {
           outline: 'none',
         },
       },
-      fluid && { width: '100%' },
+      fluid && { margin: 0, width: '100%' },
       inverted && { color: theme.textColors.white.hex() },
     )
   },

@@ -132,7 +132,7 @@ class App extends Component {
         <Button fluid>Fluid</Button>
 
         <DocHeader>Code</DocHeader>
-        <Code>const greet = name => console.log(`Hi ${name}!`)</Code>
+        <Code>const greet = name => console.debug(`Hi ${name}!`)</Code>
 
         <DocHeader>Divider</DocHeader>
         <Divider />

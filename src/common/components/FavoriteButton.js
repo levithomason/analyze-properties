@@ -1,8 +1,9 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
 import { connect as felaConnect } from 'react-fela'
+import { connect as reduxConnect } from 'react-redux'
+import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+
 import Button from '../../ui/components/Button'
 
 const rules = {
@@ -28,9 +29,9 @@ class FavoriteButton extends Component {
   }
 
   render() {
-    const { active, dispatch, firebase, propertyId, styles, ...rest } = this.props
+    const { active, dispatch, firebase, analysis, propertyId, styles, ...rest } = this.props
 
-    if (!propertyId) return null
+    if (!propertyId || !isLoaded(analysis) || !analysis || !isLoaded(active)) return null
 
     const src = active
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
@@ -49,6 +50,7 @@ export default _.flow(
   felaConnect(rules),
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}/favorite`]),
   reduxConnect(({ firebase }, { propertyId }) => ({
+    analysis: dataToJS(firebase, `analyses/${propertyId}`),
     active: dataToJS(firebase, `analyses/${propertyId}/favorite`),
   })),
 )(FavoriteButton)

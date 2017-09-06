@@ -104,14 +104,29 @@ export const getPropertyInfo = propertyId => {
 export const suggest = input => {
   const params = {
     input: input,
-    area_types: 'neighborhood,city,county,postal_code,address,street',
-    limit: 10,
-    lat: 47.730493,
-    long: -116.823844,
+    area_types: [
+      // 'postal_code',
+      // 'county',
+      // 'city',
+      // 'neighborhood',
+      'address',
+      // 'street',
+    ].join(','),
+    limit: 5,
+    // lat: 47.730493,
+    // long: -116.823844,
     client_id: 'rdcV8',
   }
 
-  return request(`https://parser-external.geo.moveaws.com/suggest`, params)
+  return request(`https://parser-external.geo.moveaws.com/suggest`, params).then(res => {
+    return _.map(
+      result => ({
+        propertyId: result.mpr_id,
+        address: _.first(result.full_address),
+      }),
+      res.autocomplete,
+    )
+  })
 }
 
 export const trend = (lat, lon) => {
@@ -139,81 +154,116 @@ const db = firebase.database()
 // -------------------------------------
 // Analysis
 // -------------------------------------
+/**
+ * Used for very rough initial rent values:
+ *
+ * 5 bed 3 bath === $1,800
+ * 4 bed 3 bath === $1,600
+ * 3 bed 2 bath === $1,200
+ * 3 bed 1 bath === $1,000
+ * 2 bed 1 bath === $800
+ * 1 bed 1 bath === $600
+ * @param bed
+ * @param bath
+ */
+export const estimatedRent = (bed, bath) => 200 + bed * 200 + bath * 200
+
+/**
+ * Converts a propertyInfo() result into an analysis shape.
+ *
+ * @param {object} info - A propertyInfo() call result.
+ * @returns {object}
+ */
+export const propertyInfoToAnalysis = info => {
+  const purchasePrice = info.price || 0
+
+  const beds = _.get('beds', info) || ''
+  const baths = _.get('baths', info) || ''
+  const grossMonthlyRent = estimatedRent(beds, baths)
+
+  const downRate = 0.2
+  const purchaseCostsRate = 0.04
+
+  const lotSize = _.get('lot_size.size', info) || 0
+
+  return {
+    // property info
+    propertyId: _.get('property_id', info) || '',
+    image: _.get('photos[0].href', info) || '',
+    url: _.get('rdc_web_url', info) || '',
+    address: _.get('address.line', info) || '',
+    city: _.get('address.city', info) || '',
+    state: _.get('address.state_code', info) || '',
+    zip: _.get('address.postal_code', info) || '',
+    county: _.get('address.county', info) || '',
+    lat: _.get('address.lat', info) || '',
+    lon: _.get('address.lon', info) || '',
+    type: _.get('prop_type', info) || '',
+    year: _.get('year_built', info) || 0,
+    beds,
+    baths,
+    mlsNumber: _.get('mls.id', info) || '',
+    sqft: _.get('building_size.size', info) || 0,
+    lotAcres: _.get('lot_size.units', info) === 'sqft' ? lotSize / 43560 : lotSize,
+
+    // TODO trend data and comparison
+    // TODO Tax benefit
+    // price
+    purchasePrice,
+    afterRepairValue: purchasePrice,
+
+    // value
+    marketValue: purchasePrice,
+    landValue: _.get('tax_history[0].assessment.land', info) || 0,
+
+    // financing
+    isFinanced: purchasePrice > 60000,
+    downRate,
+    downAmount: purchasePrice * downRate,
+    rate: 0.045,
+    term: 30,
+    // TODO include in loan payment calc?
+    mortgageInsuranceUpfrontRate: 0, // only if down is <20%
+    mortgageInsuranceRecurringRate: 0, // only if down is <20%
+
+    // purchase costs
+    purchaseCostsRate,
+    purchaseCostsAmount: purchasePrice * purchaseCostsRate,
+
+    // rehab costs
+    rehabCosts: 0,
+
+    // income
+    grossMonthlyRent,
+    grossPotentialRent: grossMonthlyRent * 12,
+    otherIncome: 0,
+
+    // expenses
+    operatingExpenseRate: 0.5,
+    taxes: _.get('tax_history[0].tax', info) || 1200,
+    insurance: 600,
+    managementRate: 0.08,
+    maintenanceRate: 0.05,
+    capitalExpendituresRate: 0.1,
+    otherExpenses: 0,
+
+    // assumptions
+    vacancyRate: 0.05,
+    appreciationRate: 0.03,
+    incomeIncreaseRate: 0.02,
+    expenseIncreaseRate: 0.02,
+    sellingCostRate: 0.06,
+  }
+}
+
 export const getDefaultAnalysis = propertyId => {
   // console.debug('FIREBASE: getDefaultAnalysis()', propertyId)
-  return getPropertyInfo(propertyId).then(info => {
-    return crunch({
-      // property info
-      propertyId,
-      image: _.get('photos[0].href', info) || '',
-      url: _.get('rdc_web_url', info) || '',
-      address: _.get('address.line', info) || '',
-      city: _.get('address.city', info) || '',
-      state: _.get('address.state_code', info) || '',
-      zip: _.get('address.postal_code', info) || '',
-      county: _.get('address.county', info) || '',
-      lat: _.get('address.lat', info) || '',
-      lon: _.get('address.lon', info) || '',
-      type: _.get('prop_type', info) || '',
-      year: _.get('year_built', info) || 0,
-      beds: _.get('beds', info) || '',
-      baths: _.get('baths', info) || '',
-      mlsNumber: _.get('mls.id', info) || '',
-      sqft: _.get('building_size.size', info) || 0,
-      lotAcres:
-        _.get('lot_size.units', info) === 'sqft'
-          ? _.get('lot_size.size', info) || 0 / 43560
-          : _.get('lot_size.size', info) || 0,
-
-      // TODO trend data and comparison
-      // TODO Tax benefit
-      // price
-      purchasePrice: info.price || 0,
-      afterRepairValue: info.price || 0,
-
-      // value
-      marketValue: info.price || 0,
-      landValue: _.get('tax_history[0].assessment.land', info) || 0,
-
-      // financing
-      isFinanced: true,
-      downRate: 0.2,
-      downAmount: 0,
-      rate: 0.045,
-      term: 30,
-      // TODO include in loan payment calc?
-      mortgageInsuranceUpfrontRate: 0, // only if down is <20%
-      mortgageInsuranceRecurringRate: 0, // only if down is <20%
-
-      // purchase costs
-      purchaseCostsRate: 0.04,
-      purchaseCostsAmount: 0,
-
-      // rehab costs
-      rehabCosts: 0,
-
-      // income
-      grossMonthlyRent: 1250,
-      grossPotentialRent: 15000,
-      otherIncome: 0,
-
-      // expenses
-      operatingExpenseRate: 0.5,
-      taxes: _.get('tax_history[0].tax', info) || 1200,
-      insurance: 600,
-      managementRate: 0.08,
-      maintenanceRate: 0.05,
-      capitalExpendituresRate: 0.1,
-      otherExpenses: 0,
-
-      // assumptions
-      vacancyRate: 0.05,
-      appreciationRate: 0.03,
-      incomeIncreaseRate: 0.02,
-      expenseIncreaseRate: 0.02,
-      sellingCostRate: 0.06,
+  return getPropertyInfo(propertyId)
+    .then(propertyInfoToAnalysis)
+    .then(analysis => {
+      analysis.propertyId = propertyId
+      return crunch(analysis)
     })
-  })
 }
 
 export const getAnalysis = propertyId => {

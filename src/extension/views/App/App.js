@@ -3,8 +3,9 @@ import { connect as felaConnect } from 'react-fela'
 
 import Loader from '../../../ui/components/Loader'
 import Tabs from '../../../ui/components/Tabs'
+import keyboardKey from 'keyboard-key'
 
-import LogoutButton from '../../../common/components/LogoutButton'
+// import LogoutButton from '../../../common/components/LogoutButton'
 
 import Analyze from '../Analyze'
 import Debug from '../Debug'
@@ -38,8 +39,14 @@ class App extends Component {
     }))
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleDocumentKeyDown)
+  }
+
   handleDocumentKeyDown = e => {
-    if (e.keyCode === 27) {
+    const key = keyboardKey.getKey(e)
+
+    if (key === '=') {
       this.setState(prevState => ({ isOpen: !prevState.isOpen }))
     }
   }
@@ -52,7 +59,6 @@ class App extends Component {
   render() {
     const { isFetching, isOpen, activeTab } = this.state
     const { propertyId, styles } = this.props
-    console.debug('App.render()')
 
     if (!isOpen) return null
 
@@ -68,7 +74,7 @@ class App extends Component {
             { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
           ]}
         />
-        <LogoutButton fluid />
+        {/*<LogoutButton fluid />*/}
       </div>
     )
   }

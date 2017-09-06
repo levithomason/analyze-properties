@@ -20,6 +20,7 @@
     "firebase": "^4.2.0",
     "firebaseui": "^2.3.0",
     "hoist-non-react-statics": "^2.2.2",
+    "keyboard-key": "^1.0.0",
     "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
     "react": "^15.5.4",
@@ -64,8 +65,7 @@
     "firebase:backup": "yarn run firebase:login && node scripts/firebase-backup",
     "firebase:deploy": "yarn run build:web && cd dist/web && firebase deploy && cd ../..",
     "firebase:login": "firebase login",
-    "lint":
-      "prettier --config ./.prettierrc.js --write \"**/*.js?(on|x)\" && eslint --fix \"**/*.js?(on|x)\"",
+    "lint": "prettier --config ./.prettierrc.js --write \"**/*.js?(on|x)\" && eslint --fix \"**/*.js?(on|x)\"",
     "prebuild:extension": "yarn run -s satisfied",
     "prebuild:mobile": "yarn run -s satisfied",
     "prebuild:ui": "yarn run -s satisfied",
@@ -74,8 +74,7 @@
     "prestart:mobile": "yarn run -s satisfied",
     "prestart:ui": "yarn run -s satisfied",
     "prestart:web": "yarn run -s satisfied",
-    "satisfied":
-      "which satisfied && satisfied --fix yarn --skip-invalid || echo \"satisfied is not installed\"",
+    "satisfied": "which satisfied && satisfied --fix yarn --skip-invalid || echo \"satisfied is not installed\"",
     "start:extension": "node scripts/genesis start extension",
     "start:mobile": "node scripts/genesis start mobile",
     "start:ui": "node scripts/genesis start ui",

@@ -67,25 +67,36 @@ class Trend extends Component {
   static propTypes = {
     analysis: PropTypes.object,
     firebase: PropTypes.object,
-    propertyId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string,
   }
 
   componentDidMount() {
-    const { analysis, propertyId } = this.props
-    rei.trend(analysis.lat, analysis.lon).then(trend => {
-      this.setState(() => ({ trend }))
-    })
+    this.update(this.props)
+  }
 
-    rei.getPropertyInfo(propertyId).then(info => {
-      this.setState(() => ({
-        propertyHistory: _.map(_.mapKeys(_.camelCase), info.property_history),
-        taxHistory: info.tax_history || [],
-      }))
-    })
+  componentWillReceiveProps(nextProps) {
+    this.update(nextProps)
+  }
+
+  update = ({ analysis, propertyId }) => {
+    if (analysis && analysis.lat && analysis.lon) {
+      rei.trend(analysis.lat, analysis.lon).then(trend => {
+        this.setState(() => ({ trend }))
+      })
+    }
+
+    if (propertyId) {
+      rei.getPropertyInfo(propertyId).then(info => {
+        this.setState(() => ({
+          propertyHistory: _.map(_.mapKeys(_.camelCase), info.property_history),
+          taxHistory: info.tax_history || [],
+        }))
+      })
+    }
   }
 
   render() {
-    console.debug('Trend.renderAnalyze()')
+    console.debug('Trend.render()')
     const { propertyId } = this.props
     const { propertyHistory = [], taxHistory = [], trend = {} } = this.state
 

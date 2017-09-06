@@ -33,22 +33,31 @@ class Trend extends Component {
   static propTypes = {
     analysis: PropTypes.object,
     firebase: PropTypes.object,
-    propertyId: PropTypes.string.isRequired,
+    propertyId: PropTypes.string,
   }
 
   componentDidMount() {
-    const { analysis } = this.props
+    this.update(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.update(nextProps)
+  }
+
+  update = ({ analysis }) => {
+    if (!analysis || !analysis.lat || !analysis.lon) return
+
     rei.trend(analysis.lat, analysis.lon).then(trend => {
       this.setState(() => ({ trend }))
     })
   }
 
   render() {
-    console.debug('Trend.renderAnalyze()')
+    console.debug('Trend.render()')
     const { analysis = {} } = this.props
     const { trend = {} } = this.state
 
-    if (!isLoaded(analysis) || !trend || !trend.price || !trend.price_sqft) return null
+    if (!isLoaded(analysis) || !analysis || !trend || !trend.price || !trend.price_sqft) return null
 
     return (
       <div>

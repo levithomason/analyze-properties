@@ -37,6 +37,7 @@ const baseConfig = {
     'firebase',
     'hoist-non-react-statics',
     'lodash',
+    'lodash/fp',
     'normalize.css',
     'react',
     'react-dom',

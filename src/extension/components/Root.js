@@ -1,3 +1,4 @@
+import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { firebaseConnect, isEmpty, isLoaded, pathToJS } from 'react-redux-firebase'
 import { connect as reduxConnect } from 'react-redux'
@@ -13,8 +14,7 @@ const waitForPropertyId = () =>
 
     const getPropertyId = () => {
       // first propertyid element on the page contains the actual id
-      const $id = document.querySelector('[data-propertyid]')
-      const propertyId = $id && $id.getAttribute('data-propertyid')
+      const propertyId = _.get('MOVE_DATA.propertyDetails.property_id', window)
 
       if (!propertyId) {
         console.debug('waitingForPropertyId()')

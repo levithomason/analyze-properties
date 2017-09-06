@@ -18,11 +18,6 @@ body {
   margin: 0;
 }
 
-// Text selections should not include text shadows
-::selection {
-  text-shadow: none;
-}
-
 //Media elements should align to the text center of other content
 audio, canvas, iframe, img, svg, video {
   vertical-align: middle;
