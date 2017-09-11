@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
 
@@ -49,8 +49,8 @@ class FavoriteButton extends Component {
 export default _.flow(
   felaConnect(rules),
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}/favorite`]),
-  reduxConnect(({ firebase }, { propertyId }) => ({
-    analysis: dataToJS(firebase, `analyses/${propertyId}`),
-    active: dataToJS(firebase, `analyses/${propertyId}/favorite`),
+  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+    active: _.get([propertyId, 'favorite'], analyses),
   })),
 )(FavoriteButton)

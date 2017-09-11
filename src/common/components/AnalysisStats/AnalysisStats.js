@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'
@@ -82,10 +82,8 @@ const AnalysisStats = ({ analysis, settings }) => {
 
 export default _.flow(
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`, '/settings']),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-      settings: dataToJS(firebase, 'settings'),
-    }
-  }),
+  reduxConnect(({ firebase: { data: { analyses, settings } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+    settings,
+  })),
 )(AnalysisStats)

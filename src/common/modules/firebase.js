@@ -28,7 +28,7 @@ export const reactReduxFirebaseConfig = {
   enableLogging: false, // enable/disable Firebase's database logging
 }
 
-export const firebaseStoreEnhancer = reactReduxFirebase(firebaseConfig, reactReduxFirebaseConfig)
+export const firebaseStoreEnhancer = reactReduxFirebase(firebase, reactReduxFirebaseConfig)
 
 // ----------------------------------------
 // Reducer

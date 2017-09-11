@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 import Textarea from 'react-textarea-autosize'
 
 import Checkbox from '../../../ui/components/Checkbox'
@@ -16,10 +16,11 @@ const textAreaStyle = {
   display: 'block',
   margin: 0,
   width: '100%',
-  border: 'none',
-  outline: 'none',
+  verticalAlign: 'text-top',
   fontFamily: 'monospace',
   fontSize: '12px',
+  border: 'none',
+  outline: 'none',
   resize: 'none',
 }
 
@@ -305,12 +306,10 @@ class AnalysisWorksheet extends React.Component {
           */}
         </div>
         <div style={{ padding: '1em' }}>
-          <Header textAlign="center">Financing</Header>
-          <Checkbox
-            checked={isFinanced}
-            label="Use financing"
-            onChange={this.handleBooleanChange('isFinanced')}
-          />
+          <Header textAlign="center">
+            <Checkbox checked={isFinanced} onChange={this.handleBooleanChange('isFinanced')} />
+            Financing
+          </Header>
           <div style={{ textAlign: 'center' }}>
             <sup>{perMonth(usd(debtService))}</sup>
           </div>
@@ -352,10 +351,8 @@ class AnalysisWorksheet extends React.Component {
 
 export default _.flow(
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`, '/settings']),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-      settings: dataToJS(firebase, 'settings'),
-    }
-  }),
+  reduxConnect(({ firebase: { data: { analyses, settings } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+    settings,
+  })),
 )(AnalysisWorksheet)

@@ -15,7 +15,9 @@ const rules = {
   }),
 }
 
-class Input extends Component {
+class Checkbox extends Component {
+  state = { checked: false }
+
   handleRef = c => (this.ref = c)
 
   focus = () => this.ref.focus()
@@ -32,4 +34,4 @@ class Input extends Component {
   }
 }
 
-export default createComponent({ defaultElementType: 'label', rules })(Input)
+export default createComponent({ defaultElementType: 'label', rules })(Checkbox)

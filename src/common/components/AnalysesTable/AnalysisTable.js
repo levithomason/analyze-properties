@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import AnalysesTableRow from './AnalysesTableRow'
 import COLUMNS from './COLUMNS'
@@ -88,7 +88,7 @@ class Analyses extends Component {
 export default _.flow(
   felaConnect(tableStyles),
   firebaseConnect(['/analyses']),
-  reduxConnect(({ firebase }) => ({
-    analyses: dataToJS(firebase, 'analyses'),
+  reduxConnect(({ firebase: { data: { analyses } } }) => ({
+    analyses,
   })),
 )(Analyses)

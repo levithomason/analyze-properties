@@ -10,12 +10,16 @@ import Trend from '../../../common/components/Trend'
 
 class Analyze extends Component {
   static propTypes = {
-    analysis: PropTypes.object,
-    firebase: PropTypes.object,
-    propertyId: PropTypes.string.isRequired,
+    propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }
 
   state = {}
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.propertyId !== this.state.propertyId) {
+      this.setState(() => ({ propertyId: nextProps.propertyId }))
+    }
+  }
 
   handleSuggestSelect = (e, { propertyId }) => {
     console.debug('Analyze.handleSuggestSelect()', propertyId)
@@ -28,7 +32,7 @@ class Analyze extends Component {
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: '0 0 auto', padding: '1em 1em 0' }}>
-          <Suggest onSelect={this.handleSuggestSelect} propertyId={propertyId} />
+          <Suggest onSelect={this.handleSuggestSelect} />
         </div>
 
         <AnalysisStats propertyId={propertyId} />

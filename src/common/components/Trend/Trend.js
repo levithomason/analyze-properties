@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 import {
   ResponsiveContainer,
   BarChart,
@@ -67,7 +67,7 @@ class Trend extends Component {
   static propTypes = {
     analysis: PropTypes.object,
     firebase: PropTypes.object,
-    propertyId: PropTypes.string,
+    propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }
 
   componentDidMount() {
@@ -180,9 +180,7 @@ class Trend extends Component {
 
 export default _.flow(
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`]),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-    }
-  }),
+  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+  })),
 )(Trend)

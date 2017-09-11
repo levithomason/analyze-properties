@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Slider from '../../../ui/components/Slider'
 
@@ -214,7 +214,7 @@ class Settings extends Component {
 
 export default _.flow(
   firebaseConnect(['/settings']),
-  reduxConnect(({ firebase }) => ({
-    settings: dataToJS(firebase, 'settings'),
+  reduxConnect(({ firebase: { data: { settings } } }) => ({
+    settings,
   })),
 )(Settings)

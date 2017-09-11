@@ -2,7 +2,7 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 const wrapperStyle = {
   display: 'flex',
@@ -37,14 +37,12 @@ const Debug = ({ analysis }) => (
 
 Debug.propTypes = {
   analysis: PropTypes.object,
-  propertyId: PropTypes.string.isRequired,
+  propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 }
 
 export default _.flow(
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`]),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-    }
-  }),
+  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+  })),
 )(Debug)

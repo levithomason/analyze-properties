@@ -18,7 +18,7 @@ const outDir = path.resolve(rootPath, `dist/${app}`)
 const commonPublic = path.resolve(srcPath, 'common/public')
 const appPublic = path.resolve(srcPath, app, 'public')
 
-const baseConfig = {
+const globalBaseConfig = {
   entry,
   globals: {
     __DEV__: process.env.NODE_ENV !== 'production',
@@ -52,7 +52,7 @@ const baseConfig = {
   sourcemaps: true,
 }
 
-const appConfig = {
+const globalAppConfig = {
   web: {
     templatePath: path.resolve(__dirname, '../src/web/index.html'),
   },
@@ -65,7 +65,21 @@ const appConfig = {
   },
 }[app]
 
-const compiler = genesis(Object.assign({}, baseConfig, appConfig))
+const globalConfig = Object.assign({}, globalBaseConfig, globalAppConfig)
+
+const compiler = genesis(globalConfig)
+
+const commandConfig = {
+  build: {
+    out: outDir,
+  },
+  test: {
+    watch: process.env.NODE_ENV !== 'production',
+  },
+  start: {
+    port: 5000,
+  },
+}
 
 // go!
 Promise.resolve()
@@ -78,10 +92,7 @@ Promise.resolve()
     return Promise.all([sh(`mkdir -p ${appPublic}`), sh(`cp -RL ${commonPublic}/* ${appPublic}`)])
   })
   .then(() => {
-    return compiler[cmd]({
-      out: cmd === 'build' ? outDir : undefined,
-      watch: cmd === 'test' && process.env.NODE_ENV !== 'production',
-    })
+    return compiler[cmd](commandConfig[cmd])
   })
   .then(() => {
     // TODO remove once genesis copies public

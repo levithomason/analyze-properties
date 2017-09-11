@@ -1,6 +1,6 @@
 import _ from 'lodash/fp'
 import React from 'react'
-import { firebaseConnect, isEmpty, isLoaded, pathToJS } from 'react-redux-firebase'
+import { firebaseConnect, isEmpty, isLoaded } from 'react-redux-firebase'
 import { connect as reduxConnect } from 'react-redux'
 
 import Loader from '../../ui/components/Loader'
@@ -20,9 +20,9 @@ const Root = ({ auth, authError, profile }) => {
 
 export default _.flow(
   firebaseConnect(),
-  reduxConnect(({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    authError: pathToJS(firebase, 'authError'),
-    profile: pathToJS(firebase, 'profile'),
+  reduxConnect(({ firebase: { auth, authError, profile } }) => ({
+    auth,
+    authError,
+    profile,
   })),
 )(Root)

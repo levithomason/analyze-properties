@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, dataToJS, pathToJS } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Container from '../../ui/components/Container'
 import Divider from '../../ui/components/Divider'
@@ -42,10 +42,10 @@ class Analysis extends Component {
 
 export default _.flow(
   firebaseConnect(['/analyses']),
-  reduxConnect(({ firebase }) => ({
-    auth: pathToJS(firebase, 'auth'),
-    authError: pathToJS(firebase, 'authError'),
-    profile: pathToJS(firebase, 'profile'),
-    analyses: dataToJS(firebase, 'analyses'),
+  reduxConnect(({ firebase: { auth, authError, data: { analyses }, profile } }) => ({
+    auth,
+    authError,
+    profile,
+    analyses,
   })),
 )(Analysis)

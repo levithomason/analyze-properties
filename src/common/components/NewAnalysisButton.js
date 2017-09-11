@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
+import { firebaseConnect, isLoaded } from 'react-redux-firebase'
 
 import * as rei from '../resources/rei'
 
@@ -44,9 +44,7 @@ class NewAnalysisButton extends Component {
 
 export default _.flow(
   firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`]),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-    }
-  }),
+  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get(propertyId, analyses),
+  })),
 )(NewAnalysisButton)

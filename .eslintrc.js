@@ -27,6 +27,7 @@ module.exports = {
     // 'no-fallthrough': 'off',
     // 'no-unused-expressions': 'off',
     'no-unused-vars': ['error', { args: 'none' }],
+    'object-shorthand': 'error',
     'prettier/prettier': ['error', prettierConfig],
     // 'react/display-name': 'off',
     // 'react/jsx-boolean-value': 'error',

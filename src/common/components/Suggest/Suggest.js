@@ -1,8 +1,6 @@
 import keyboardKey from 'keyboard-key'
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded, dataToJS } from 'react-redux-firebase'
 
 import * as rei from '../../../common/resources/rei'
 
@@ -49,7 +47,10 @@ class Suggest extends Component {
   }
 
   getSuggestions = _.debounce(250, value => {
-    if (!value) return
+    if (!value) {
+      this.setState(() => ({ results: null }))
+      return
+    }
 
     rei.suggest(value).then(results => {
       this.setState(() => ({ results }))
@@ -59,7 +60,8 @@ class Suggest extends Component {
   getResultByAddress = address => _.find({ address }, this.state.results)
   getSelectedResult = address => this.state.results[this.state.selectedIndex]
 
-  moveSelectionBy = amount => {
+  moveSelectionBy = (e, amount) => {
+    e.preventDefault()
     this.setState(prevState => {
       const { selectedIndex, results } = prevState
       return {
@@ -80,11 +82,11 @@ class Suggest extends Component {
 
     switch (key) {
       case 'ArrowDown':
-        this.moveSelectionBy(1)
+        this.moveSelectionBy(e, 1)
         break
 
       case 'ArrowUp':
-        this.moveSelectionBy(-1)
+        this.moveSelectionBy(e, -1)
         break
 
       case 'Enter':
@@ -129,23 +131,12 @@ class Suggest extends Component {
   }
 
   render() {
-    const { analysis } = this.props
     const { selectedIndex, searchQuery, results } = this.state
-
-    const placeholder =
-      !isLoaded(analysis) || !analysis
-        ? `Search`
-        : `${analysis.address}, ${analysis.city}, ${analysis.state} ${analysis.zip}`
-
     const items = _.map('address', results)
+
     return (
       <div style={{ position: 'relative' }} ref={this.handleRef}>
-        <Input
-          fluid
-          value={searchQuery}
-          onChange={this.handleSearchChange}
-          placeholder={placeholder}
-        />
+        <Input fluid value={searchQuery} onChange={this.handleSearchChange} placeholder="Address" />
         <List
           link
           items={items}
@@ -168,11 +159,4 @@ class Suggest extends Component {
   }
 }
 
-export default _.flow(
-  firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`]),
-  reduxConnect(({ firebase }, { propertyId }) => {
-    return {
-      analysis: dataToJS(firebase, `analyses/${propertyId}`),
-    }
-  }),
-)(Suggest)
+export default Suggest
