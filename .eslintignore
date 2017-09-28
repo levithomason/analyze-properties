@@ -3,6 +3,6 @@
 # Keep in sync with .prettierignore
 #
 
-**/node_modules**
+**/node_modules/**
 .yarn-cache/**
 dist/**

@@ -1,5 +1,3 @@
-const prettierConfig = require('./.prettierrc')
-
 module.exports = {
   parser: 'babel-eslint',
   parserOptions: {
@@ -20,6 +18,7 @@ module.exports = {
   },
   globals: {
     __DEV__: false,
+    chrome: false,
   },
   rules: {
     // 'no-console': 'off',
@@ -28,7 +27,7 @@ module.exports = {
     // 'no-unused-expressions': 'off',
     'no-unused-vars': ['error', { args: 'none' }],
     'object-shorthand': 'error',
-    'prettier/prettier': ['error', prettierConfig],
+    'prettier/prettier': 'error',
     // 'react/display-name': 'off',
     // 'react/jsx-boolean-value': 'error',
     // 'react/jsx-no-comment-textnodes': 'off',
