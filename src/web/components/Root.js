@@ -1,14 +1,14 @@
 import _ from 'lodash/fp'
 import React from 'react'
-import { firebaseConnect, isEmpty, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import { connect as reduxConnect } from 'react-redux'
 import { connect as felaConnect } from 'react-fela'
 
+import Logo from '../../common/components/Logo'
+import Login from '../../common/views/Login'
 import Header from '../../ui/components/Header'
 import Loader from '../../ui/components/Loader'
-import Login from '../../common/views/Login'
 import Analyses from '../views/Analyses'
-import logo from '../public/icon128.png'
 
 const styles = {
   root: props => ({
@@ -23,24 +23,24 @@ const styles = {
   }),
 }
 
-const Root = ({ auth, authError, profile, styles }) => {
+const Root = ({ firebase, auth, authError, profile, styles }) => {
+  if (firebase.isInitializing || !auth.isLoaded) return <Loader active />
+
+  if (auth.isEmpty) return <Login />
+
+  // TODO, get extension auth working, re-enable auth then the web app
+  return <Analyses />
+
   return (
     <div className={styles.root}>
       <Header color="gray">
-        <img width="64" src={logo} alt="Analyze Properties" />
+        <Logo size={64} />
         <br />
         Analyze Properties
       </Header>
       <p>The fastest and easiest way to analyze real estate investment deals.</p>
     </div>
   )
-
-  if (!isLoaded(auth)) return <Loader active />
-
-  if (isEmpty(auth)) return <Login />
-
-  // TODO, get extension auth working, re-enable auth then the web app
-  return <Analyses />
 }
 
 export default _.flow(

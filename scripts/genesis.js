@@ -1,10 +1,14 @@
 const path = require('path')
-const yargs = require('yargs')
 const sh = require('./sh')
 
-const argv = yargs.usage('Usage: $0 <cmd> <app>').demand(1).argv
+const argv = process.argv.slice(2)
 
-const [cmd, app] = argv._
+const [cmd, app] = argv
+
+if (!cmd || !app) {
+  console.log('Usage: $0 <cmd> <app>')
+  process.exit(1)
+}
 
 /////////////////////////////////////////////////////////
 
@@ -16,7 +20,8 @@ const srcPath = path.resolve(rootPath, 'src')
 const entry = path.resolve(__dirname, `../src/${app}/index.js`)
 const outDir = path.resolve(rootPath, `dist/${app}`)
 const commonPublic = path.resolve(srcPath, 'common/public')
-const appPublic = path.resolve(srcPath, app, 'public')
+const appDir = path.resolve(srcPath, app)
+const appPublic = path.resolve(appDir, 'public')
 
 const globalBaseConfig = {
   entry,
@@ -92,6 +97,8 @@ Promise.resolve()
     return Promise.all([sh(`mkdir -p ${appPublic}`), sh(`cp -RL ${commonPublic}/* ${appPublic}`)])
   })
   .then(() => {
+    if (cmd === 'start') process.chdir(appDir)
+
     return compiler[cmd](commandConfig[cmd])
   })
   .then(() => {

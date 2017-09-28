@@ -2,23 +2,24 @@ import React from 'react'
 import createComponent from '../../lib/createComponent'
 
 const rules = {
-  root: ({ theme, color }) => {
+  root: ({ theme, avatar }) => {
     return Object.assign(
       {
-        margin: `1em 0 0.5em`,
-        textTransform: 'uppercase',
+        maxWidth: '100%',
       },
-      color && {
-        color: theme.textColors[color].hex(),
+      avatar && {
+        display: 'inline-block',
+        width: '2em',
+        height: '2em',
       },
     )
   },
 }
 
 const Image = props => {
-  const { ElementType, styles, theme, ...rest } = props
+  const { ElementType, styles, theme, avatar, ...rest } = props
 
   return <ElementType {...rest} />
 }
 
-export default createComponent({ defaultElementType: 'h3', rules })(Image)
+export default createComponent({ defaultElementType: 'img', rules })(Image)

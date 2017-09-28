@@ -89,21 +89,21 @@ const textWhite = white.fade(0.8)
 const textBlack = black.fade(0.8)
 const textGray = gray.mix(darkMixer(gray))
 
-const backgroundRed = bgForText(red, textGray)
-const backgroundOrange = bgForText(orange, textGray)
-const backgroundYellow = bgForText(yellow, textGray)
-const backgroundChartreuse = bgForText(chartreuse, textGray)
-const backgroundGreen = bgForText(green, textGray)
-const backgroundSpring = bgForText(spring, textGray)
-const backgroundCyan = bgForText(cyan, textGray)
-const backgroundAzure = bgForText(azure, textGray)
-const backgroundBlue = bgForText(blue, textGray)
-const backgroundViolet = bgForText(violet, textGray)
-const backgroundMagenta = bgForText(magenta, textGray)
-const backgroundRose = bgForText(rose, textGray)
-const backgroundWhite = bgForText(white, textGray)
-const backgroundBlack = bgForText(black, textGray)
-const backgroundGray = bgForText(gray, textGray)
+const backgroundRed = bgForText(red, textWhite)
+const backgroundOrange = bgForText(orange, textWhite)
+const backgroundYellow = bgForText(yellow, textWhite)
+const backgroundChartreuse = bgForText(chartreuse, textWhite)
+const backgroundGreen = bgForText(green, textWhite)
+const backgroundSpring = bgForText(spring, textWhite)
+const backgroundCyan = bgForText(cyan, textWhite)
+const backgroundAzure = bgForText(azure, textWhite)
+const backgroundBlue = bgForText(blue, textWhite)
+const backgroundViolet = bgForText(violet, textWhite)
+const backgroundMagenta = bgForText(magenta, textWhite)
+const backgroundRose = bgForText(rose, textWhite)
+const backgroundWhite = bgForText(white, textWhite)
+const backgroundBlack = bgForText(black, textWhite)
+const backgroundGray = bgForText(gray, textWhite)
 
 const theme = {
   val,
@@ -203,11 +203,11 @@ const theme = {
     gray: textGray,
   },
   statusBackgroundColors: {
-    undefined: backgroundGray,
-    info: backgroundCyan,
-    success: backgroundGreen,
-    warning: backgroundOrange,
-    error: backgroundRed,
+    undefined: backgroundGray.lighten(0.75),
+    info: backgroundCyan.lighten(0.75),
+    success: backgroundGreen.lighten(0.75),
+    warning: backgroundOrange.lighten(0.75),
+    error: backgroundRed.lighten(0.75),
   },
   statusTextColors: {
     undefined: textGray,

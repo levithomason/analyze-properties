@@ -5,6 +5,7 @@ import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 import Slider from '../../../ui/components/Slider'
+import LogoutButton from '../../../common/components/LogoutButton'
 
 class Settings extends Component {
   static propTypes = {
@@ -207,6 +208,8 @@ class Settings extends Component {
           step={5}
           onChange={this.handleChange('otherDebts')}
         />
+
+        <LogoutButton fluid />
       </div>
     )
   }

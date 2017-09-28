@@ -9,45 +9,41 @@ import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 
 class Analyses extends Component {
-  static defaultProps = {
-    filter: _.identity,
+  state = {
+    analyses: null,
+    sortBy: null,
+    sortDirection: null,
   }
-  // state = {
-  //   analyses: {},
-  //   sortBy: null,
-  //   sortDirection: null,
-  // }
-  //
-  // componentWillMount() {
-  //   this.setState((prevState, props) => ({ analyses: _.values(props.analyses) }))
-  // }
-  //
-  // componentWillUpdate(nextProps, nextState) {
-  //   if (!_.isEqual(this.props.analyses, nextProps.analyses)) {
-  //     this.setState((prevState, props) => ({ analyses: _.values(nextProps.analyses) }))
-  //   }
-  // }
-  //
-  // sortBy = sortBy => () => {
-  //   this.setState((prevState, props) => {
-  //     // changed headers, sort asc
-  //     // same header, toggle direction
-  //     const sortDirection = prevState.sortBy !== sortBy
-  //       ? 'asc'
-  //       : prevState.sortDirection === 'asc' ? 'desc' : 'asc'
-  //
-  //     const analyses = _.orderBy([sortBy], [sortDirection], prevState.analyses)
-  //
-  //     return { analyses, sortBy, sortDirection }
-  //   })
-  // }
+
+  componentWillMount() {
+    this.setState((prevState, props) => ({ analyses: _.values(props.analyses) }))
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if (!_.isEqual(this.props.analyses, nextProps.analyses)) {
+      this.setState((prevState, props) => ({ analyses: _.values(nextProps.analyses) }))
+    }
+  }
+
+  sortBy = sortBy => () => {
+    this.setState((prevState, props) => {
+      // changed headers, sort asc
+      // same header, toggle direction
+      const sortDirection =
+        prevState.sortBy !== sortBy ? 'asc' : prevState.sortDirection === 'asc' ? 'desc' : 'asc'
+
+      const analyses = _.orderBy([sortBy], [sortDirection], prevState.analyses)
+
+      return { analyses, sortBy, sortDirection }
+    })
+  }
 
   render() {
-    const { analyses, filter, styles } = this.props
+    const { analyses, onRowClick, selectedPropertyId, styles } = this.props
     const filteredAnalyses = _.flow(
-      _.filter(filter),
       _.orderBy(
         ..._.unzip([
+          ['favorite', 'desc'],
           ['cashFlow', 'desc'],
           ['cashNeeded', 'asc'],
           ['cashOnCash', 'desc'],
@@ -63,21 +59,29 @@ class Analyses extends Component {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.headerCell}>{/* Favorite */}</th>
             <th className={styles.headerCell}>Location</th>
-            <th className={styles.headerCell}>Notes</th>
+            {/*<th className={styles.headerCell}>Notes</th>*/}
             {COLUMNS.map(({ key, label }) => (
               <th key={key} className={styles.headerCell}>
                 {label}
               </th>
             ))}
+            <th className={styles.headerCell}>{/* Favorite */}</th>
           </tr>
         </thead>
         <tbody>
-          {filteredAnalyses.map(analysis => {
-            const { propertyId } = analysis
+          {filteredAnalyses.slice(0).map(analysis => {
+            const propertyId = _.get('propertyId', analysis)
+            const active = selectedPropertyId && propertyId === selectedPropertyId
 
-            return <AnalysesTableRow key={propertyId} analysis={analysis} />
+            return (
+              <AnalysesTableRow
+                key={propertyId}
+                active={active}
+                analysis={analysis}
+                onClick={onRowClick}
+              />
+            )
           })}
         </tbody>
       </table>

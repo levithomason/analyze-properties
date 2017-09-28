@@ -5,25 +5,16 @@ import Loader from '../../../ui/components/Loader'
 import Tabs from '../../../ui/components/Tabs'
 import keyboardKey from 'keyboard-key'
 
-// import LogoutButton from '../../../common/components/LogoutButton'
-
-import Analyze from '../Analyze'
+import Analyze from '../../../common/views/Analyze'
 import Debug from '../Debug'
 import Settings from '../Settings'
 
 const rules = {
   root: props => ({
-    position: 'fixed',
     display: 'flex',
     flexDirection: 'column',
-    width: '23em',
-    top: '0',
-    bottom: '0',
-    right: '0',
+    height: '100vh',
     overflowY: 'auto',
-    background: '#FFF',
-    boxShadow: '-0.5em 0 1em rgba(0, 0, 0, 0.25)',
-    zIndex: '999999',
   }),
 }
 
@@ -74,7 +65,6 @@ class App extends Component {
             { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
           ]}
         />
-        {/*<LogoutButton fluid />*/}
       </div>
     )
   }

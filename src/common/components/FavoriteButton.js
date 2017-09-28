@@ -2,14 +2,14 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
 
 const rules = {
   root: props => ({}),
-  image: props => ({
-    marginRight: '0.325em',
+  image: ({ icon }) => ({
+    marginRight: icon ? '0' : '0.325em',
     verticalAlign: 'middle',
     height: '1em',
   }),
@@ -31,14 +31,12 @@ class FavoriteButton extends Component {
   render() {
     const { active, dispatch, firebase, analysis, propertyId, styles, ...rest } = this.props
 
-    if (!propertyId || !isLoaded(analysis) || !analysis || !isLoaded(active)) return null
-
     const src = active
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
       : '//image.flaticon.com/icons/png/128/126/126471.png'
 
     return (
-      <Button className={styles.root} onClick={this.handleClick} {...rest}>
+      <Button icon className={styles.root} onClick={this.handleClick} {...rest}>
         <img className={styles.image} src={src} alt="Favorite button" />
         <span className={styles.text}>Favorite</span>
       </Button>
@@ -48,7 +46,7 @@ class FavoriteButton extends Component {
 
 export default _.flow(
   felaConnect(rules),
-  firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}/favorite`]),
+  firebaseConnect(({ propertyId }) => `/analyses/${propertyId}/favorite`),
   reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
     analysis: _.get(propertyId, analyses),
     active: _.get([propertyId, 'favorite'], analyses),

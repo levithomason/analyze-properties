@@ -2,11 +2,37 @@ import React from 'react'
 import createComponent from '../../lib/createComponent'
 
 const rules = {
-  root: ({ theme, border, circular, color, fluid, inline, inverted, padded, radius, shadow }) => {
+  root: ({
+           theme,
+           align,
+           border,
+           circular,
+           color,
+           column,
+           fluid,
+           inverted,
+           justify,
+           padded,
+           radius,
+           row,
+           shadow,
+         }) => {
     return Object.assign(
       {
         display: 'flex',
         flexDirection: 'column',
+      },
+      row && {
+        flexDirection: 'row',
+      },
+      column && {
+        flexDirection: 'column',
+      },
+      align && {
+        alignItems: align,
+      },
+      justify && {
+        justifyContent: justify,
       },
       border && {
         border: theme.borders[border]({ color }),
@@ -42,13 +68,17 @@ const Box = props => {
     styles,
     theme,
     // props
+    align,
     border,
     circular,
     color,
+    column,
     fluid,
-    inline,
     inverted,
+    justify,
     padded,
+    radius,
+    row,
     shadow,
     ...rest
   } = props

@@ -1,12 +1,29 @@
 {
   "manifest_version": 2,
-  "name": "REI",
-  "description": "Property analyzer",
-  "version": "1.0",
+  "name": "Analyze Properties",
+  "description": "Real estate investment property analyzer",
+  "version": "1.1",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
   "browser_action": {
-    "default_icon": "./favicon.ico",
+    "default_icon": "./icon128.png",
     "default_title": "Analyze Properties",
     "default_popup": "./index.html"
   },
-  "permissions": ["activeTab", "https://ajax.googleapis.com/"]
+  "background": {
+    "scripts": ["/dscripts/jquery-3.1.1.min.js", "/dscripts/firebase.js", "/scripts/background.js"]
+  },
+  "permissions": ["activeTab", "https://ajax.googleapis.com/", "identity"],
+  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+  "oauth2": {
+    "client_id": "739162247121-ajh76m4mgtfuujh71kcd6bnm144aacpe.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt0v8tudFKsSEp0SRxj3A2ZtVnlgNL2wq19yoC8OYClRFOtIfbUhbdhBlJ7XHXPNejffn3W45zpOxbOB7wDnY1s/dHkEtCNeRFq+zfpD3U+CwrMO4eOnGSY4Cly8U/559rT2DMvX4NR0UNHoaylWhw9HqIEPTOOUppfFx4WR3oKrBrbK9IeNzly3k8n6GUPgEyhwaOnATuas7t1NAxvQ5mcU4VBkNhg1VCFsEiF93RXQHMg60fesny1lRih/9Qtyks8n/nu5qZJN/biNvKt5duOGtveTmARfcgRAvqhC3Soei5Zse8kgzIyaBD9vR5j/HP66zbcISj3dHK7mL5S6bnQIDAQAB"
 }

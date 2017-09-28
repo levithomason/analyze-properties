@@ -1,23 +1,25 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
-import { firebaseConnect } from 'react-redux-firebase'
 
-import * as rei from '../../resources/rei'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 import FavoriteButton from '../../components/FavoriteButton'
 
 class AnalysesTableRow extends Component {
+  handleClick = e => {
+    _.invokeArgs('onClick', [e, { ...this.props }], this.props)
+  }
+
   render() {
-    const { analysis = {}, styles } = this.props
+    const { analysis, styles } = this.props
+
+    if (!analysis) return null
+
     const { url, image, notes, address, city, state, zip } = analysis
 
     return (
-      <tr>
-        <td className={styles.tableCell}>
-          <FavoriteButton icon propertyId={analysis.propertyId} />
-        </td>
+      <tr onClick={this.handleClick} className={styles.tableRow}>
         <td className={styles.tableCell}>
           <a
             href={url}
@@ -40,7 +42,7 @@ class AnalysesTableRow extends Component {
             {city}, {state} {zip}
           </div>
         </td>
-        <td className={styles.tableCell}>{notes}</td>
+        {/*<td className={styles.tableCell}>{notes}</td>*/}
         {COLUMNS.map(({ key, format }) => {
           return (
             <td key={key} className={styles.tableCell} style={{ textAlign: 'right' }}>
@@ -48,9 +50,12 @@ class AnalysesTableRow extends Component {
             </td>
           )
         })}
+        <td className={styles.tableCell}>
+          <FavoriteButton icon propertyId={analysis.propertyId} />
+        </td>
       </tr>
     )
   }
 }
 
-export default _.flow(felaConnect(tableStyles))(AnalysesTableRow)
+export default felaConnect(tableStyles)(AnalysesTableRow)

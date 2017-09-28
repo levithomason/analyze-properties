@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import {
   ResponsiveContainer,
   BarChart,
@@ -57,7 +57,7 @@ class Trend extends Component {
     const { analysis = {} } = this.props
     const { trend = {} } = this.state
 
-    if (!isLoaded(analysis) || !analysis || !trend || !trend.price || !trend.price_sqft) return null
+    if (!analysis || !trend || !trend.price || !trend.price_sqft) return null
 
     return (
       <div>

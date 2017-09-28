@@ -58,7 +58,7 @@ export const crunch = analysis => {
   x.netOperatingIncome = x.operatingIncome - x.operatingExpenseAmount
   // TODO verify against a calculator, https://www.mtgprofessor.com/formulas.htm
   // TODO ARP
-  x.debtService = PMT(x.amountFinanced, x.rate / 12, x.term * 12)
+  x.debtService = x.isFinanced ? PMT(x.amountFinanced, x.rate / 12, x.term * 12) : 0
   x.cashFlow = x.isFinanced ? x.netOperatingIncome / 12 - x.debtService : x.netOperatingIncome / 12
 
   // Returns
@@ -188,6 +188,7 @@ export const propertyInfoToAnalysis = info => {
 
   return {
     // property info
+    favorite: false,
     propertyId: _.get('property_id', info) || '',
     image: _.get('photos[0].href', info) || '',
     url: _.get('rdc_web_url', info) || '',

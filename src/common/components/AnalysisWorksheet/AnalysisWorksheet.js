@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import Textarea from 'react-textarea-autosize'
 
 import Checkbox from '../../../ui/components/Checkbox'
@@ -52,7 +52,7 @@ class AnalysisWorksheet extends React.Component {
   render() {
     const { analysis, onNumberChange, onBooleanChange, onTextChange } = this.props
 
-    if (!isLoaded(analysis) || !analysis) return null
+    if (!analysis) return null
 
     const {
       // WORKSHEET

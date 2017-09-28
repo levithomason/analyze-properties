@@ -28,6 +28,34 @@ const createComponent = (config = {}) => WrappedComponent => {
         opacity: '0.5',
         pointerEvents: 'none',
       },
+      // Relaxed
+      // Adds margin around an element
+      props.relaxed === true && {
+        marginTop: '0.5em',
+        marginBottom: '0.5em',
+        marginLeft: '0.5em',
+        marginRight: '0.5em',
+      },
+      props.relaxed === 'horizontally' && {
+        marginLeft: '0.5em',
+        marginRight: '0.5em',
+      },
+      props.relaxed === 'vertically' && {
+        marginTop: '0.5em',
+        marginBottom: '0.5em',
+      },
+      props.relaxed === 'top' && {
+        marginTop: '0.5em',
+      },
+      props.relaxed === 'bottom' && {
+        marginBottom: '0.5em',
+      },
+      props.relaxed === 'left' && {
+        marginLeft: '0.5em',
+      },
+      props.relaxed === 'right' && {
+        marginRight: '0.5em',
+      },
     )
   }
 
@@ -45,7 +73,7 @@ const createComponent = (config = {}) => WrappedComponent => {
     }
 
     render() {
-      const { as, className, styles, theme, ...rest } = this.props
+      const { as, className, styles, theme, relaxed, ...rest } = this.props
 
       // make browser debug easier
       rest[`data-ui-${displayName}`] = true

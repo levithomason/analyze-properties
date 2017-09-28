@@ -2,7 +2,7 @@ import React from 'react'
 import createComponent from '../../lib/createComponent'
 
 const rules = {
-  root: ({ theme, color, fluid, inverted }) => {
+  root: ({ theme, color, fluid, icon, inverted }) => {
     const background = color
       ? theme[inverted ? 'invertedBackgroundColors' : 'colors'][color]
       : theme.grayscale.lighterGray
@@ -37,12 +37,13 @@ const rules = {
         },
       },
       fluid && { margin: 0, width: '100%' },
+      icon && { padding: '0.5em' },
       inverted && { color: theme.textColors.white.hex() },
     )
   },
 }
 
-const Button = ({ ElementType, styles, theme, color, fluid, inverted, ...rest }) => {
+const Button = ({ ElementType, styles, theme, color, fluid, icon, inverted, ...rest }) => {
   return <ElementType {...rest} />
 }
 

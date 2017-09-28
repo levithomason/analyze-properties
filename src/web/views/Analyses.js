@@ -3,38 +3,57 @@ import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
+import Box from '../../ui/components/Box'
 import Container from '../../ui/components/Container'
 import Divider from '../../ui/components/Divider'
 // import Dropdown from '../../ui/components/Dropdown'
+import Grid from '../../ui/components/Grid'
 import Header from '../../ui/components/Header'
 import Image from '../../ui/components/Image'
 import Button from '../../ui/components/Button'
 
 import AnalysesTable from '../../common/components/AnalysesTable'
+import Analyze from '../../common/views/Analyze'
 
 class Analysis extends Component {
+  state = {}
+
   handleLogout = () => {
     const { firebase } = this.props
     firebase.logout()
   }
 
+  handleRowClick = (e, { analysis }) => {
+    console.log(analysis)
+    this.setState(() => ({ selectedPropertyId: analysis.propertyId }))
+  }
+
   render() {
     const { profile = {} } = this.props
+    const { selectedPropertyId } = this.state
 
     return (
       <Container>
-        <Button onClick={this.handleLogout()}>
-          <Image bordered avatar src={profile.avatarUrl} /> {profile.displayName}
-        </Button>
-
+        <Box row align="center" justify="flex-end">
+          <Image avatar src={profile.avatarUrl} /> {profile.displayName}
+          <Button relaxed="left" onClick={this.handleLogout}>
+            Logout
+          </Button>
+        </Box>
         <Divider hidden section />
-        <Divider hidden />
-
-        <Header as="h1" textAlign="center" content="Favorites" />
-        <AnalysesTable filter={_.get('favorite')} />
-
-        <Header as="h1" textAlign="center" content="Others" />
-        <AnalysesTable filter={_.negate(_.get('favorite'))} />
+        <Grid>
+          <Grid.Column>
+            <AnalysesTable
+              selectedPropertyId={selectedPropertyId}
+              onRowClick={this.handleRowClick}
+            />
+          </Grid.Column>
+          {selectedPropertyId && (
+            <Grid.Column style={{ flex: '0 0 auto', width: '20em' }}>
+              <Analyze favorite={false} search={false} propertyId={selectedPropertyId} />
+            </Grid.Column>
+          )}
+        </Grid>
       </Container>
     )
   }

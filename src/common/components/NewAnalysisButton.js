@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import * as rei from '../resources/rei'
 
@@ -32,7 +32,7 @@ class NewAnalysisButton extends Component {
     const { active, analysis, dispatch, firebase, propertyId, ...rest } = this.props
     const { isFetching } = this.state
 
-    if (!propertyId || !isLoaded(analysis) || analysis) return null
+    if (!propertyId || !analysis.isLoaded || analysis) return null
 
     return (
       <Button onClick={this.createDefaultAnalysis} disabled={isFetching} {...rest}>

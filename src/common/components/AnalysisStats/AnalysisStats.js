@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, isLoaded } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'
@@ -9,10 +9,9 @@ import Stat from '../../../ui/components/Stat'
 
 import { usd, percent, ratio } from '../../../common/lib'
 import * as rei from '../../../common/resources/rei'
-window.rei = rei
 
 const AnalysisStats = ({ analysis, settings }) => {
-  if (!isLoaded(analysis) || !analysis || !isLoaded(settings) || !settings) return null
+  if (!analysis || !settings) return null
 
   const {
     // purchase

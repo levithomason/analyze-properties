@@ -7,6 +7,7 @@ const rules = {
       {
         margin: `1em 0 0.5em`,
         textTransform: 'uppercase',
+        fontWeight: 300,
       },
       color && {
         color: theme.textColors[color].hex(),
