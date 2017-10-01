@@ -24,7 +24,7 @@ const valueStyle = {
 
 const Debug = ({ analysis }) => (
   <div>
-    {Object.keys(analysis)
+    {_.keys(analysis)
       .sort()
       .map(key => (
         <div key={key} style={wrapperStyle}>
