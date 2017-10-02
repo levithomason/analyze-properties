@@ -44,6 +44,7 @@
     "fela-layout-debugger": "^5.0.0",
     "fela-perf": "^5.0.0",
     "fela-plugin-validator": "^5.0.0",
+    "firebase-bolt": "^0.8.2",
     "firebase-tools": "^3.9.1",
     "nodemon": "^1.11.0",
     "prettier": "^1.6.1",

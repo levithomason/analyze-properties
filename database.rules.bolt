@@ -1,0 +1,158 @@
+// ------------------------------------------------------------
+// Paths
+// ------------------------------------------------------------
+
+//
+// Root
+//
+path / {
+  read() { isAuthenticated() }
+  write() { isAuthenticated() }
+}
+
+//
+// Analyses
+//
+path /analyses is Analysis {
+  read() { isKeyUsersID() }
+  write() { isKeyUsersID() }
+}
+
+//
+// Roles
+//
+path /roles is Roles {
+  write() { isSuperAdmin() }
+}
+
+path /roles/{role}/{uid} is Role {
+  read() { isKeyUsersID() }
+}
+
+//
+// Users
+//
+path /users is User {
+  write() { isKeyUsersID() }
+}
+
+// ------------------------------------------------------------
+// Types
+// ------------------------------------------------------------
+type Roles {
+  $role: Map<ExistingUserID, Boolean>,
+}
+
+type Role {
+  $uid: Boolean,
+  validate() { doesUserExist($uid) }
+}
+
+type User {
+  avatarUrl: String,
+  displayName: String,
+  email: String,
+  providerData: Object | Null,
+}
+
+type Analysis {
+  // property info
+  favorite: Boolean,
+  propertyId: String,
+  image: String,
+  url: String,
+  address: String,
+  city: String,
+  state: String,
+  zip: String,
+  county: String,
+  lat: PositiveNumber,
+  lon: PositiveNumber,
+  type: String,
+  year: PositiveInteger,
+  beds: PositiveInteger,
+  baths: PositiveInteger,
+  mlsNumber: String,
+  sqft: PositiveInteger,
+  lotAcres: PositiveNumber,
+
+  // TODO trend data and comparison
+  // TODO Tax benefit
+  // price
+  purchasePrice: PositiveNumber,
+  afterRepairValue: PositiveNumber,
+
+  // value
+  marketValue: PositiveNumber,
+  landValue: PositiveNumber,
+
+  // financing
+  isFinanced: Boolean,
+  downRate: PositiveNumber,
+  downAmount: PositiveInteger,
+  rate: PositiveNumber,
+  term: PositiveNumber,
+  // TODO include in loan payment calc?
+  mortgageInsuranceUpfrontRate: PositiveNumber,
+  mortgageInsuranceRecurringRate: PositiveNumber,
+
+  // purchase costs
+  purchaseCostsRate: PositiveNumber,
+  purchaseCostsAmount: PositiveNumber,
+
+  // rehab costs
+  rehabCosts: PositiveNumber,
+
+  // income
+  grossMonthlyRent: PositiveNumber,
+  grossPotentialRent: PositiveNumber,
+  otherIncome: PositiveNumber,
+
+  // expenses
+  operatingExpenseRate: PositiveNumber,
+  taxes: PositiveNumber,
+  insurance: PositiveNumber,
+  managementRate: PositiveNumber,
+  maintenanceRate: PositiveNumber,
+  capitalExpendituresRate: PositiveNumber,
+  otherExpenses: PositiveNumber,
+
+  // assumptions
+  vacancyRate: PositiveNumber,
+  appreciationRate: PositiveNumber,
+  incomeIncreaseRate: PositiveNumber,
+  expenseIncreaseRate: PositiveNumber,
+  sellingCostRate: PositiveNumber,
+}
+
+// ------------------------------------------------------------
+// Helper Types
+// ------------------------------------------------------------
+type ExistingUserID extends String {
+  validate() { doesUserExist(this) }
+}
+
+type PositiveNumber extends Number {
+  validate() { this >= 0 }
+}
+
+type PositiveInteger extends PositiveNumber {
+  validate() { this % 1 === 0.0 }
+}
+
+// ------------------------------------------------------------
+// Functions
+// ------------------------------------------------------------
+exists(val) { val !== null }
+isTrue(val) { val === true }
+
+doesUserExist(uid) { exists(root.user[uid]) }
+isAuthenticated() { exists(auth) && isTrue(auth.token.email_verified) }
+
+isKeyUsersID() { key() === auth.uid }
+isValueUsersID() { doesUserExist(this) }
+
+hasRole(role) { isAuthenticated() && isTrue(root.roles[role][auth.uid]) }
+isSuperAdmin() { hasRole('superAdmin') }
+isApproved() { hasRole('approved') }
+
