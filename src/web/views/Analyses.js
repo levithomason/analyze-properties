@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Box from '../../ui/components/Box'
 import Container from '../../ui/components/Container'
@@ -24,7 +24,6 @@ class Analysis extends Component {
   }
 
   handleRowClick = (e, { analysis }) => {
-    console.log(analysis)
     this.setState(() => ({ selectedPropertyId: analysis.propertyId }))
   }
 

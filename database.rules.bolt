@@ -6,7 +6,8 @@ path / {
   read() { isSuperAdmin() }
 }
 
-path /analyses/{uid} is Analysis {
+// TODO get VALIDATION to match DATA path /analyses/{uid}/{propertyId} is Analysis {
+path /analyses/{uid}/{propertyId} is Analysis {
   read() { isCurrentUser(uid) }
   write() { isCurrentUser(uid) }
 }
@@ -65,6 +66,10 @@ type Analyses {
 }
 
 type Analysis {
+  //
+  // Worksheet
+  //
+
   // property info
   favorite: Boolean,
   propertyId: String,
@@ -85,8 +90,6 @@ type Analysis {
   sqft: PositiveInteger,
   lotAcres: PositiveNumber,
 
-  // TODO trend data and comparison
-  // TODO Tax benefit
   // price
   purchasePrice: PositiveNumber,
   afterRepairValue: PositiveNumber,
@@ -101,7 +104,6 @@ type Analysis {
   downAmount: PositiveInteger,
   rate: PositiveNumber,
   term: PositiveNumber,
-  // TODO include in loan payment calc?
   mortgageInsuranceUpfrontRate: PositiveNumber,
   mortgageInsuranceRecurringRate: PositiveNumber,
 
@@ -132,6 +134,35 @@ type Analysis {
   incomeIncreaseRate: PositiveNumber,
   expenseIncreaseRate: PositiveNumber,
   sellingCostRate: PositiveNumber,
+
+  //
+  // Crunch
+  //
+
+  // Purchase & Rehab
+  amountFinanced: PositiveInteger,
+  loanToValue: PositiveNumber,
+  totalCashNeeded: PositiveInteger,
+  equity: PositiveInteger,
+
+  // Operation
+  operatingExpenseAmount: PositiveInteger,
+  operatingIncome: PositiveInteger,
+  netOperatingIncome: PositiveInteger,
+  debtService: PositiveInteger,
+  cashFlow: PositiveInteger,
+
+  // Returns
+  sellingCostsAmount: PositiveInteger,
+
+  capRate: PositiveNumber,
+  cashOnCash: PositiveNumber,
+  returnOnInvestment: PositiveNumber,
+
+  // Ratios
+  rentToValue: PositiveNumber,
+  grossRentMultiplier: PositiveNumber,
+  debtServiceCoverageRatio: PositiveNumber,
 }
 
 type Criteria {

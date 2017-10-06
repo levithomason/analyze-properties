@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'

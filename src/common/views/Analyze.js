@@ -15,7 +15,13 @@ class Analyze extends Component {
     favorite: PropTypes.bool,
   }
 
-  state = {}
+  constructor(props, ...rest) {
+    super(props, ...rest)
+
+    this.state = {
+      propertyId: props.propertyId,
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.propertyId !== this.state.propertyId) {

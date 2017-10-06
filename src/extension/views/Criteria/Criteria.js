@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Slider from '../../../ui/components/Slider'
 import LogoutButton from '../../../common/components/LogoutButton'
@@ -34,9 +34,9 @@ class Criteria extends Component {
   }
 
   handleChange = keyPath => e => {
-    const { firebase, criteria } = this.props
+    const { auth, firebase, criteria } = this.props
 
-    firebase.set(`/criteria/${getFirebase().auth.uid}`, _.set(keyPath, +e.target.value, criteria))
+    firebase.set(`/criteria/${auth.uid}`, _.set(keyPath, +e.target.value, criteria))
   }
 
   render() {
@@ -218,6 +218,7 @@ class Criteria extends Component {
 export default _.flow(
   firebaseConnect(['/criteria']),
   reduxConnect(({ firebase: { auth, data: { criteria } } }, { propertyId }) => ({
+    auth,
     criteria: _.get([auth.uid, propertyId], criteria),
   })),
 )(Criteria)

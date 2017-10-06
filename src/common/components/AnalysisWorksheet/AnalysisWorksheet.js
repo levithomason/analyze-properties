@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 import Textarea from 'react-textarea-autosize'
 
 import Checkbox from '../../../ui/components/Checkbox'
@@ -28,10 +28,10 @@ class AnalysisWorksheet extends React.Component {
   handleBooleanChange = key => e => {
     console.debug('AnalysisWorksheet.handleBooleanChange()')
     const { checked } = e.target
-    const { analysis, firebase, propertyId } = this.props
+    const { analysis, auth, firebase, propertyId } = this.props
 
     firebase.set(
-      `/analyses/${getFirebase().auth.uid}/${propertyId}`,
+      `/analyses/${auth.uid}/${propertyId}`,
       rei.crunch({ ...analysis, [key]: !!checked }),
     )
   }
@@ -39,20 +39,17 @@ class AnalysisWorksheet extends React.Component {
   handleNumberChange = key => e => {
     console.debug('AnalysisWorksheet.handleNumberChange()')
     const { value } = e.target
-    const { analysis, firebase, propertyId } = this.props
+    const { analysis, auth, firebase, propertyId } = this.props
 
-    firebase.set(
-      `/analyses/${getFirebase().auth.uid}/${propertyId}`,
-      rei.crunch({ ...analysis, [key]: +value }),
-    )
+    firebase.set(`/analyses/${auth.uid}/${propertyId}`, rei.crunch({ ...analysis, [key]: +value }))
   }
 
   handleTextChange = key => e => {
     console.debug('AnalysisWorksheet.handleTextChange()')
     const { value } = e.target
-    const { analysis, firebase, propertyId } = this.props
+    const { analysis, auth, firebase, propertyId } = this.props
 
-    firebase.set(`/analyses/${getFirebase().auth.uid}/${propertyId}`, { ...analysis, [key]: value })
+    firebase.set(`/analyses/${auth.uid}/${propertyId}`, { ...analysis, [key]: value })
   }
 
   render() {
@@ -358,6 +355,7 @@ class AnalysisWorksheet extends React.Component {
 export default _.flowRight(
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
+    auth,
     analysis: _.get([auth.uid, propertyId], analyses),
   })),
 )(AnalysisWorksheet)

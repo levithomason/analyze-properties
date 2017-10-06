@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
 
@@ -24,12 +24,12 @@ const rules = {
 
 class FavoriteButton extends Component {
   handleClick = () => {
-    const { active, firebase, propertyId } = this.props
-    firebase.set(`/analyses/${getFirebase().auth.uid}/${propertyId}/favorite`, !active)
+    const { active, auth, firebase, propertyId } = this.props
+    firebase.set(`/analyses/${auth.uid}/${propertyId}/favorite`, !active)
   }
 
   render() {
-    const { active, dispatch, firebase, analysis, propertyId, styles, ...rest } = this.props
+    const { analysis, active, auth, dispatch, firebase, propertyId, styles, ...rest } = this.props
 
     const src = active
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
@@ -48,7 +48,8 @@ export default _.flow(
   felaConnect(rules),
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
-    analysis: _.get([auth.uid, propertyId], analyses),
     active: _.get([propertyId, 'favorite'], analyses),
+    analysis: _.get([auth.uid, propertyId], analyses),
+    auth,
   })),
 )(FavoriteButton)

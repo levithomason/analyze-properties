@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import * as rei from '../resources/rei'
 
@@ -12,14 +12,14 @@ class NewAnalysisButton extends Component {
 
   createDefaultAnalysis = () => {
     console.debug('NewAnalysisButton.createDefaultAnalysis()')
-    const { firebase, propertyId } = this.props
+    const { auth, firebase, propertyId } = this.props
 
     this.setState(() => ({ isFetching: true }))
 
     rei
       .getDefaultAnalysis(propertyId)
       .then(defaultAnalysis => {
-        firebase.set(`/analyses/${getFirebase().auth.uid}/${propertyId}`, defaultAnalysis)
+        firebase.set(`/analyses/${auth.uid}/${propertyId}`, defaultAnalysis)
 
         this.setState(() => ({ isFetching: false }))
       })
@@ -29,7 +29,7 @@ class NewAnalysisButton extends Component {
   }
 
   render() {
-    const { active, analysis, dispatch, firebase, propertyId, ...rest } = this.props
+    const { analysis, auth, dispatch, firebase, propertyId, ...rest } = this.props
     const { isFetching } = this.state
 
     if (!propertyId || !!analysis) return null
@@ -46,5 +46,6 @@ export default _.flow(
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
     analysis: _.get([auth.uid, propertyId], analyses),
+    auth,
   })),
 )(NewAnalysisButton)

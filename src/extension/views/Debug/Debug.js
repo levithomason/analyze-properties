@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect, getFirebase } from 'react-redux-firebase'
+import { firebaseConnect } from 'react-redux-firebase'
 
 const wrapperStyle = {
   display: 'flex',

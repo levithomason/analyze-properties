@@ -79,7 +79,7 @@ export const crunch = analysis => {
   x.grossRentMultiplier = x.purchasePrice / x.grossPotentialRent
   // TODO generate an amortization schedule
   // TODO debt service is slightly inflated due to not accounting for interest paydown, sum amortization schedule
-  x.debtServiceCoverageRatio = x.netOperatingIncome / (x.debtService * 12)
+  x.debtServiceCoverageRatio = x.isFinanced ? x.netOperatingIncome / (x.debtService * 12) : 1
 
   return x
 }
