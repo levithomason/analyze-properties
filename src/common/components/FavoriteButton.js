@@ -46,9 +46,9 @@ class FavoriteButton extends Component {
 
 export default _.flow(
   felaConnect(rules),
-  firebaseConnect(({ propertyId }) => `/analyses/${getFirebase().auth.uid}/${propertyId}/favorite`),
-  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
-    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
+  firebaseConnect(['/analyses']),
+  reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get([auth.uid, propertyId], analyses),
     active: _.get([propertyId, 'favorite'], analyses),
   })),
 )(FavoriteButton)

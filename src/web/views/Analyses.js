@@ -60,11 +60,11 @@ class Analysis extends Component {
 }
 
 export default _.flow(
-  firebaseConnect([`/analyses/${getFirebase().auth.uid}`]),
+  firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, authError, data: { analyses }, profile } }) => ({
     auth,
     authError,
     profile,
-    analyses: _.get(getFirebase().auth.uid, analyses),
+    analyses: _.get(auth.uid, analyses),
   })),
 )(Analysis)

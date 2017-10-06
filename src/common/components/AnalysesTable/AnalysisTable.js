@@ -91,8 +91,8 @@ class Analyses extends Component {
 
 export default _.flow(
   felaConnect(tableStyles),
-  firebaseConnect([`/analyses/${getFirebase().auth.uid}`]),
-  reduxConnect(({ firebase: { data: { analyses } } }) => ({
-    analyses: _.get(getFirebase().auth.uid, analyses),
+  firebaseConnect(['/analyses']),
+  reduxConnect(({ firebase: { auth, data: { analyses } } }) => ({
+    analyses: _.get(auth.uid, analyses),
   })),
 )(Analyses)

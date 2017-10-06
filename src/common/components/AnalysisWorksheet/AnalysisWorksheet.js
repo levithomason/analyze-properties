@@ -355,9 +355,9 @@ class AnalysisWorksheet extends React.Component {
   }
 }
 
-export default _.flow(
-  firebaseConnect(({ propertyId }) => [`/analyses/${getFirebase().auth.uid}/${propertyId}`]),
-  reduxConnect(({ firebase: { data: { analyses, criteria } } }, { propertyId }) => ({
-    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
+export default _.flowRight(
+  firebaseConnect(['/analyses']),
+  reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get([auth.uid, propertyId], analyses),
   })),
 )(AnalysisWorksheet)

@@ -80,12 +80,9 @@ const AnalysisStats = ({ analysis, criteria }) => {
 }
 
 export default _.flow(
-  firebaseConnect(({ propertyId }) => [
-    `/analyses/${getFirebase().auth.uid}/${propertyId}`,
-    `/criteria/${getFirebase().auth.uid}/${propertyId}`,
-  ]),
-  reduxConnect(({ firebase: { data: { analyses, criteria } } }, { propertyId }) => ({
-    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
-    criteria: _.get(getFirebase().auth.uid, criteria),
+  firebaseConnect(['/analyses', '/criteria']),
+  reduxConnect(({ firebase: { auth, data: { analyses, criteria } } }, { propertyId }) => ({
+    analysis: _.get([auth.uid, propertyId], analyses),
+    criteria: _.get(auth.uid, criteria),
   })),
 )(AnalysisStats)

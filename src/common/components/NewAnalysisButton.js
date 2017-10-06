@@ -32,7 +32,7 @@ class NewAnalysisButton extends Component {
     const { active, analysis, dispatch, firebase, propertyId, ...rest } = this.props
     const { isFetching } = this.state
 
-    if (!propertyId || !analysis.isLoaded || analysis) return null
+    if (!propertyId || !!analysis) return null
 
     return (
       <Button onClick={this.createDefaultAnalysis} disabled={isFetching} {...rest}>
@@ -43,8 +43,8 @@ class NewAnalysisButton extends Component {
 }
 
 export default _.flow(
-  firebaseConnect(({ propertyId }) => [`/analyses/${getFirebase().auth.uid}/${propertyId}`]),
-  reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
-    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
+  firebaseConnect(['/analyses']),
+  reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
+    analysis: _.get([auth.uid, propertyId], analyses),
   })),
 )(NewAnalysisButton)
