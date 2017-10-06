@@ -2,57 +2,66 @@
 // Paths
 // ------------------------------------------------------------
 
-//
-// Root
-//
 path / {
-  read() { isAuthenticated() }
-  write() { isAuthenticated() }
+  read() { isSuperAdmin() }
 }
 
-//
-// Analyses
-//
-path /analyses is Analysis {
-  read() { isKeyUsersID() }
-  write() { isKeyUsersID() }
+path /analyses/{uid} is Analysis {
+  read() { isCurrentUser(uid) }
+  write() { isCurrentUser(uid) }
 }
 
+path /criteria/{uid} is Criteria {
+  read() { isCurrentUser(uid) }
+  write() { isCurrentUser(uid) }
+}
+
+// path /presence is UserIDFlag {
+//   read() { isAuthenticated() }
 //
-// Roles
-//
-path /roles is Roles {
+//   /{uid} {
+//     create() { isCurrentUser(uid) }
+//     update() { isCurrentUser(uid) }
+//     delete() { prior(this) == auth.uid }
+//   }
+// }
+
+path /roles {
   write() { isSuperAdmin() }
+
+  /{role} is UserIDFlag {
+    /{uid} {
+      read() { isCurrentUser(uid) }
+    }
+  }
 }
 
-path /roles/{role}/{uid} is Role {
-  read() { isKeyUsersID() }
-}
+// path /sessions {
+//   read() { isAuthenticated() }
+//
+//   /{id} {
+//     create() { isCurrentUser(this.user) }
+//     update() { isCurrentUser(this.user) }
+//     delete() { prior(this.user) == auth.uid }
+//
+//     /startedAt is PastTimestamp;
+//     /endedAt is PastTimestamp;
+//     /user is CurrentUserID;
+//   }
+// }
 
-//
-// Users
-//
-path /users is User {
-  write() { isKeyUsersID() }
+path /users/{uid} is User {
+  create() { isAuthenticated() }
+  read() { isCurrentUser(uid) }
+  update() { isCurrentUser(uid) }
+  delete() { isSuperAdmin() }
 }
 
 // ------------------------------------------------------------
 // Types
 // ------------------------------------------------------------
-type Roles {
-  $role: Map<ExistingUserID, Boolean>,
-}
-
-type Role {
-  $uid: Boolean,
-  validate() { doesUserExist($uid) }
-}
-
-type User {
-  avatarUrl: String,
-  displayName: String,
-  email: String,
-  providerData: Object | Null,
+type Analyses {
+  $uid: Map<ExistingUserID, Analysis>,
 }
 
 type Analysis {
@@ -125,6 +134,31 @@ type Analysis {
   sellingCostRate: PositiveNumber,
 }
 
+type Criteria {
+  // purchase criteria
+  cashFlow: PositiveInteger,
+  capRate: PositiveNumber,
+  rentToValue: PositiveNumber,
+  totalCashNeeded: PositiveInteger,
+  netOperatingIncome: PositiveInteger,
+  cashOnCash: PositiveNumber,
+  grossRentMultiplier: PositiveNumber,
+  debtServiceCoverageRatio: PositiveNumber,
+  internalRateOfReturn: PositiveNumber,
+
+  // debt to income
+  income: PositiveInteger,
+  mortgages: PositiveInteger,
+  otherDebts: PositiveInteger,
+}
+
+type User {
+  avatarUrl: String,
+  displayName: String,
+  email: String,
+  providerData: Object | Null,
+}
+
 // ------------------------------------------------------------
 // Helper Types
 // ------------------------------------------------------------
@@ -132,27 +166,36 @@ type ExistingUserID extends String {
   validate() { doesUserExist(this) }
 }
 
+type CurrentUserID extends String {
+  validate() { isCurrentUser(this) }
+}
+
+type PastTimestamp extends Number  {
+  validate() { this <= now }
+}
+
 type PositiveNumber extends Number {
   validate() { this >= 0 }
 }
 
 type PositiveInteger extends PositiveNumber {
-  validate() { this % 1 === 0.0 }
+  validate() { this % 1 == 0.0 }
+}
+
+type UserIDFlag {
+  $uid: Boolean,
 }
 
 // ------------------------------------------------------------
 // Functions
 // ------------------------------------------------------------
-exists(val) { val !== null }
-isTrue(val) { val === true }
+exists(val) { val != null }
+isTrue(val) { val == true }
+isCurrentUser(uid) { uid == auth.uid }
 
 doesUserExist(uid) { exists(root.user[uid]) }
 isAuthenticated() { exists(auth) && isTrue(auth.token.email_verified) }
 
-isKeyUsersID() { key() === auth.uid }
-isValueUsersID() { doesUserExist(this) }
-
 hasRole(role) { isAuthenticated() && isTrue(root.roles[role][auth.uid]) }
 isSuperAdmin() { hasRole('superAdmin') }
 isApproved() { hasRole('approved') }
-

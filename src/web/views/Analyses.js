@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase'
 
 import Box from '../../ui/components/Box'
 import Container from '../../ui/components/Container'
@@ -60,11 +60,11 @@ class Analysis extends Component {
 }
 
 export default _.flow(
-  firebaseConnect(['/analyses']),
+  firebaseConnect([`/analyses/${getFirebase().auth.uid}`]),
   reduxConnect(({ firebase: { auth, authError, data: { analyses }, profile } }) => ({
     auth,
     authError,
     profile,
-    analyses,
+    analyses: _.get(getFirebase().auth.uid, analyses),
   })),
 )(Analysis)

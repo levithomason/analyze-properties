@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({ theme, active, link, selected }) =>
     Object.assign(
       {

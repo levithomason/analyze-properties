@@ -6,7 +6,7 @@ console.log('Backing up firebase...')
 const d = new Date()
 const filename = path.resolve(__dirname, `../backups/${d.toISOString()}.json`)
 
-sh(`firebase database:get --export --output ${filename} /`)
+sh(`firebase database:get --export --pretty --output ${filename} /`)
   .then(() => {
     console.log('Done!', filename)
   })

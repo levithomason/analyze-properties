@@ -3,7 +3,7 @@ import FormField from './FormField'
 
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: props => ({}),
 }
 

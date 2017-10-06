@@ -2,19 +2,19 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase'
 
 import Slider from '../../../ui/components/Slider'
 import LogoutButton from '../../../common/components/LogoutButton'
 
-class Settings extends Component {
+class Criteria extends Component {
   static propTypes = {
-    settings: PropTypes.object,
+    criteria: PropTypes.object,
     firebase: PropTypes.object,
   }
 
   static defaultProps = {
-    settings: {
+    criteria: {
       // criteria
       cashFlow: { min: 100 },
       capRate: { min: 0.05 },
@@ -34,13 +34,13 @@ class Settings extends Component {
   }
 
   handleChange = keyPath => e => {
-    const { firebase, settings } = this.props
+    const { firebase, criteria } = this.props
 
-    firebase.set('/settings', _.set(keyPath, +e.target.value, settings))
+    firebase.set(`/criteria/${getFirebase().auth.uid}`, _.set(keyPath, +e.target.value, criteria))
   }
 
   render() {
-    const { settings = {} } = this.props
+    const { criteria = {} } = this.props
     const {
       // criteria
       cashFlow,
@@ -57,7 +57,7 @@ class Settings extends Component {
       income,
       mortgages,
       otherDebts,
-    } = settings
+    } = criteria
 
     return (
       <div style={{ padding: '1em' }}>
@@ -216,8 +216,8 @@ class Settings extends Component {
 }
 
 export default _.flow(
-  firebaseConnect(['/settings']),
-  reduxConnect(({ firebase: { data: { settings } } }) => ({
-    settings,
+  firebaseConnect([`/criteria/${getFirebase().auth.uid}`]),
+  reduxConnect(({ firebase: { data: { criteria } } }) => ({
+    criteria: _.get(getFirebase().auth.uid, criteria),
   })),
-)(Settings)
+)(Criteria)

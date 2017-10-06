@@ -1,7 +1,7 @@
 import React from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: props => ({
     padding: '0 1em',
     width: '100%',

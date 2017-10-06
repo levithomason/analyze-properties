@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase'
 import Textarea from 'react-textarea-autosize'
 
 import Checkbox from '../../../ui/components/Checkbox'
@@ -30,7 +30,10 @@ class AnalysisWorksheet extends React.Component {
     const { checked } = e.target
     const { analysis, firebase, propertyId } = this.props
 
-    firebase.set(`/analyses/${propertyId}`, rei.crunch({ ...analysis, [key]: !!checked }))
+    firebase.set(
+      `/analyses/${getFirebase().auth.uid}/${propertyId}`,
+      rei.crunch({ ...analysis, [key]: !!checked }),
+    )
   }
 
   handleNumberChange = key => e => {
@@ -38,7 +41,10 @@ class AnalysisWorksheet extends React.Component {
     const { value } = e.target
     const { analysis, firebase, propertyId } = this.props
 
-    firebase.set(`/analyses/${propertyId}`, rei.crunch({ ...analysis, [key]: +value }))
+    firebase.set(
+      `/analyses/${getFirebase().auth.uid}/${propertyId}`,
+      rei.crunch({ ...analysis, [key]: +value }),
+    )
   }
 
   handleTextChange = key => e => {
@@ -46,7 +52,7 @@ class AnalysisWorksheet extends React.Component {
     const { value } = e.target
     const { analysis, firebase, propertyId } = this.props
 
-    firebase.set(`/analyses/${propertyId}`, { ...analysis, [key]: value })
+    firebase.set(`/analyses/${getFirebase().auth.uid}/${propertyId}`, { ...analysis, [key]: value })
   }
 
   render() {
@@ -350,9 +356,8 @@ class AnalysisWorksheet extends React.Component {
 }
 
 export default _.flow(
-  firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`, '/settings']),
-  reduxConnect(({ firebase: { data: { analyses, settings } } }, { propertyId }) => ({
-    analysis: _.get(propertyId, analyses),
-    settings,
+  firebaseConnect(({ propertyId }) => [`/analyses/${getFirebase().auth.uid}/${propertyId}`]),
+  reduxConnect(({ firebase: { data: { analyses, criteria } } }, { propertyId }) => ({
+    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
   })),
 )(AnalysisWorksheet)

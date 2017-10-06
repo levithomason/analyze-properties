@@ -7,7 +7,7 @@ import keyboardKey from 'keyboard-key'
 
 import Analyze from '../../../common/views/Analyze'
 import Debug from '../Debug'
-import Settings from '../Settings'
+import Criteria from '../Criteria'
 
 const rules = {
   root: props => ({
@@ -61,7 +61,7 @@ class App extends Component {
           activeTab={activeTab}
           panes={[
             { menuItem: 'Analyze', render: () => <Analyze propertyId={propertyId} /> },
-            { menuItem: 'Settings', render: () => <Settings /> },
+            { menuItem: 'Criteria', render: () => <Criteria /> },
             { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
           ]}
         />

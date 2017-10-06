@@ -9,10 +9,10 @@ export const PMT = (amount, rate, term) => {
   return amount * rate * Math.pow(1 + rate, term) / (Math.pow(1 + rate, term) - 1)
 }
 
-export const checkDeal = (analysis, settings) => {
-  return Object.keys(settings).reduce((acc, key) => {
+export const checkDeal = (analysis, criteria) => {
+  return Object.keys(criteria).reduce((acc, key) => {
     const analyzed = analysis[key]
-    const { min, max } = settings[key]
+    const { min, max } = criteria[key]
 
     // don't check keys that haven't yet been analyzed
     if (_.isNil(analyzed)) return acc
@@ -103,7 +103,7 @@ export const getPropertyInfo = propertyId => {
 
 export const suggest = input => {
   const params = {
-    input: input,
+    input,
     area_types: [
       // 'postal_code',
       // 'county',
@@ -265,79 +265,4 @@ export const getDefaultAnalysis = propertyId => {
       analysis.propertyId = propertyId
       return crunch(analysis)
     })
-}
-
-export const getAnalysis = propertyId => {
-  return db
-    .ref('analyses/' + propertyId)
-    .once('value')
-    .then(snapshot => {
-      const analysis = snapshot.val()
-      const crunched = analysis ? crunch(analysis) : analysis
-      // console.debug('FIREBASE: getAnalysis()', crunched)
-      return crunched
-    })
-}
-
-export const setAnalysis = (propertyId, analysis) => {
-  // console.debug('FIREBASE: setAnalysis()', propertyId, analysis)
-  db.ref('analyses/' + propertyId).set(analysis)
-}
-
-export const onAnalysisChange = (propertyId, cb) => {
-  db.ref('analyses/' + propertyId).on('value', cb)
-}
-
-export const offAnalysisChange = (propertyId, cb) => {
-  db.ref('analyses/' + propertyId).off('value', cb)
-}
-
-// -------------------------------------
-// Analyses
-// -------------------------------------
-export const getAnalyses = () => {
-  // console.debug('FIREBASE: getAnalyses() start')
-  return db
-    .ref('analyses/')
-    .once('value')
-    .then(snapshot => {
-      const analyses = snapshot.val()
-      // console.debug('FIREBASE: getAnalyses() done', analyses)
-      return analyses
-    })
-}
-
-export const onAnalysesChange = cb => {
-  db.ref('analyses/').on('value', cb)
-}
-
-export const offAnalysesChange = cb => {
-  db.ref('analyses/').off('value', cb)
-}
-
-// -------------------------------------
-// Settings
-// -------------------------------------
-export const getSettings = () => {
-  return db
-    .ref('settings/')
-    .once('value')
-    .then(snapshot => {
-      const settings = snapshot.val()
-      // console.debug('FIREBASE: getSettings()', settings)
-      return settings
-    })
-}
-
-export const setSettings = settings => {
-  // console.debug('FIREBASE: setSettings()', settings)
-  db.ref('settings/').set(settings)
-}
-
-export const onSettingsChange = cb => {
-  db.ref('settings/').on('value', cb)
-}
-
-export const offSettingsChange = cb => {
-  db.ref('settings/').off('value', cb)
 }

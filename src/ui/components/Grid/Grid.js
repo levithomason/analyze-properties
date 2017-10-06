@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 import GridColumn from './GridColumn'
 
-const rules = {
+export const rules = {
   root: props => ({
     display: 'flex',
   }),

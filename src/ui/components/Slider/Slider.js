@@ -68,7 +68,7 @@ const hoverFocus = {
   },
 }
 
-const rules = {
+export const rules = {
   root: props => {
     return Object.assign({
       WebkitAppearance: 'none',

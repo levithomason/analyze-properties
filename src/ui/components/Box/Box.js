@@ -1,22 +1,22 @@
 import React from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({
-           theme,
-           align,
-           border,
-           circular,
-           color,
-           column,
-           fluid,
-           inverted,
-           justify,
-           padded,
-           radius,
-           row,
-           shadow,
-         }) => {
+    theme,
+    align,
+    border,
+    circular,
+    color,
+    column,
+    fluid,
+    inverted,
+    justify,
+    padded,
+    radius,
+    row,
+    shadow,
+  }) => {
     return Object.assign(
       {
         display: 'flex',

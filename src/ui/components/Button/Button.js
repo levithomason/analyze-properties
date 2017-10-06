@@ -1,7 +1,7 @@
 import React from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({ theme, color, fluid, icon, inverted }) => {
     const background = color
       ? theme[inverted ? 'invertedBackgroundColors' : 'colors'][color]

@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
 
@@ -25,7 +25,7 @@ const rules = {
 class FavoriteButton extends Component {
   handleClick = () => {
     const { active, firebase, propertyId } = this.props
-    firebase.set(`/analyses/${propertyId}/favorite`, !active)
+    firebase.set(`/analyses/${getFirebase().auth.uid}/${propertyId}/favorite`, !active)
   }
 
   render() {
@@ -46,9 +46,9 @@ class FavoriteButton extends Component {
 
 export default _.flow(
   felaConnect(rules),
-  firebaseConnect(({ propertyId }) => `/analyses/${propertyId}/favorite`),
+  firebaseConnect(({ propertyId }) => `/analyses/${getFirebase().auth.uid}/${propertyId}/favorite`),
   reduxConnect(({ firebase: { data: { analyses } } }, { propertyId }) => ({
-    analysis: _.get(propertyId, analyses),
+    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
     active: _.get([propertyId, 'favorite'], analyses),
   })),
 )(FavoriteButton)

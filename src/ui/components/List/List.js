@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 import ListItem from './ListItem'
 
-const rules = {
+export const rules = {
   root: ({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -39,7 +39,17 @@ class List extends Component {
   }
 
   render() {
-    const { ElementType, styles, theme, activeItem, items, onItemClick, link, selectedItem, ...rest } = this.props
+    const {
+      ElementType,
+      styles,
+      theme,
+      activeItem,
+      items,
+      onItemClick,
+      link,
+      selectedItem,
+      ...rest
+    } = this.props
 
     return <ElementType {...rest}>{this.renderItems()}</ElementType>
   }

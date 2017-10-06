@@ -1,7 +1,7 @@
 import React from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({ theme, status }) => {
     return Object.assign({
       padding: '1em',
@@ -13,7 +13,7 @@ const rules = {
 }
 
 const Message = props => {
-  const { ElementType, styles, theme, color, status, ...rest } = props
+  const { ElementType, styles, theme, status, ...rest } = props
 
   return <ElementType {...rest} />
 }

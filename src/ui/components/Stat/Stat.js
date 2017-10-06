@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({ status, theme }) => {
     const style = {
       fontWeight: 'bold',

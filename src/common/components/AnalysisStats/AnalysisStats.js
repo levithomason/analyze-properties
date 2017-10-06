@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import { firebaseConnect, getFirebase } from 'react-redux-firebase'
 
 import Divider from '../../../ui/components/Divider'
 import Grid from '../../../ui/components/Grid'
@@ -10,8 +10,8 @@ import Stat from '../../../ui/components/Stat'
 import { usd, percent, ratio } from '../../../common/lib'
 import * as rei from '../../../common/resources/rei'
 
-const AnalysisStats = ({ analysis, settings }) => {
-  if (!analysis || !settings) return null
+const AnalysisStats = ({ analysis, criteria }) => {
+  if (!analysis || !criteria) return null
 
   const {
     // purchase
@@ -31,7 +31,7 @@ const AnalysisStats = ({ analysis, settings }) => {
     debtServiceCoverageRatio,
   } = analysis
 
-  const check = rei.checkDeal(analysis, settings)
+  const check = rei.checkDeal(analysis, criteria)
 
   return (
     <div style={{ flex: '0 0 auto', padding: '1em' }}>
@@ -80,9 +80,12 @@ const AnalysisStats = ({ analysis, settings }) => {
 }
 
 export default _.flow(
-  firebaseConnect(({ propertyId }) => [`/analyses/${propertyId}`, '/settings']),
-  reduxConnect(({ firebase: { data: { analyses, settings } } }, { propertyId }) => ({
-    analysis: _.get(propertyId, analyses),
-    settings,
+  firebaseConnect(({ propertyId }) => [
+    `/analyses/${getFirebase().auth.uid}/${propertyId}`,
+    `/criteria/${getFirebase().auth.uid}/${propertyId}`,
+  ]),
+  reduxConnect(({ firebase: { data: { analyses, criteria } } }, { propertyId }) => ({
+    analysis: _.get([getFirebase().auth.uid, propertyId], analyses),
+    criteria: _.get(getFirebase().auth.uid, criteria),
   })),
 )(AnalysisStats)

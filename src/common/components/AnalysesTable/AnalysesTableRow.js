@@ -43,13 +43,11 @@ class AnalysesTableRow extends Component {
           </div>
         </td>
         {/*<td className={styles.tableCell}>{notes}</td>*/}
-        {COLUMNS.map(({ key, format }) => {
-          return (
-            <td key={key} className={styles.tableCell} style={{ textAlign: 'right' }}>
-              {format(analysis[key])}
-            </td>
-          )
-        })}
+        {COLUMNS.map(({ key, format }) => (
+          <td key={key} className={styles.tableCell} style={{ textAlign: 'right' }}>
+            {format(analysis[key])}
+          </td>
+        ))}
         <td className={styles.tableCell}>
           <FavoriteButton icon propertyId={analysis.propertyId} />
         </td>

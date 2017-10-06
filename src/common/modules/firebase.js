@@ -23,8 +23,8 @@ export { firebase }
 // ----------------------------------------
 export const reactReduxFirebaseConfig = {
   userProfile: 'users', // where profiles are stored in firebase
-  presence: 'presence', // where list of online users is stored in firebase
-  sessions: 'sessions', // where list of user sessions is stored in firebase (requires presence)
+  // presence: 'presence', // where list of online users is stored in firebase
+  // sessions: 'sessions', // where list of user sessions is stored in firebase (requires presence)
   enableLogging: false, // enable/disable Firebase's database logging
 }
 

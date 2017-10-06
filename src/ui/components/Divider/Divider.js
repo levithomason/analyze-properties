@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 
-const rules = {
+export const rules = {
   root: ({ fitted, hidden, relaxed, section, thick }) =>
     Object.assign(
       {

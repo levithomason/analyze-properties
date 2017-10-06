@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
 import MenuItem from './MenuItem'
 
-const rules = {
+export const rules = {
   root: ({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
