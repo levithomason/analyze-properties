@@ -48,7 +48,7 @@ export default _.flow(
   felaConnect(rules),
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
-    active: _.get([propertyId, 'favorite'], analyses),
+    active: _.get([auth.uid, propertyId, 'favorite'], analyses),
     analysis: _.get([auth.uid, propertyId], analyses),
     auth,
   })),
