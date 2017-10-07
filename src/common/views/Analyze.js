@@ -1,3 +1,4 @@
+import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
@@ -13,6 +14,7 @@ class Analyze extends Component {
     propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     search: PropTypes.bool,
     favorite: PropTypes.bool,
+    onPropertyIdChange: PropTypes.func,
   }
 
   constructor(props, ...rest) {
@@ -29,14 +31,29 @@ class Analyze extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    // props propertyId
+    // state propertyId
+    // propertyId props != state
+
+    return (
+      this.props.propertyId !== nextProps.propertyId ||
+      this.state.propertyId !== nextState.propertyId ||
+      nextProps.propertyId !== nextState.propertyId
+    )
+  }
+
   handleSuggestSelect = (e, { propertyId }) => {
     console.debug('Analyze.handleSuggestSelect()', propertyId)
     this.setState(() => ({ propertyId }))
+    _.invokeArgs('onPropertyIdChange', [e, { ...this.props, propertyId }], this.props)
   }
 
   render() {
     const { propertyId } = this.state
     const { favorite, search } = this.props
+
+    const authoritativePropertyId = this.props.propertyId || this.state.propertyId
 
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -46,15 +63,15 @@ class Analyze extends Component {
           </div>
         )}
 
-        <AnalysisStats propertyId={propertyId} />
-        <NewAnalysisButton propertyId={propertyId} fluid />
+        <AnalysisStats propertyId={authoritativePropertyId} />
+        <NewAnalysisButton propertyId={authoritativePropertyId} fluid />
 
         <div style={{ flex: '1', overflowY: 'auto' }}>
-          <Trend propertyId={propertyId} />
+          <Trend propertyId={authoritativePropertyId} />
 
-          {favorite && <FavoriteButton propertyId={propertyId} fluid />}
+          {favorite && <FavoriteButton propertyId={authoritativePropertyId} fluid />}
 
-          <AnalysisWorksheet propertyId={propertyId} />
+          <AnalysisWorksheet propertyId={authoritativePropertyId} />
         </div>
       </div>
     )

@@ -1,3 +1,5 @@
+import theme from '../../../ui/styles/theme.js'
+
 const tableStyles = {
   table: props => ({
     marginBottom: '2em',
@@ -11,10 +13,11 @@ const tableStyles = {
     fontFamily: 'monospace',
   }),
   tableRow: ({ active }) => ({
-    background: active ? 'rgba(0, 0, 0, 0.075)' : '',
+    background: active ? 'rgba(0, 0, 0, 0.05)' : '',
+    transition: 'background 0.2s',
     cursor: 'pointer',
     onHover: {
-      background: 'rgba(0, 0, 0, 0.05)',
+      background: 'rgba(0, 0, 0, 0.02)',
     },
   }),
   headerCell: props => ({

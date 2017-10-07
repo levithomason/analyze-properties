@@ -1,4 +1,5 @@
 import _ from 'lodash/fp'
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
@@ -8,7 +9,13 @@ import AnalysesTableRow from './AnalysesTableRow'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 
-class Analyses extends Component {
+class AnalysesTable extends Component {
+  static propTypes = {
+    onRowClick: PropTypes.func,
+    onInitialSort: PropTypes.func,
+    selectedPropertyId: PropTypes.string,
+  }
+
   state = {
     analyses: null,
     sortBy: null,
@@ -19,10 +26,36 @@ class Analyses extends Component {
     this.setState((prevState, props) => ({ analyses: _.values(props.analyses) }))
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.sortByDefault(nextProps)
+  }
+
   componentWillUpdate(nextProps, nextState) {
     if (!_.isEqual(this.props.analyses, nextProps.analyses)) {
       this.setState((prevState, props) => ({ analyses: _.values(nextProps.analyses) }))
     }
+  }
+
+  sortByDefault = props => {
+    const analyses = _.flow(
+      _.orderBy(
+        ..._.unzip([
+          ['favorite', 'desc'],
+          ['cashFlow', 'desc'],
+          ['cashNeeded', 'asc'],
+          ['cashOnCash', 'desc'],
+          ['capRate', 'desc'],
+          ['rentToValue', 'desc'],
+          ['grossRentMultiplier', 'desc'],
+          ['debtServiceCoverageRatio', 'desc'],
+        ]),
+      ),
+    )(props.analyses)
+
+    this.setState(
+      () => ({ analyses }),
+      () => _.invokeArgs('onInitialSort', [null, { ...props, analyses }], this.props),
+    )
   }
 
   sortBy = sortBy => () => {
@@ -39,28 +72,16 @@ class Analyses extends Component {
   }
 
   render() {
-    const { analyses, onRowClick, selectedPropertyId, styles } = this.props
-    const filteredAnalyses = _.flow(
-      _.orderBy(
-        ..._.unzip([
-          ['favorite', 'desc'],
-          ['cashFlow', 'desc'],
-          ['cashNeeded', 'asc'],
-          ['cashOnCash', 'desc'],
-          ['capRate', 'desc'],
-          ['rentToValue', 'desc'],
-          ['grossRentMultiplier', 'desc'],
-          ['debtServiceCoverageRatio', 'desc'],
-        ]),
-      ),
-    )(analyses)
+    const { onRowClick, selectedPropertyId, styles } = this.props
+    const { analyses } = this.state
+
+    if (_.isEmpty(analyses)) return null
 
     return (
       <table className={styles.table}>
         <thead>
           <tr>
             <th className={styles.headerCell}>Location</th>
-            {/*<th className={styles.headerCell}>Notes</th>*/}
             {COLUMNS.map(({ key, label }) => (
               <th key={key} className={styles.headerCell}>
                 {label}
@@ -70,7 +91,7 @@ class Analyses extends Component {
           </tr>
         </thead>
         <tbody>
-          {filteredAnalyses.slice(0).map(analysis => {
+          {analyses.slice(0).map(analysis => {
             const propertyId = _.get('propertyId', analysis)
             const active = selectedPropertyId && propertyId === selectedPropertyId
 
@@ -95,4 +116,4 @@ export default _.flow(
   reduxConnect(({ firebase: { auth, data: { analyses } } }) => ({
     analyses: _.get(auth.uid, analyses),
   })),
-)(Analyses)
+)(AnalysesTable)

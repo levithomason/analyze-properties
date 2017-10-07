@@ -115,6 +115,7 @@ class Trend extends Component {
         {propertyHistoryData.length > 1 && (
           <ResponsiveContainer width="100%" height={100}>
             <LineChart
+              animationDuration={100}
               data={propertyHistoryData}
               margin={{ top: 15, right: 15, bottom: 15, left: 15 }}
             >
@@ -146,7 +147,11 @@ class Trend extends Component {
         )}
         {taxHistoryData.length > 1 && (
           <ResponsiveContainer width="100%" height={100}>
-            <LineChart data={taxHistoryData} margin={{ top: 15, right: 15, bottom: 15, left: 15 }}>
+            <LineChart
+              animationDuration={100}
+              data={taxHistoryData}
+              margin={{ top: 15, right: 15, bottom: 15, left: 15 }}
+            >
               <CartesianGrid horizontal={false} strokeDasharray="3 3" />
               <Tooltip {...TooltipProps} labelFormatter={label => `year : ${label}`} />
               <XAxis

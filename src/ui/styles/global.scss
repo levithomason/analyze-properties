@@ -9,18 +9,16 @@
   // Scrollbars
   //
   ::-webkit-scrollbar {
-    width: 7px;
+    width: 4px;
   }
 
   ::-webkit-scrollbar-track {
-    background: cornflowerblue;
-    border: 3px solid #fff;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: cornflowerblue;
-    border-radius: 999rem;
-    border-left: 1px solid #fff;
-    border-right: 1px solid #fff;
+    background: #a0a4aF;
+    border-radius: 0;
+    border: none;
   }
 }

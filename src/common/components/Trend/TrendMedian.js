@@ -27,6 +27,48 @@ import theme from '../../../ui/styles/theme.js'
 import * as rei from '../../../common/resources/rei'
 import { usd } from '../../../common/lib/index'
 
+const transitionStyle = {
+}
+
+const barStyle = {
+  transition: 'transform 0.2s',
+  transformOrigin: 'bottom',
+  position: 'absolute',
+  margin: 'auto',
+  width: '50%',
+  height: '50%',
+  lineHeight: 2,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  textAlign: 'center',
+}
+
+const trendLabel = {
+  transition: 'top 0.2s',
+  position: 'absolute',
+  marginTop: '0.5em',
+  width: '100%',
+  color: theme.grayscale.white.hex(),
+  textAlign: 'center',
+  zIndex: 1, // above trend bar
+}
+
+const TrendBar = ({ color, label, value }) => (
+  <div>
+    <div style={{ ...trendLabel, top: 100 - 50 * value + '%' }}>{label}</div>
+
+    <Box
+      inverted
+      color={color}
+      style={{
+        ...barStyle,
+        transform: `scaleY(${value})`,
+      }}
+    />
+  </div>
+)
+
 class Trend extends Component {
   state = {}
 
@@ -44,16 +86,31 @@ class Trend extends Component {
     this.update(nextProps)
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { analysis } = nextProps
+    const { trend, isFetchingTrend } = nextState
+
+    return (
+      !isFetchingTrend &&
+      trend &&
+      trend.price &&
+      trend.price_sqft &&
+      analysis &&
+      analysis.purchasePrice &&
+      analysis.sqft
+    )
+  }
+
   update = ({ analysis }) => {
+    this.setState(() => ({ isFetchingTrend: true }))
     if (!analysis || !analysis.lat || !analysis.lon) return
 
     rei.trend(analysis.lat, analysis.lon).then(trend => {
-      this.setState(() => ({ trend }))
+      this.setState(() => ({ isFetchingTrend: false, trend }))
     })
   }
 
   render() {
-    console.debug('Trend.render()')
     const { analysis = {} } = this.props
     const { trend = {} } = this.state
 
@@ -81,23 +138,11 @@ class Trend extends Component {
               borderRight: '1px solid #fff',
             }}
           >
-            <Box
-              inverted
+            <TrendBar
               color="green"
-              style={{
-                position: 'absolute',
-                margin: 'auto',
-                width: '50%',
-                height: 50 * analysis.purchasePrice / trend.price + '%',
-                lineHeight: 2,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                textAlign: 'center',
-              }}
-            >
-              {usd(analysis.purchasePrice / 1000)}k
-            </Box>
+              label={usd(analysis.purchasePrice / 1000) + 'k'}
+              value={analysis.purchasePrice / trend.price}
+            />
             <div
               style={{
                 position: 'absolute',
@@ -130,23 +175,11 @@ class Trend extends Component {
               borderLeft: '1px solid #fff',
             }}
           >
-            <Box
-              inverted
+            <TrendBar
               color="orange"
-              style={{
-                position: 'absolute',
-                margin: 'auto',
-                width: '50%',
-                height: 50 * (analysis.purchasePrice / analysis.sqft) / trend.price_sqft + '%',
-                lineHeight: 2,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                textAlign: 'center',
-              }}
-            >
-              {usd(analysis.purchasePrice / analysis.sqft)}/sf
-            </Box>
+              label={`${usd(analysis.purchasePrice / analysis.sqft)}/sf`}
+              value={analysis.purchasePrice / analysis.sqft / trend.price_sqft}
+            />
             <div
               style={{
                 position: 'absolute',

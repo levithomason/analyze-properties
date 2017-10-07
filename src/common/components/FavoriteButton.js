@@ -28,8 +28,12 @@ class FavoriteButton extends Component {
     firebase.set(`/analyses/${auth.uid}/${propertyId}/favorite`, !active)
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.active !== nextProps.active
+  }
+
   render() {
-    const { analysis, active, auth, dispatch, firebase, propertyId, styles, ...rest } = this.props
+    const { active, auth, dispatch, firebase, propertyId, styles, ...rest } = this.props
 
     const src = active
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
@@ -49,7 +53,6 @@ export default _.flow(
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
     active: _.get([auth.uid, propertyId, 'favorite'], analyses),
-    analysis: _.get([auth.uid, propertyId], analyses),
     auth,
   })),
 )(FavoriteButton)
