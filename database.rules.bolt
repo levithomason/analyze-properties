@@ -6,7 +6,6 @@ path / {
   read() { isSuperAdmin() }
 }
 
-// TODO get VALIDATION to match DATA path /analyses/{uid}/{propertyId} is Analysis {
 path /analyses/{uid}/{propertyId} is Analysis {
   read() { isCurrentUser(uid) }
   write() { isCurrentUser(uid) }
@@ -70,8 +69,11 @@ type Analysis {
   // Worksheet
   //
 
-  // property info
+  // user
   favorite: Boolean,
+  notes: String,
+
+  // property info
   propertyId: String,
   image: String,
   url: String,
@@ -80,107 +82,107 @@ type Analysis {
   state: String,
   zip: String,
   county: String,
-  lat: PositiveNumber,
-  lon: PositiveNumber,
+  lat: Number,
+  lon: Number,
   type: String,
-  year: PositiveInteger,
-  beds: PositiveInteger,
-  baths: PositiveInteger,
+  year: Number,
+  beds: Number,
+  baths: Number,
   mlsNumber: String,
-  sqft: PositiveInteger,
-  lotAcres: PositiveNumber,
+  sqft: Number,
+  lotAcres: Number,
 
   // price
-  purchasePrice: PositiveNumber,
-  afterRepairValue: PositiveNumber,
+  purchasePrice: Number,
+  afterRepairValue: Number,
 
   // value
-  marketValue: PositiveNumber,
-  landValue: PositiveNumber,
+  marketValue: Number,
+  landValue: Number,
 
   // financing
   isFinanced: Boolean,
-  downRate: PositiveNumber,
-  downAmount: PositiveInteger,
-  rate: PositiveNumber,
-  term: PositiveNumber,
-  mortgageInsuranceUpfrontRate: PositiveNumber,
-  mortgageInsuranceRecurringRate: PositiveNumber,
+  downRate: Number,
+  downAmount: Number,
+  rate: Number,
+  term: Number,
+  mortgageInsuranceUpfrontRate: Number,
+  mortgageInsuranceRecurringRate: Number,
 
   // purchase costs
-  purchaseCostsRate: PositiveNumber,
-  purchaseCostsAmount: PositiveNumber,
+  purchaseCostsRate: Number,
+  purchaseCostsAmount: Number,
 
   // rehab costs
-  rehabCosts: PositiveNumber,
+  rehabCosts: Number,
 
   // income
-  grossMonthlyRent: PositiveNumber,
-  grossPotentialRent: PositiveNumber,
-  otherIncome: PositiveNumber,
+  grossMonthlyRent: Number,
+  grossPotentialRent: Number,
+  otherIncome: Number,
 
   // expenses
-  operatingExpenseRate: PositiveNumber,
-  taxes: PositiveNumber,
-  insurance: PositiveNumber,
-  managementRate: PositiveNumber,
-  maintenanceRate: PositiveNumber,
-  capitalExpendituresRate: PositiveNumber,
-  otherExpenses: PositiveNumber,
+  operatingExpenseRate: Number,
+  taxes: Number,
+  insurance: Number,
+  managementRate: Number,
+  maintenanceRate: Number,
+  capitalExpendituresRate: Number,
+  otherExpenses: Number,
 
   // assumptions
-  vacancyRate: PositiveNumber,
-  appreciationRate: PositiveNumber,
-  incomeIncreaseRate: PositiveNumber,
-  expenseIncreaseRate: PositiveNumber,
-  sellingCostRate: PositiveNumber,
+  vacancyRate: Number,
+  appreciationRate: Number,
+  incomeIncreaseRate: Number,
+  expenseIncreaseRate: Number,
+  sellingCostRate: Number,
 
   //
   // Crunch
   //
 
   // Purchase & Rehab
-  amountFinanced: PositiveInteger,
-  loanToValue: PositiveNumber,
-  totalCashNeeded: PositiveInteger,
-  equity: PositiveInteger,
+  amountFinanced: Number,
+  loanToValue: Number,
+  totalCashNeeded: Number,
+  equity: Number,
 
   // Operation
-  operatingExpenseAmount: PositiveInteger,
-  operatingIncome: PositiveInteger,
-  netOperatingIncome: PositiveInteger,
-  debtService: PositiveInteger,
-  cashFlow: PositiveInteger,
+  operatingExpenseAmount: Number,
+  operatingIncome: Number,
+  netOperatingIncome: Number,
+  debtService: Number,
+  cashFlow: Number,
 
   // Returns
-  sellingCostsAmount: PositiveInteger,
+  sellingCostsAmount: Number,
 
-  capRate: PositiveNumber,
-  cashOnCash: PositiveNumber,
-  returnOnInvestment: PositiveNumber,
+  capRate: Number,
+  cashOnCash: Number,
+  returnOnInvestment: Number,
 
   // Ratios
-  rentToValue: PositiveNumber,
-  grossRentMultiplier: PositiveNumber,
-  debtServiceCoverageRatio: PositiveNumber,
+  rentToValue: Number,
+  grossRentMultiplier: Number,
+  debtServiceCoverageRatio: Number,
 }
 
 type Criteria {
   // purchase criteria
-  cashFlow: PositiveInteger,
-  capRate: PositiveNumber,
-  rentToValue: PositiveNumber,
-  totalCashNeeded: PositiveInteger,
-  netOperatingIncome: PositiveInteger,
-  cashOnCash: PositiveNumber,
-  grossRentMultiplier: PositiveNumber,
-  debtServiceCoverageRatio: PositiveNumber,
-  internalRateOfReturn: PositiveNumber,
+  cashFlow: Number,
+  capRate: Number,
+  rentToValue: Number,
+  totalCashNeeded: Number,
+  netOperatingIncome: Number,
+  cashOnCash: Number,
+  grossRentMultiplier: Number,
+  debtServiceCoverageRatio: Number,
+  internalRateOfReturn: Number,
 
   // debt to income
-  income: PositiveInteger,
-  mortgages: PositiveInteger,
-  otherDebts: PositiveInteger,
+  income: Number,
+  mortgages: Number,
+  otherDebts: Number,
 }
 
 type User {
@@ -203,14 +205,6 @@ type CurrentUserID extends String {
 
 type PastTimestamp extends Number  {
   validate() { this <= now }
-}
-
-type PositiveNumber extends Number {
-  validate() { this >= 0 }
-}
-
-type PositiveInteger extends PositiveNumber {
-  validate() { this % 1 == 0.0 }
 }
 
 type UserIDFlag {
