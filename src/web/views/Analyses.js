@@ -1,7 +1,5 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
 
 import AnalysesTable from '../../common/components/AnalysesTable'
 import Analyze from '../../common/views/Analyze'
@@ -14,7 +12,7 @@ const analyzeStyle = {
   width: '20em',
   background: '#FFF',
   boxShadow: '0 0 1em rgba(0, 0, 0, 0.2)',
-  overflowY: 'scroll',
+  height: '100vh',
 }
 
 const rootStyle = {

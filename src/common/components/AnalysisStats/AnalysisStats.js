@@ -34,7 +34,7 @@ const AnalysisStats = ({ analysis, criteria }) => {
   const check = rei.checkDeal(analysis, criteria)
 
   return (
-    <div style={{ flex: '0 0 auto', padding: '1em' }}>
+    <div style={{ flex: '0 0 auto', padding: '1em', borderBottom: '2px solid #ddd' }}>
       <Grid>
         <Grid.Column>
           <Stat label="Cash Flow" value={usd(cashFlow)} status={check.cashFlow} />
@@ -74,7 +74,6 @@ const AnalysisStats = ({ analysis, criteria }) => {
           <Stat label="IRR" value={'todo'} status={check.internalRateOfReturn} />
         </Grid.Column>
       </Grid>
-      <Divider />
     </div>
   )
 }

@@ -32,10 +32,6 @@ class Analyze extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    // props propertyId
-    // state propertyId
-    // propertyId props != state
-
     return (
       this.props.propertyId !== nextProps.propertyId ||
       this.state.propertyId !== nextState.propertyId ||
@@ -50,13 +46,12 @@ class Analyze extends Component {
   }
 
   render() {
-    const { propertyId } = this.state
     const { favorite, search } = this.props
 
     const authoritativePropertyId = this.props.propertyId || this.state.propertyId
 
     return (
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}>
         {search && (
           <div style={{ flex: '0 0 auto', padding: '1em 1em 0' }}>
             <Suggest onSelect={this.handleSuggestSelect} />

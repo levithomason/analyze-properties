@@ -16,7 +16,6 @@ class Login extends Component {
   state = {
     error: null,
     user: null,
-    loading: null,
   }
 
   logout = () => {
@@ -42,10 +41,8 @@ class Login extends Component {
     // })
 
     // TODO web only
-    this.setState(() => ({ loading: true }))
-
     firebase.login({ provider, type: 'popup' }).catch(error => {
-      this.setState(() => ({ error, loading: false }))
+      this.setState(() => ({ error }))
     })
   }
 
@@ -54,14 +51,13 @@ class Login extends Component {
 
     return (
       <Container>
-        <Box padded style={{ margin: '0 auto', width: 290 }}>
-          <div style={{ textAlign: 'center' }}>
-            <Header as="h3" color="gray">
-              <Logo size={64} />
-              <br />
-              Analyze Properties
-            </Header>
-          </div>
+        <Box padded style={{ margin: '0 auto', width: 290, textAlign: 'center' }}>
+          <Header color="gray">
+            <Logo size={64} />
+            <br />
+            Analyze Properties
+          </Header>
+          <p>The fastest and easiest way to analyze real estate investment deals.</p>
 
           {authError.message && <Message status="error">{authError.message}</Message>}
           <Divider hidden />
