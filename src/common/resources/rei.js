@@ -1,6 +1,5 @@
 import _ from 'lodash/fp'
 import { request } from '../lib'
-import { firebase } from '../modules/firebase'
 
 // ----------------------------------------
 // Utils

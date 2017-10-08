@@ -33,14 +33,14 @@ class FavoriteButton extends Component {
   }
 
   render() {
-    const { active, auth, dispatch, firebase, propertyId, styles, ...rest } = this.props
+    const { active, auth, dispatch, firebase, icon, propertyId, styles, ...rest } = this.props
 
     const src = active
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
       : '//image.flaticon.com/icons/png/128/126/126471.png'
 
     return (
-      <Button icon className={styles.root} onClick={this.handleClick} {...rest}>
+      <Button basic={icon} icon className={styles.root} onClick={this.handleClick} {...rest}>
         <img className={styles.image} src={src} alt="Favorite button" />
         <span className={styles.text}>Favorite</span>
       </Button>

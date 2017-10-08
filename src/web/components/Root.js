@@ -8,7 +8,7 @@ import Logo from '../../common/components/Logo'
 import Login from '../../common/views/Login'
 import Header from '../../ui/components/Header'
 import Loader from '../../ui/components/Loader'
-import Analyses from '../views/Analyses'
+import App from '../layouts/App'
 
 const styles = {
   root: props => ({
@@ -29,7 +29,7 @@ const Root = ({ firebase, auth, authError, profile, styles }) => {
   if (auth.isEmpty) return <Login />
 
   // TODO, get extension auth working, re-enable auth then the web app
-  return <Analyses />
+  return <App />
 
   return (
     <div className={styles.root}>

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import createComponent from '../../lib/createComponent'
 
@@ -5,6 +6,7 @@ export const rules = {
   root: ({
     theme,
     align,
+    alignSelf,
     border,
     circular,
     color,
@@ -12,6 +14,7 @@ export const rules = {
     fluid,
     inverted,
     justify,
+    justifySelf,
     padded,
     radius,
     row,
@@ -33,6 +36,12 @@ export const rules = {
       },
       justify && {
         justifyContent: justify,
+      },
+      alignSelf && {
+        alignSelf,
+      },
+      justifySelf && {
+        justifySelf,
       },
       border && {
         border: theme.borders[border]({ color }),
@@ -69,6 +78,7 @@ const Box = props => {
     theme,
     // props
     align,
+    alignSelf,
     border,
     circular,
     color,
@@ -76,6 +86,7 @@ const Box = props => {
     fluid,
     inverted,
     justify,
+    justifySelf,
     padded,
     radius,
     row,
@@ -84,6 +95,24 @@ const Box = props => {
   } = props
 
   return <ElementType {...rest} />
+}
+
+Box.propTypes = {
+  theme: PropTypes.string,
+  align: PropTypes.string,
+  alignSelf: PropTypes.string,
+  border: PropTypes.string,
+  circular: PropTypes.bool,
+  color: PropTypes.string,
+  column: PropTypes.string,
+  fluid: PropTypes.string,
+  inverted: PropTypes.bool,
+  justify: PropTypes.string,
+  justifySelf: PropTypes.string,
+  padded: PropTypes.bool,
+  radius: PropTypes.string,
+  row: PropTypes.bool,
+  shadow: PropTypes.string,
 }
 
 export default createComponent({ rules })(Box)

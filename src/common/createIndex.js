@@ -15,9 +15,6 @@ import fallbackValue from 'fela-plugin-fallback-value'
 import validator from 'fela-plugin-validator'
 import unit from 'fela-plugin-unit'
 
-// style renderer enhancers
-import layoutDebugger from 'fela-layout-debugger'
-
 import store from './modules/store'
 
 const createIndex = ({ styles = {}, importRoot }) => {
@@ -45,14 +42,13 @@ const createIndex = ({ styles = {}, importRoot }) => {
   if (__DEV__) {
     window.reactPerf = require('react-addons-perf')
 
-    rendererConfig.plugins.concat([
+    rendererConfig.plugins = [
+      ...rendererConfig.plugins,
       validator({
         logInvalid: true,
         deleteInvalid: true,
       }),
-    ])
-
-    rendererConfig.enhancers.concat([layoutDebugger()])
+    ]
   }
 
   const styleRenderer = createRenderer(rendererConfig)

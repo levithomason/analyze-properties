@@ -66,11 +66,11 @@ class Login extends Component {
           {authError.message && <Message status="error">{authError.message}</Message>}
           <Divider hidden />
 
-          <Button fluid onClick={this.handleOAuthLogin('google')} inverted color="red">
+          <Button fluid onClick={this.handleOAuthLogin('google')} color="red">
             Sign in with Google
           </Button>
           <Divider hidden />
-          <Button fluid onClick={this.handleOAuthLogin('facebook')} inverted color="blue">
+          <Button fluid onClick={this.handleOAuthLogin('facebook')} color="blue">
             Sign in with Facebook
           </Button>
           {/*

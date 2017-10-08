@@ -68,6 +68,9 @@ const globalAppConfig = {
   mobile: {
     templatePath: path.resolve(__dirname, '../src/mobile/index.html'),
   },
+  ui: {
+    templatePath: '',
+  },
 }[app]
 
 const globalConfig = Object.assign({}, globalBaseConfig, globalAppConfig)

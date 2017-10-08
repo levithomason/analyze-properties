@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import createComponent from '../../lib/createComponent'
+import theme from '../../styles/theme'
 
 export const rules = {
-  root: ({ active }) =>
+  root: ({ active, inverted }) =>
     Object.assign(
       {
         transition: 'opacity 0.2s',
@@ -13,7 +14,8 @@ export const rules = {
         left: 0,
         right: 0,
         textAlign: 'center',
-        background: '#fff',
+        background: theme.grayscale[inverted ? 'black' : 'white'].fade(0.5).rgb(),
+        color: theme.textColors.gray.hex(),
         opacity: 0,
         zIndex: 999999,
         pointerEvents: 'none',
@@ -31,7 +33,7 @@ export const rules = {
 
 class Loader extends Component {
   render() {
-    const { ElementType, styles, theme, children, active, ...rest } = this.props
+    const { ElementType, styles, theme, children, active, inverted, ...rest } = this.props
 
     return (
       <ElementType {...rest}>

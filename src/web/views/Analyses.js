@@ -3,14 +3,6 @@ import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
-import Box from '../../ui/components/Box'
-import Container from '../../ui/components/Container'
-import Divider from '../../ui/components/Divider'
-// import Dropdown from '../../ui/components/Dropdown'
-import Loader from '../../ui/components/Loader'
-import Image from '../../ui/components/Image'
-import Button from '../../ui/components/Button'
-
 import AnalysesTable from '../../common/components/AnalysesTable'
 import Analyze from '../../common/views/Analyze'
 
@@ -26,17 +18,11 @@ const analyzeStyle = {
 }
 
 const rootStyle = {
-  marginLeft: analyzeStyle.width,
   padding: '0 1em',
 }
 
-class Analysis extends Component {
+class Analyses extends Component {
   state = {}
-
-  handleLogout = () => {
-    const { firebase } = this.props
-    firebase.logout()
-  }
 
   handleRowClick = (e, { analysis }) => {
     this.setState(() => ({ selectedPropertyId: analysis.propertyId }))
@@ -49,18 +35,10 @@ class Analysis extends Component {
   }
 
   render() {
-    const { profile = {} } = this.props
     const { selectedPropertyId } = this.state
 
     return (
       <div style={rootStyle}>
-        <Box row align="center" justify="flex-end">
-          <Image avatar src={profile.avatarUrl} /> {profile.displayName}
-          <Button relaxed="left" onClick={this.handleLogout}>
-            Logout
-          </Button>
-        </Box>
-        <Divider hidden />
         <AnalysesTable
           selectedPropertyId={selectedPropertyId}
           onRowClick={this.handleRowClick}
@@ -75,12 +53,4 @@ class Analysis extends Component {
   }
 }
 
-export default _.flow(
-  firebaseConnect(['/analyses']),
-  reduxConnect(({ firebase: { auth, authError, data: { analyses }, profile } }) => ({
-    auth,
-    authError,
-    profile,
-    analyses: _.get(auth.uid, analyses),
-  })),
-)(Analysis)
+export default Analyses

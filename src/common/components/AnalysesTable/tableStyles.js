@@ -4,26 +4,47 @@ const tableStyles = {
   table: props => ({
     marginBottom: '2em',
     width: '100%',
-    // fontSize: '12px',
     borderSpacing: 0,
   }),
-  tableCell: props => ({
+  tableCell: () => ({
+    padding: '1px',
+  }),
+  tableCellCollapse: () => ({
+    width: '1px',
+  }),
+  tableValueCell: ({ active }) => ({
     padding: '0.5em',
-    borderBottom: '1px solid #eee',
     fontFamily: 'monospace',
+    textAlign: 'right',
   }),
-  tableRow: ({ active }) => ({
-    background: active ? 'rgba(0, 0, 0, 0.05)' : '',
-    transition: 'background 0.2s',
-    cursor: 'pointer',
-    onHover: {
-      background: 'rgba(0, 0, 0, 0.02)',
-    },
-  }),
+  tableRow: ({ active, analysis = {} }) => {
+    return Object.assign(
+      {
+        transition: 'background 0.3s, box-shadow 0.3s, transform 0.3s',
+      },
+      !analysis.favorite && {
+        color: theme.textColors.gray.hex(),
+        filter: 'grayscale() brightness(1.1) contrast(0.9)',
+      },
+      !active && {
+        transform: 'scale3d(0.98, 0.98, 0.98)',
+        cursor: 'pointer',
+        onHover: {
+          background: 'rgba(0, 0, 0, 0.03)',
+        },
+      },
+      active && {
+        transform: 'scale3d(1, 1, 1)',
+        boxShadow: [
+          '0 0 2em rgba(0, 0, 0, 0.2)',
+          `inset 0 0 0 1px ${theme.colors.blue.fade(0.5).rgb()}`,
+        ].join(),
+      },
+    )
+  },
   headerCell: props => ({
-    padding: '0.125em 0.5em',
-    textAlign: 'left',
-    borderBottom: '1px solid #ccc',
+    padding: '0.25em 0.5em',
+    textAlign: 'right',
   }),
 }
 

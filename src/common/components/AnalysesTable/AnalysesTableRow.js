@@ -1,3 +1,4 @@
+import cx from 'classnames'
 import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
@@ -6,7 +7,7 @@ import { connect as felaConnect } from 'react-fela'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 import FavoriteButton from '../../components/FavoriteButton'
-import theme from '../../../ui/styles/theme.js'
+import theme from '../../../ui/styles/theme'
 
 class AnalysesTableRow extends Component {
   static propTypes = {
@@ -18,15 +19,12 @@ class AnalysesTableRow extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    const analysisKeys = ['url', 'image', 'address', 'city', 'state', 'zip', 'favorite']
+
     return (
-      _.some(col => this.props[col] !== nextProps[col], COLUMNS) ||
       this.props.active !== nextProps.active ||
-      this.props.url !== nextProps.url ||
-      this.props.image !== nextProps.image ||
-      this.props.address !== nextProps.address ||
-      this.props.city !== nextProps.city ||
-      this.props.state !== nextProps.state ||
-      this.props.zip !== nextProps.zip
+      _.some(col => this.props.analysis[col] !== nextProps.analysis[col], COLUMNS) ||
+      _.some(key => this.props.analysis[key] !== nextProps.analysis[key], analysisKeys)
     )
   }
 
@@ -39,41 +37,49 @@ class AnalysesTableRow extends Component {
 
     return (
       <tr onClick={this.handleClick} className={styles.tableRow}>
-        <td className={styles.tableCell}>
+        <td className={cx(styles.tableCell, styles.tableCellCollapse)}>
           <a
             href={url}
             style={{
-              display: 'inline-block',
-              marginRight: '0.5em',
-              width: '10em',
-              height: '7em',
+              position: 'relative',
+              display: 'block',
+              width: '12em',
+              height: '8em',
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
-              verticalAlign: 'middle',
             }}
             target="_blank"
-          />
-          <div style={{ display: 'block', verticalAlign: 'middle' }}>
-            {address}
-            <br />
-            {city}, {state} {zip}
-          </div>
+          >
+            <span
+              style={{
+                position: 'absolute',
+                padding: '0.125em',
+                width: '100%',
+                bottom: '0',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                color: 'rgba(255, 255, 255, 0.9)',
+                fontSize: '11px',
+                textShadow: '0 1px rgba(0, 0, 0, 0.75)',
+                whiteSpace: 'nowrap',
+                textTransform: 'uppercase',
+                background: `linear-gradient(transparent, rgba(0, 0, 0, 0.5))`,
+              }}
+            >
+              {address}
+              <br />
+              {city}, {state}
+            </span>
+          </a>
         </td>
         {COLUMNS.map(({ key, format }) => (
-          <td
-            key={key}
-            className={styles.tableCell}
-            style={{
-              textAlign: 'right',
-              fontWeight: active ? 'bold' : 'normal',
-            }}
-          >
+          <td key={key} className={cx(styles.tableCell, styles.tableValueCell)}>
             {format(analysis[key])}
           </td>
         ))}
-        <td className={styles.tableCell}>
+        <td className={styles.tableCell} style={{ textAlign: 'center' }}>
           <FavoriteButton icon propertyId={analysis.propertyId} />
         </td>
       </tr>

@@ -14,6 +14,7 @@ class AnalysesTable extends Component {
     onRowClick: PropTypes.func,
     onInitialSort: PropTypes.func,
     selectedPropertyId: PropTypes.string,
+    analyses: PropTypes.object,
   }
 
   state = {
@@ -23,21 +24,29 @@ class AnalysesTable extends Component {
   }
 
   componentWillMount() {
-    this.setState((prevState, props) => ({ analyses: _.values(props.analyses) }))
+    this.setState((prevState, props) => ({
+      analyses: this.sortAnalysesByBestDeal(this.props.analyses),
+    }))
   }
 
   componentWillReceiveProps(nextProps) {
-    this.sortByDefault(nextProps)
+    this.setState((prevState, props) => ({
+      analyses: this.sortAnalysesByBestDeal(nextProps.analyses),
+    }))
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (!_.isEqual(this.props.analyses, nextProps.analyses)) {
-      this.setState((prevState, props) => ({ analyses: _.values(nextProps.analyses) }))
+      this.setState((prevState, props) => ({
+        analyses: this.sortAnalysesByBestDeal(nextProps.analyses),
+      }))
     }
   }
 
-  sortByDefault = props => {
-    const analyses = _.flow(
+  sortAnalysesByBestDeal = analyses => {
+    const isFirstSort = _.isEmpty(this.state.analyses) && !_.isEmpty(analyses)
+
+    const sortedAnalyses = _.flow(
       _.orderBy(
         ..._.unzip([
           ['favorite', 'desc'],
@@ -50,12 +59,13 @@ class AnalysesTable extends Component {
           ['debtServiceCoverageRatio', 'desc'],
         ]),
       ),
-    )(props.analyses)
+    )(analyses)
 
-    this.setState(
-      () => ({ analyses }),
-      () => _.invokeArgs('onInitialSort', [null, { ...props, analyses }], this.props),
-    )
+    if (isFirstSort) {
+      _.invokeArgs('onInitialSort', [null, { ...this.props, analyses: sortedAnalyses }], this.props)
+    }
+
+    return sortedAnalyses
   }
 
   sortBy = sortBy => () => {
@@ -81,7 +91,7 @@ class AnalysesTable extends Component {
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.headerCell}>Location</th>
+            <th className={styles.headerCell}>{/* Location */}</th>
             {COLUMNS.map(({ key, label }) => (
               <th key={key} className={styles.headerCell}>
                 {label}

@@ -3,39 +3,20 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  LineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Text,
-  ReferenceLine,
-  Legend,
-  Line,
-} from 'recharts'
 
-import Loader from '../../../ui/components/Loader'
-import Header from '../../../ui/components/Header'
-import Box from '../../../ui/components/Box'
-
-import theme from '../../../ui/styles/theme.js'
-
+import * as chartUtils from './chartUtils'
 import * as rei from '../../../common/resources/rei'
 import { usd } from '../../../common/lib/index'
-
-const transitionStyle = {
-}
+import Box from '../../../ui/components/Box'
+import Header from '../../../ui/components/Header'
+import theme from '../../../ui/styles/theme'
 
 const barStyle = {
-  transition: 'transform 0.2s',
+  transition: `transform ${chartUtils.animationDuration}ms`,
   transformOrigin: 'bottom',
   position: 'absolute',
   margin: 'auto',
-  width: '50%',
+  width: '40%',
   height: '50%',
   lineHeight: 2,
   bottom: 0,
@@ -45,7 +26,7 @@ const barStyle = {
 }
 
 const trendLabel = {
-  transition: 'top 0.2s',
+  transition: `top ${chartUtils.animationDuration}ms`,
   position: 'absolute',
   marginTop: '0.5em',
   width: '100%',
@@ -87,38 +68,26 @@ class Trend extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { analysis } = nextProps
-    const { trend, isFetchingTrend } = nextState
-
-    return (
-      !isFetchingTrend &&
-      trend &&
-      trend.price &&
-      trend.price_sqft &&
-      analysis &&
-      analysis.purchasePrice &&
-      analysis.sqft
-    )
+    return this.state.isFetching !== nextState.isFetching
   }
 
   update = ({ analysis }) => {
-    this.setState(() => ({ isFetchingTrend: true }))
+    this.setState(() => ({ isFetching: true }))
     if (!analysis || !analysis.lat || !analysis.lon) return
 
     rei.trend(analysis.lat, analysis.lon).then(trend => {
-      this.setState(() => ({ isFetchingTrend: false, trend }))
+      this.setState(() => ({ analysis, isFetching: false, trend }))
     })
   }
 
   render() {
-    const { analysis = {} } = this.props
-    const { trend = {} } = this.state
+    const { analysis = {}, isFetching, trend = {} } = this.state
 
     if (!analysis || !trend || !trend.price || !trend.price_sqft) return null
 
     return (
-      <div>
-        <Header textAlign="center" color="gray">
+      <div style={{ opacity: isFetching ? 0.5 : 1 }}>
+        <Header as="h4" textAlign="center" color="gray">
           {trend.name} Trend
         </Header>
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
