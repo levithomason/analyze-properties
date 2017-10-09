@@ -22,7 +22,7 @@ export const rules = {
     textTransform: 'uppercase',
     fontSize: '0.8em',
     fontWeight: 'lighter',
-    opacity: '0.5',
+    opacity: 0.5,
   }),
 }
 

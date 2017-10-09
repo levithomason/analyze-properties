@@ -32,7 +32,6 @@ const thumb = {
   overflow: 'visible',
   width: thumbWidth,
   height: trackHeight,
-  background: 'lighten(thumbColor, 5)',
   border: `${thumbBorderWidth} solid ${thumbBorderColor}`,
   borderRadius: thumbRadius,
   cursor: 'pointer',

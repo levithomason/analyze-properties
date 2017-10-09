@@ -10,7 +10,6 @@ import Container from '../../ui/components/Container'
 import Divider from '../../ui/components/Divider'
 import Header from '../../ui/components/Header'
 import Message from '../../ui/components/Message'
-import Box from '../../ui/components/Box'
 
 class Login extends Component {
   state = {
@@ -51,22 +50,23 @@ class Login extends Component {
 
     return (
       <Container>
-        <Box padded style={{ margin: '0 auto', width: 290, textAlign: 'center' }}>
+        <div style={{ margin: '0 auto', width: '40em', textAlign: 'center' }}>
           <Header color="gray">
             <Logo size={64} />
             <br />
             Analyze Properties
           </Header>
-          <p>The fastest and easiest way to analyze real estate investment deals.</p>
+          {!authError.message && (
+            <p>The fastest and easiest way to analyze real estate investment deals.</p>
+          )}
 
           {authError.message && <Message status="error">{authError.message}</Message>}
           <Divider hidden />
 
-          <Button fluid onClick={this.handleOAuthLogin('google')} color="red">
+          <Button onClick={this.handleOAuthLogin('google')} color="red">
             Sign in with Google
           </Button>
-          <Divider hidden />
-          <Button fluid onClick={this.handleOAuthLogin('facebook')} color="blue">
+          <Button onClick={this.handleOAuthLogin('facebook')} color="blue">
             Sign in with Facebook
           </Button>
           {/*
@@ -77,7 +77,7 @@ class Login extends Component {
             state = <code>{JSON.stringify(this.state, null, 2)}</code>
           </pre>
           */}
-        </Box>
+        </div>
       </Container>
     )
   }
