@@ -2,13 +2,16 @@
 // Paths
 // ------------------------------------------------------------
 
+// TODO fix this!  We mount to `/analyses` all over the app, need to mount to user id paths only.
 path / {
-  read() { isSuperAdmin() }
+  read() { isAuthenticated() }
 }
 
-path /analyses/{uid}/{propertyId} is Analysis {
+path /analyses/{uid} {
   read() { isCurrentUser(uid) }
   write() { isCurrentUser(uid) }
+
+  /{propertyId} is Analysis;
 }
 
 path /criteria/{uid} is Criteria {
