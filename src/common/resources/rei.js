@@ -185,8 +185,10 @@ export const propertyInfoToAnalysis = info => {
   const lotSize = _.get('lot_size.size', info) || 0
 
   return {
-    // property info
     favorite: false,
+    notes: '',
+
+    // property info
     propertyId: _.get('property_id', info) || '',
     image: _.get('photos[0].href', info) || '',
     url: _.get('rdc_web_url', info) || '',

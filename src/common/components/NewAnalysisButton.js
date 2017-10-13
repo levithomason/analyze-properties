@@ -36,7 +36,7 @@ class NewAnalysisButton extends Component {
 
     return (
       <Button onClick={this.createDefaultAnalysis} disabled={isFetching} {...rest}>
-        Analyze
+        New Analysis
       </Button>
     )
   }

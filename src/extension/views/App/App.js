@@ -60,7 +60,7 @@ class App extends Component {
           onTabChange={this.handleTabChange}
           activeTab={activeTab}
           panes={[
-            { menuItem: 'Analyze', render: () => <Analyze propertyId={propertyId} /> },
+            { menuItem: 'Analyze', render: () => <Analyze favorite propertyId={propertyId} /> },
             { menuItem: 'Criteria', render: () => <Criteria /> },
             { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
           ]}

@@ -4,10 +4,7 @@ import '../ui/styles/ui.scss'
 const render = createIndex({
   importRoot: () => import('./components/Root'),
   styles: {
-    htmlBody: {
-      width: '20rem',
-      height: '36rem',
-    },
+    htmlBody: {},
     mountNode: {},
   },
 })

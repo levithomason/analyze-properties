@@ -18,6 +18,7 @@ module.exports = {
   },
   globals: {
     __DEV__: false,
+    __EXTENSION__: false,
     chrome: false,
   },
   rules: {

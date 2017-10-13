@@ -5,6 +5,7 @@ import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 import Slider from '../../../ui/components/Slider'
+import Header from '../../../ui/components/Header'
 import LogoutButton from '../../../common/components/LogoutButton'
 
 class Criteria extends Component {
@@ -61,7 +62,7 @@ class Criteria extends Component {
 
     return (
       <div style={{ padding: '1em' }}>
-        <h4>Criteria</h4>
+        <Header textAlign="center">Criteria</Header>
         <Slider
           unit="usd"
           label={
@@ -180,7 +181,7 @@ class Criteria extends Component {
           onChange={this.handleChange('internalRateOfReturn.min')}
         />
 
-        <h4>Debt to Income</h4>
+        <Header textAlign="center">Debt to Income</Header>
         <Slider
           unit="usd"
           label="Income"

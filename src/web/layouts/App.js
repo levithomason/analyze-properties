@@ -4,18 +4,16 @@ import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 import Box from '../../ui/components/Box'
-import Container from '../../ui/components/Container'
 import Divider from '../../ui/components/Divider'
-// import Dropdown from '../../ui/components/Dropdown'
-import Loader from '../../ui/components/Loader'
 import Image from '../../ui/components/Image'
 import Button from '../../ui/components/Button'
 
 import Analyses from '../views/Analyses'
 import Logo from '../../common/components/Logo'
+import * as styles from '../../common/styles'
 
 const rootStyle = {
-  marginLeft: '20em',
+  marginLeft: styles.sidePanel({ side: 'left' }).width,
   padding: '0 1em',
 }
 

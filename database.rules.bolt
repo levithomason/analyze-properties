@@ -77,7 +77,7 @@ type Analysis {
   notes: String,
 
   // property info
-  propertyId: String,
+  propertyId: String | Number,
   image: String,
   url: String,
   address: String,

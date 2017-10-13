@@ -34,7 +34,7 @@ const AnalysisStats = ({ analysis, criteria }) => {
   const check = rei.checkDeal(analysis, criteria)
 
   return (
-    <div style={{ flex: '0 0 auto', padding: '1em', borderBottom: '2px solid #ddd' }}>
+    <div style={{ flex: '0 0 auto', padding: '1em' }}>
       <Grid>
         <Grid.Column>
           <Stat label="Cash Flow" value={usd(cashFlow)} status={check.cashFlow} />

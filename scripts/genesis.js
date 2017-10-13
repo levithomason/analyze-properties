@@ -27,6 +27,7 @@ const globalBaseConfig = {
   entry,
   globals: {
     __DEV__: process.env.NODE_ENV !== 'production',
+    __EXTENSION__: app === 'extension',
   },
   vendors: [
     'classnames',

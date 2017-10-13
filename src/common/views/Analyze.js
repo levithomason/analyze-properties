@@ -1,4 +1,3 @@
-import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
@@ -6,67 +5,39 @@ import AnalysisStats from '../components/AnalysisStats'
 import AnalysisWorksheet from '../components/AnalysisWorksheet'
 import NewAnalysisButton from '../components/NewAnalysisButton'
 import FavoriteButton from '../components/FavoriteButton'
-import Suggest from '../components/Suggest'
 import Trend from '../components/Trend'
+
+import Divider from '../../ui/components/Divider'
 
 class Analyze extends Component {
   static propTypes = {
     propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    search: PropTypes.bool,
     favorite: PropTypes.bool,
-    onPropertyIdChange: PropTypes.func,
-  }
-
-  constructor(props, ...rest) {
-    super(props, ...rest)
-
-    this.state = {
-      propertyId: props.propertyId,
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.propertyId !== this.state.propertyId) {
-      this.setState(() => ({ propertyId: nextProps.propertyId }))
-    }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      this.props.propertyId !== nextProps.propertyId ||
-      this.state.propertyId !== nextState.propertyId ||
-      nextProps.propertyId !== nextState.propertyId
-    )
-  }
-
-  handleSuggestSelect = (e, { propertyId }) => {
-    console.debug('Analyze.handleSuggestSelect()', propertyId)
-    this.setState(() => ({ propertyId }))
-    _.invokeArgs('onPropertyIdChange', [e, { ...this.props, propertyId }], this.props)
   }
 
   render() {
-    const { favorite, search } = this.props
+    const { favorite, propertyId } = this.props
 
-    const authoritativePropertyId = this.props.propertyId || this.state.propertyId
+    const favoriteButtonElement = favorite && <FavoriteButton propertyId={propertyId} fluid />
+    const newAnalysisButtonElement = <NewAnalysisButton propertyId={propertyId} fluid />
 
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        {search && (
-          <div style={{ flex: '0 0 auto', padding: '1em 1em 0' }}>
-            <Suggest onSelect={this.handleSuggestSelect} />
+        <AnalysisStats propertyId={propertyId} />
+
+        {(newAnalysisButtonElement || favoriteButtonElement) && (
+          <div style={{ padding: '1em' }}>
+            {newAnalysisButtonElement}
+            {favoriteButtonElement}
           </div>
         )}
 
-        <AnalysisStats propertyId={authoritativePropertyId} />
-        <NewAnalysisButton propertyId={authoritativePropertyId} fluid />
+        <Divider fitted />
 
         <div style={{ flex: '1', overflowY: 'auto' }}>
-          <Trend propertyId={authoritativePropertyId} />
+          <Trend propertyId={propertyId} />
 
-          {favorite && <FavoriteButton propertyId={authoritativePropertyId} fluid />}
-
-          <AnalysisWorksheet propertyId={authoritativePropertyId} />
+          <AnalysisWorksheet propertyId={propertyId} />
         </div>
       </div>
     )

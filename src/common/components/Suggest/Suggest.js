@@ -77,7 +77,7 @@ class Suggest extends Component {
   }
 
   handleDocumentKeyDown = e => {
-    console.log('Suggest.handleDocumentKeyDown()')
+    console.debug('Suggest.handleDocumentKeyDown()')
     const key = keyboardKey.getKey(e)
 
     switch (key) {
@@ -133,27 +133,30 @@ class Suggest extends Component {
   render() {
     const { selectedIndex, searchQuery, results } = this.state
     const items = _.map('address', results)
+    const hasResults = !_.isEmpty(results)
 
     return (
       <div style={{ position: 'relative' }} ref={this.handleRef}>
         <Input fluid value={searchQuery} onChange={this.handleSearchChange} placeholder="Address" />
-        <List
-          link
-          items={items}
-          selectedItem={items[selectedIndex]}
-          onItemClick={this.handleItemClick}
-          style={{
-            position: 'absolute',
-            padding: '0.5em',
-            margin: '0 0.5em',
-            left: 0,
-            right: 0,
-            top: '100%',
-            background: '#fff',
-            boxShadow: '0 0.25em 0.5em rgba(0, 0, 0, 0.2)',
-            zIndex: '100',
-          }}
-        />
+        {hasResults && (
+          <List
+            link
+            items={items}
+            selectedItem={items[selectedIndex]}
+            onItemClick={this.handleItemClick}
+            style={{
+              position: 'absolute',
+              padding: '0.5em',
+              margin: '0 0.5em',
+              left: 0,
+              right: 0,
+              top: '100%',
+              background: '#fff',
+              boxShadow: '0 0.25em 0.5em rgba(0, 0, 0, 0.2)',
+              zIndex: '100',
+            }}
+          />
+        )}
       </div>
     )
   }

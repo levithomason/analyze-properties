@@ -24,18 +24,20 @@ const rules = {
 
 class FavoriteButton extends Component {
   handleClick = () => {
-    const { active, auth, firebase, propertyId } = this.props
-    firebase.set(`/analyses/${auth.uid}/${propertyId}/favorite`, !active)
+    const { analysis, auth, firebase, propertyId } = this.props
+    firebase.set(`/analyses/${auth.uid}/${propertyId}/favorite`, !analysis.favorite)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.active !== nextProps.active
+    return _.get('analysis.favorite', this.props) !== _.get('analysis.favorite', nextProps)
   }
 
   render() {
-    const { active, auth, dispatch, firebase, icon, propertyId, styles, ...rest } = this.props
+    const { analysis, auth, dispatch, firebase, icon, propertyId, styles, ...rest } = this.props
 
-    const src = active
+    if (!analysis) return null
+
+    const src = analysis.favorite
       ? '//image.flaticon.com/icons/png/128/179/179539.png'
       : '//image.flaticon.com/icons/png/128/126/126471.png'
 
@@ -52,7 +54,7 @@ export default _.flow(
   felaConnect(rules),
   firebaseConnect(['/analyses']),
   reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
-    active: _.get([auth.uid, propertyId, 'favorite'], analyses),
+    analysis: _.get([auth.uid, propertyId], analyses),
     auth,
   })),
 )(FavoriteButton)

@@ -6,32 +6,22 @@ import { connect as reduxConnect } from 'react-redux'
 import Loader from '../../ui/components/Loader'
 import Login from '../../common/views/Login'
 import App from '../views/App'
+import * as styles from '../../common/styles'
 
-// Add postMessage support when running as an extension
-// if (chrome.runtime.id) {
-//   const port = chrome.runtime.connect(chrome.runtime.id)
-//
-//   const receiveMessage = event => {
-//     // We only accept messages from ourselves
-//     if (event.source !== window) {
-//       console.debug('MSG: ignoring message not form self:', event)
-//       return
-//     }
-//
-//     if (event.data.type === 'FROM_PAGE') {
-//       console.debug('Content script received: ' + event.data.text)
-//       port.postMessage(event.data.text)
-//     }
-//   }
-//
-//   window.addEventListener('message', receiveMessage, false)
-//
-//   const script = document.createElement('script')
-//   script.innerHTML = `window.postMessage({ type: "FROM_PAGE", text: JSON.stringify(MOVE_DATA) }, "*")`
-//   document.body.appendChild(script)
-// }
+const sidePanelStyle = styles.sidePanel({ side: 'right' })
 
-// TODO this should live somewhere else :/
+const rootStyles = {
+  ...sidePanelStyle,
+  transition: 'transform 0.3s',
+  transitionTimingFunction: 'cubic-bezier(0.2, 1, 0.8, 1)',
+  // Realtor.com overrides
+  fontWeight: 'normal',
+  zIndex: 1000000, // Just beneath the Realtor.com photo modal at 1000040
+}
+
+// Realtor.com includes a global MOVE_DATA object which has the property info.
+// Extensions are sandboxed and cannot read global window variables, but they can pass messages.
+// Inject a script into the page, get MOVE_DATA, and message it back to ourselves.
 const getMoveData = () => {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
@@ -59,7 +49,7 @@ const getMoveData = () => {
 }
 
 class Root extends Component {
-  state = { propertyId: null }
+  state = { propertyId: null, isOpen: false }
 
   componentDidMount() {
     getMoveData()
@@ -71,22 +61,44 @@ class Root extends Component {
       .catch(err => {
         throw err
       })
+
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      switch (request.type) {
+        case 'toggleExtension':
+          this.setState(() => ({ isOpen: !this.state.isOpen }))
+          break
+        default:
+          break
+      }
+    })
   }
 
   render() {
-    const { propertyId } = this.state
-    const { auth, authError, profile } = this.props
-
     console.debug('Root.render() state', this.state)
     console.debug('Root.render() props', this.props)
 
-    if (!auth.isLoaded) return <Loader active>Waiting for auth...</Loader>
+    const { isOpen, propertyId } = this.state
+    const { auth } = this.props
 
-    if (auth.isEmpty) return <Login />
+    const style = {
+      ...rootStyles,
+      // a little more than 100% when out of view to hide the shadow
+      transform: `translate3d(${isOpen ? 0 : 110}%, 0, 0)`,
+    }
 
-    // if (!propertyId) return <Loader active>Waiting for property id...</Loader>
-
-    return <App propertyId={propertyId} />
+    return (
+      <div style={{ ...style }}>
+        {!auth.isLoaded ? (
+          <Loader active>Waiting for auth...</Loader>
+        ) : auth.isEmpty ? (
+          <Login />
+        ) : !propertyId ? (
+          <Loader active>Waiting for property id...</Loader>
+        ) : (
+          <App propertyId={propertyId} />
+        )}
+      </div>
+    )
   }
 }
 
