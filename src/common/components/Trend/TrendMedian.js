@@ -40,6 +40,7 @@ const TrendBar = ({ color, label, value }) => (
     <div style={{ ...trendLabel, top: 100 - 50 * value + '%' }}>{label}</div>
 
     <Box
+      column
       inverted
       color={color}
       style={{
@@ -97,6 +98,7 @@ class Trend extends Component {
 
            */}
           <Box
+            column
             style={{
               position: 'relative',
               flex: '0 0 auto',
@@ -134,6 +136,7 @@ class Trend extends Component {
 
           */}
           <Box
+            column
             style={{
               position: 'relative',
               flex: '0 0 auto',

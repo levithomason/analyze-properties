@@ -31,30 +31,30 @@ const createComponent = (config = {}) => WrappedComponent => {
       // Relaxed
       // Adds margin around an element
       props.relaxed === true && {
-        marginTop: '0.5em',
-        marginBottom: '0.5em',
-        marginLeft: '0.5em',
-        marginRight: '0.5em',
+        marginTop: '1em',
+        marginBottom: '1em',
+        marginLeft: '1em',
+        marginRight: '1em',
       },
       props.relaxed === 'horizontally' && {
-        marginLeft: '0.5em',
-        marginRight: '0.5em',
+        marginLeft: '1em',
+        marginRight: '1em',
       },
       props.relaxed === 'vertically' && {
-        marginTop: '0.5em',
-        marginBottom: '0.5em',
+        marginTop: '1em',
+        marginBottom: '1em',
       },
       props.relaxed === 'top' && {
-        marginTop: '0.5em',
+        marginTop: '1em',
       },
       props.relaxed === 'bottom' && {
-        marginBottom: '0.5em',
+        marginBottom: '1em',
       },
       props.relaxed === 'left' && {
-        marginLeft: '0.5em',
+        marginLeft: '1em',
       },
       props.relaxed === 'right' && {
-        marginRight: '0.5em',
+        marginRight: '1em',
       },
     )
   }

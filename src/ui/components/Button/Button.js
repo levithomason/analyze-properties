@@ -3,13 +3,13 @@ import createComponent from '../../lib/createComponent'
 
 export const rules = {
   root: ({ theme, basic, color, fluid, icon }) => {
-    const background = color ? theme.invertedBackgroundColors[color] : theme.grayscale.lighterGray
+    const background = color ? theme.invertedBackgroundColors[color] : theme.grayscale.lightGray
 
     return Object.assign(
       {
         flex: '0 0 auto',
         transitionProperty: 'background',
-        transitionDuration: '0.1s',
+        transitionDuration: '0.15s',
         padding: '0.75em 1em',
         margin: '0 1em 0 0',
         width: 'auto',
@@ -21,12 +21,12 @@ export const rules = {
         borderRadius: 0,
         color: theme.textColors[basic ? color || 'gray' : 'white'].hex(),
         onHover: {
-          background: background.lighten(0.1).hex(),
+          background: background.darken(0.1).hex(),
         },
         onActive: {
           // instantly change background on tap, transition is too slow
           transitionDuration: 0,
-          background: background.lighten(0.2).hex(),
+          background: background.lighten(0.1).hex(),
         },
         onFocus: {
           outline: 'none',

@@ -30,11 +30,11 @@ class App extends Component {
 
     return (
       <div style={rootStyle}>
-        <Box row align="center" justify="space-between">
-          <Box row align="center" justifySelf="flex-start">
+        <Box align="center" justify="space-between">
+          <Box align="center" justifySelf="flex-start">
             <Logo /> Analyze Properties
           </Box>
-          <Box row align="center" justifySelf="flex-end">
+          <Box align="center" justifySelf="flex-end">
             <Image avatar src={profile.avatarUrl} /> {profile.displayName}
             <Button relaxed="left" onClick={this.handleLogout}>
               Logout

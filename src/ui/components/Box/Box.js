@@ -23,7 +23,7 @@ export const rules = {
     return Object.assign(
       {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
       },
       row && {
         flexDirection: 'row',
@@ -104,7 +104,7 @@ Box.propTypes = {
   border: PropTypes.string,
   circular: PropTypes.bool,
   color: PropTypes.string,
-  column: PropTypes.string,
+  column: PropTypes.bool,
   fluid: PropTypes.string,
   inverted: PropTypes.bool,
   justify: PropTypes.string,

@@ -78,6 +78,27 @@ const renderInverted = (Component, props) => (
   </div>
 )
 
+const renderRelaxed = (Component, props) => (
+  <div>
+    <DocSubheader>relaxed {props && JSON.stringify(props, null, 2)}</DocSubheader>
+    <p>Relaxing adds whitespace.</p>
+
+    {[true, 'horizontally', 'vertically', 'top', 'bottom', 'left', 'right'].map(relaxed => (
+      <Box key={relaxed} padded relaxed="vertically" border="solid">
+        <Component {...props} relaxed={relaxed}>
+          {JSON.stringify(relaxed).replace(/"/g, '')}
+        </Component>
+        <Component {...props} relaxed={relaxed}>
+          {JSON.stringify(relaxed).replace(/"/g, '')}
+        </Component>
+        <Component {...props} relaxed={relaxed}>
+          {JSON.stringify(relaxed).replace(/"/g, '')}
+        </Component>
+      </Box>
+    ))}
+  </div>
+)
+
 const renderRadii = (Component, props) => (
   <div>
     <DocSubheader>radius {props && JSON.stringify(props, null, 2)}</DocSubheader>
@@ -128,8 +149,18 @@ class App extends Component {
         {renderRadii(Box, { circular: true })}
 
         <DocHeader>Button</DocHeader>
+
+        <DocSubheader>Default</DocSubheader>
         <Button>Default</Button>
+
+        <DocSubheader>fluid</DocSubheader>
         <Button fluid>Fluid</Button>
+
+        <DocSubheader>basic</DocSubheader>
+        <Button basic>Cancel</Button>
+
+        {renderColors(Button)}
+        {renderRelaxed(Button)}
 
         <DocHeader>Code</DocHeader>
         <Code>const greet = name => console.debug(`Hi ${name}!`)</Code>

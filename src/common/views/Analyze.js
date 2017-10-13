@@ -18,19 +18,12 @@ class Analyze extends Component {
   render() {
     const { favorite, propertyId } = this.props
 
-    const favoriteButtonElement = favorite && <FavoriteButton propertyId={propertyId} fluid />
-    const newAnalysisButtonElement = <NewAnalysisButton propertyId={propertyId} fluid />
-
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <AnalysisStats propertyId={propertyId} />
 
-        {(newAnalysisButtonElement || favoriteButtonElement) && (
-          <div style={{ padding: '1em' }}>
-            {newAnalysisButtonElement}
-            {favoriteButtonElement}
-          </div>
-        )}
+        <NewAnalysisButton propertyId={propertyId} fluid />
+        {favorite && <FavoriteButton propertyId={propertyId} fluid />}
 
         <Divider fitted />
 
