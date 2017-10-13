@@ -2,7 +2,6 @@
   "manifest_version": 2,
   "name": "Analyze Properties",
   "description": "Real estate investment property analyzer",
-  "version": "1.1",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",

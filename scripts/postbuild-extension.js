@@ -1,9 +1,15 @@
 const fs = require('fs')
 const path = require('path')
 const utf8 = require('utf8')
+const pkg = require('../package.json')
 
 const assetManifest = require('../dist/extension/asset-manifest.json')
 const manifest = require('../src/extension/manifest.json')
+
+// ----------------------------------------
+// Version
+// ----------------------------------------
+manifest.version = pkg.version
 
 // ----------------------------------------
 // Add dist assets as extension content scripts
