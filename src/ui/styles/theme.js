@@ -25,7 +25,7 @@ const bgForText = (bgColor, textColor) => {
   const isLightText = textColor.light()
 
   // mute shadows (light text) or highlights (dark text)
-  const muted = bgColor.mix(isLightText ? darkener : lightener)
+  const muted = bgColor.mix(isLightText ? darkener : lightener, 0.4)
 
   // get text contrast on muted background (contrast returns 0 - 21)
   const textContrast = 1 - muted.contrast(textColor) / 21

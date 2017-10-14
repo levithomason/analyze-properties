@@ -266,3 +266,31 @@ export const getDefaultAnalysis = propertyId => {
       return crunch(analysis)
     })
 }
+cashFlow: Object
+capRate: Object
+rentToValue: Object
+totalCashNeeded: Object
+netOperatingIncome: Object
+cashOnCash: Object
+grossRentMultiplier: Object
+debtServiceCoverageRatio: Object
+internalRateOfReturn: Object
+income: Number
+mortgages: Number
+otherDebts: Number
+export const getDefaultCriteria = () => {
+  return Promise.resolve({
+    cashFlow: { min: 100 },
+    capRate: { min: 0.06 },
+    rentToValue: { min: 0.005 },
+    totalCashNeeded: { max: 75000 },
+    netOperatingIncome: { min: 0 },
+    cashOnCash: { min: 0.05 },
+    grossRentMultiplier: { max: 15 },
+    debtServiceCoverageRatio: { min: 1 },
+    internalRateOfReturn: { min: 0 },
+    income: 50000,
+    mortgages: 850,
+    otherDebts: 0,
+  })
+}

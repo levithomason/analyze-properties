@@ -21,18 +21,4 @@
     border-radius: 0;
     border: 1px solid white;
   }
-
-  a {
-    transition: color 0.1s;
-    cursor: pointer;
-    color: cornflowerblue;
-    &:hover,
-    &:active,
-    &:focus {
-      color: darken(cornflowerblue, 10)
-    }
-    &:visited {
-      color: mediumpurple;
-    }
-  }
 }

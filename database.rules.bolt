@@ -172,15 +172,15 @@ type Analysis {
 
 type Criteria {
   // purchase criteria
-  cashFlow: Number,
-  capRate: Number,
-  rentToValue: Number,
-  totalCashNeeded: Number,
-  netOperatingIncome: Number,
-  cashOnCash: Number,
-  grossRentMultiplier: Number,
-  debtServiceCoverageRatio: Number,
-  internalRateOfReturn: Number,
+  cashFlow: MinMaxObject,
+  capRate: MinMaxObject,
+  rentToValue: MinMaxObject,
+  totalCashNeeded: MinMaxObject,
+  netOperatingIncome: MinMaxObject,
+  cashOnCash: MinMaxObject,
+  grossRentMultiplier: MinMaxObject,
+  debtServiceCoverageRatio: MinMaxObject,
+  internalRateOfReturn: MinMaxObject,
 
   // debt to income
   income: Number,
@@ -200,6 +200,11 @@ type User {
 // ------------------------------------------------------------
 type ExistingUserID extends String {
   validate() { doesUserExist(this) }
+}
+
+type MinMaxObject extends Object {
+  min: Number | Null,
+  max: Number | Null
 }
 
 type CurrentUserID extends String {
@@ -222,7 +227,7 @@ isTrue(val) { val == true }
 isCurrentUser(uid) { uid == auth.uid }
 
 doesUserExist(uid) { exists(root.user[uid]) }
-isAuthenticated() { exists(auth) && isTrue(auth.token.email_verified) }
+isAuthenticated() { exists(auth) }
 
 hasRole(role) { isAuthenticated() && isTrue(root.roles[role][auth.uid]) }
 isSuperAdmin() { hasRole('superAdmin') }

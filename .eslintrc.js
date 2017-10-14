@@ -35,7 +35,7 @@ module.exports = {
     // 'react/no-deprecated': 'off',
     // 'react/no-string-refs': 'off',
     // 'react/no-find-dom-node': 'off',
-    // 'react/no-unescaped-entities': 'off',
+    'react/no-unescaped-entities': 'off',
     'react/prop-types': 'off',
   },
 }

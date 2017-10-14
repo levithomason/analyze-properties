@@ -111,6 +111,15 @@ Promise.resolve()
     return sh(`cp ${appPublic}/* ${outDir}`)
   })
   .then(() => {
+    // copy firebase background scripts to dist/extension
+    if (app === 'extension') {
+      return Promise.all([
+        sh(`cp ${require.resolve('firebase/firebase-app')} ${outDir}`),
+        sh(`cp ${require.resolve('firebase/firebase-auth')} ${outDir}`),
+      ])
+    }
+  })
+  .then(() => {
     if (cmd === 'build' && app === 'extension') {
       require('./postbuild-extension')
     }

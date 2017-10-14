@@ -218,8 +218,8 @@ class Criteria extends Component {
 
 export default _.flow(
   firebaseConnect(['/criteria']),
-  reduxConnect(({ firebase: { auth, data: { criteria } } }, { propertyId }) => ({
+  reduxConnect(({ firebase: { auth, data: { criteria } } } ) => ({
     auth,
-    criteria: _.get([auth.uid, propertyId], criteria),
+    criteria: _.get(auth.uid, criteria),
   })),
 )(Criteria)

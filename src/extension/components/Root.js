@@ -1,12 +1,11 @@
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
-import { firebaseConnect } from 'react-redux-firebase'
-import { connect as reduxConnect } from 'react-redux'
 
 import Loader from '../../ui/components/Loader'
-import Login from '../../common/views/Login'
-import App from '../views/App'
+import LoginLayout from '../../common/layouts/LoginLayout'
 import * as styles from '../../common/styles'
+
+import App from '../views/App'
 
 const sidePanelStyle = styles.sidePanel({ side: 'right' })
 
@@ -78,7 +77,6 @@ class Root extends Component {
     console.debug('Root.render() props', this.props)
 
     const { isOpen, propertyId } = this.state
-    const { auth } = this.props
 
     const style = {
       ...rootStyles,
@@ -88,25 +86,16 @@ class Root extends Component {
 
     return (
       <div style={{ ...style }}>
-        {!auth.isLoaded ? (
-          <Loader active>Waiting for auth...</Loader>
-        ) : auth.isEmpty ? (
-          <Login />
-        ) : !propertyId ? (
-          <Loader active>Waiting for property id...</Loader>
-        ) : (
-          <App propertyId={propertyId} />
-        )}
+        <LoginLayout>
+          {!propertyId ? (
+            <Loader active>Waiting for property id...</Loader>
+          ) : (
+            <App propertyId={propertyId} />
+          )}
+        </LoginLayout>
       </div>
     )
   }
 }
 
-export default _.flow(
-  firebaseConnect(),
-  reduxConnect(({ firebase: { auth, authError, profile } }) => ({
-    auth,
-    authError,
-    profile,
-  })),
-)(Root)
+export default Root

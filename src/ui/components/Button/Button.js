@@ -8,6 +8,7 @@ export const rules = {
     return Object.assign(
       {
         flex: '0 0 auto',
+        display: 'inline-block',
         transitionProperty: 'background',
         transitionDuration: '0.15s',
         padding: '0.75em 1em',
@@ -15,6 +16,7 @@ export const rules = {
         width: 'auto',
         fontSize: '1em',
         fontWeight: 'bold',
+        textDecoration: 'none',
         cursor: 'pointer',
         background: basic ? 'none' : background.hex(),
         border: 'none',

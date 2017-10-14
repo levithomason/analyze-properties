@@ -16,6 +16,11 @@ export const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
+
+if (__EXTENSION__) {
+  chrome.runtime.sendMessage({ type: 'firebase:initialize', payload: firebaseConfig })
+}
+
 export { firebase }
 
 // ----------------------------------------

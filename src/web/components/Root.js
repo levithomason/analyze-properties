@@ -4,11 +4,14 @@ import { firebaseConnect } from 'react-redux-firebase'
 import { connect as reduxConnect } from 'react-redux'
 import { connect as felaConnect } from 'react-fela'
 
+import Button from '../../ui/components/Button'
 import Container from '../../ui/components/Container'
-import Login from '../../common/views/Login'
-import App from '../layouts/App'
-import Logo from '../../common/components/Logo'
+import Divider from '../../ui/components/Divider'
 import Header from '../../ui/components/Header'
+
+import App from '../layouts/App'
+import LoginLayout from '../../common/layouts/LoginLayout'
+import Logo from '../../common/components/Logo'
 
 const styles = {
   root: props => ({
@@ -23,49 +26,23 @@ const styles = {
   }),
 }
 
-const Layout = ({ header = 'Analyze Properties', children }) => (
-  <Container>
-    <div style={{ margin: '0 auto', width: '40em', textAlign: 'center' }}>
-      <Header color="gray">
-        <Logo size={64} />
-        <br />
-        {header}
-      </Header>
-      {children}
-    </div>
-  </Container>
-)
+const Root = ({ analyses, firebase, auth, authError, profile, roles, styles }) => {
+  const firstName = (_.get('displayName', profile) || '').split(' ')[0]
 
-const Root = ({ firebase, auth, authError, profile, roles, styles }) => {
-  if (firebase.isInitializing || !auth.isLoaded) return <Layout header="Loading..." />
-
-  if (auth.isEmpty) return <Login />
-
-  if (!roles) return <Layout header="Checking access..." />
-
-  const isApproved = _.get(['approved', auth.uid], roles)
-
-  if (!isApproved) {
-    const firstName = (_.get('displayName', profile) || '').split(' ')[0]
-
-    return (
-      <Layout header={_.compact(['Thanks for joining', firstName]).join(', ') + '!'}>
-        <p>Your access request is being reviewed.</p>
-        <p>
-          <a onClick={firebase.logout}>Sign in with another account</a>
-        </p>
-      </Layout>
-    )
-  }
-
-  // TODO, get extension auth working, re-enable auth then the web app
-  return <App />
+  return (
+    <LoginLayout>
+      <App />
+    </LoginLayout>
+  )
 }
 
 export default _.flow(
   felaConnect(styles),
-  firebaseConnect(({ auth }) => (auth.uid ? [`/roles/approved/${auth.uid}`] : [])),
-  reduxConnect(({ firebase: { auth, authError, data: { roles }, profile } }) => ({
+  firebaseConnect(
+    ({ auth }) => (auth.uid ? [`/roles/approved/${auth.uid}`, `/analyses/${auth.uid}`] : []),
+  ),
+  reduxConnect(({ firebase: { auth, authError, data: { analyses, roles }, profile } }) => ({
+    analyses: _.get(auth.uid, analyses),
     roles,
     auth,
     authError,

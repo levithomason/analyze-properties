@@ -11,20 +11,23 @@ class NewAnalysisButton extends Component {
   state = {}
 
   createDefaultAnalysis = () => {
-    console.debug('NewAnalysisButton.createDefaultAnalysis()')
     const { auth, firebase, propertyId } = this.props
+    console.debug('NewAnalysisButton.createDefaultAnalysis()', { uid: auth.uid, propertyId })
 
     this.setState(() => ({ isFetching: true }))
 
     rei
       .getDefaultAnalysis(propertyId)
       .then(defaultAnalysis => {
+        console.log('NewAnalysisButton.createDefaultAnalysis() defaultAnalysis', defaultAnalysis)
         firebase.set(`/analyses/${auth.uid}/${propertyId}`, defaultAnalysis)
 
         this.setState(() => ({ isFetching: false }))
       })
-      .catch(err => {
-        throw err
+      .catch(error => {
+        console.log('NewAnalysisButton.createDefaultAnalysis() error', error)
+        this.setState(() => ({ isFetching: false }))
+        throw error
       })
   }
 

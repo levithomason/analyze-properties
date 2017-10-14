@@ -1,5 +1,8 @@
+import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
+import { connect as reduxConnect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import Loader from '../../../ui/components/Loader'
 import Tabs from '../../../ui/components/Tabs'
@@ -49,7 +52,7 @@ class App extends Component {
 
   render() {
     const { isFetching, isOpen, activeTab } = this.state
-    const { propertyId, styles } = this.props
+    const { isSuperAdmin, propertyId, styles } = this.props
 
     if (!isOpen) return null
 
@@ -60,14 +63,20 @@ class App extends Component {
           onTabChange={this.handleTabChange}
           activeTab={activeTab}
           panes={[
-            { menuItem: 'Analyze', render: () => <Analyze favorite propertyId={propertyId} /> },
+            { menuItem: 'Analyze', render: () => <Analyze propertyId={propertyId} /> },
             { menuItem: 'Criteria', render: () => <Criteria /> },
-            { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
-          ]}
+            isSuperAdmin && { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
+          ].filter(Boolean)}
         />
       </div>
     )
   }
 }
 
-export default felaConnect(rules)(App)
+export default _.flow(
+  felaConnect(rules),
+  firebaseConnect(['/roles']),
+  reduxConnect(({ firebase: { auth, authError, data: { analyses, roles }, profile } }) => ({
+    isSuperAdmin: _.get(['superAdmin', auth.uid], roles),
+  })),
+)(App)

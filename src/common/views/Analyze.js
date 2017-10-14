@@ -12,18 +12,19 @@ import Divider from '../../ui/components/Divider'
 class Analyze extends Component {
   static propTypes = {
     propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    favorite: PropTypes.bool,
   }
 
   render() {
-    const { favorite, propertyId } = this.props
+    const { propertyId } = this.props
 
     return (
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <AnalysisStats propertyId={propertyId} />
 
-        <NewAnalysisButton propertyId={propertyId} fluid />
-        {favorite && <FavoriteButton propertyId={propertyId} fluid />}
+        <div style={{ padding: '1em' }}>
+          <NewAnalysisButton propertyId={propertyId} fluid />
+          <FavoriteButton propertyId={propertyId} fluid />
+        </div>
 
         <Divider fitted />
 
