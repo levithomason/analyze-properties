@@ -5,7 +5,10 @@ import createComponent from '../../lib/createComponent'
 export const rules = {
   root: ({ status, theme }) => {
     const style = {
-      fontWeight: 'bold',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
       textAlign: 'center',
     }
 
@@ -21,7 +24,6 @@ export const rules = {
   label: props => ({
     textTransform: 'uppercase',
     fontSize: '0.8em',
-    fontWeight: 'lighter',
     opacity: 0.5,
   }),
 }

@@ -13,7 +13,7 @@ class AnalysesTable extends Component {
   static propTypes = {
     onRowClick: PropTypes.func,
     onInitialSort: PropTypes.func,
-    selectedPropertyId: PropTypes.number,
+    selectedPropertyId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     analyses: PropTypes.object,
   }
 
@@ -109,7 +109,7 @@ class AnalysesTable extends Component {
               <AnalysesTableRow
                 key={propertyId}
                 active={active}
-                analysis={analysis}
+                propertyId={propertyId}
                 onClick={onRowClick}
               />
             )

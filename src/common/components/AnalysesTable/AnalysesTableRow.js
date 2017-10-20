@@ -3,15 +3,20 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
+import { connect as reduxConnect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
 
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 import FavoriteButton from '../../components/FavoriteButton'
 import theme from '../../../ui/styles/theme'
+import * as rei from '../../resources/rei'
 
 class AnalysesTableRow extends Component {
   static propTypes = {
     active: PropTypes.bool,
+    analysis: PropTypes.object,
+    criteria: PropTypes.object,
     onClick: PropTypes.func,
   }
   handleClick = e => {
@@ -21,19 +26,28 @@ class AnalysesTableRow extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const analysisKeys = ['url', 'image', 'address', 'city', 'state', 'zip', 'favorite']
 
+    const currAnalysis = _.get('analysis', this.props) || {}
+    const currCriteria = _.get('criteria', this.props) || {}
+
+    const nextAnalysis = nextProps.analysis || {}
+    const nextCriteria = nextProps.criteria || {}
+
     return (
       this.props.active !== nextProps.active ||
-      _.some(col => this.props.analysis[col] !== nextProps.analysis[col], COLUMNS) ||
-      _.some(key => this.props.analysis[key] !== nextProps.analysis[key], analysisKeys)
+      _.some(col => currAnalysis[col.key] !== nextAnalysis[col.key], COLUMNS) ||
+      _.some(col => currCriteria[col.key] !== nextCriteria[col.key], COLUMNS) ||
+      _.some(key => currCriteria[key] !== nextCriteria[key], analysisKeys)
     )
   }
 
   render() {
-    const { active, analysis, styles } = this.props
+    const { active, criteria, analysis, styles } = this.props
 
-    if (!analysis) return null
+    if (!analysis || !criteria) return null
 
     const { url, image, address, city, state, zip } = analysis
+
+    const check = rei.checkDeal(analysis, criteria)
 
     return (
       <tr onClick={this.handleClick} className={styles.tableRow}>
@@ -70,12 +84,20 @@ class AnalysesTableRow extends Component {
             >
               {address}
               <br />
-              {city}, {state}
+              {city}, {state} {zip}
             </span>
           </a>
         </td>
         {COLUMNS.map(({ key, format }) => (
-          <td key={key} className={cx(styles.tableCell, styles.tableValueCell)}>
+          <td
+            key={key}
+            className={cx(styles.tableCell, styles.tableValueCell)}
+            style={{
+              color: _.has(key, check)
+                ? theme.textColors[check[key] ? 'green' : 'red'].hex()
+                : null,
+            }}
+          >
             {format(analysis[key])}
           </td>
         ))}
@@ -87,4 +109,11 @@ class AnalysesTableRow extends Component {
   }
 }
 
-export default felaConnect(tableStyles)(AnalysesTableRow)
+export default _.flow(
+  felaConnect(tableStyles),
+  firebaseConnect(['/analyses', '/criteria']),
+  reduxConnect(({ firebase: { auth, data: { analyses, criteria } } }, { propertyId }) => ({
+    analysis: _.get([auth.uid, propertyId], analyses),
+    criteria: _.get(auth.uid, criteria),
+  })),
+)(AnalysesTableRow)

@@ -11,8 +11,6 @@ import { usd, percent, ratio } from '../../../common/lib'
 import * as rei from '../../../common/resources/rei'
 
 const AnalysisStats = ({ analysis, criteria }) => {
-  console.log({ analysis, criteria, check })
-
   if (!analysis || !criteria) return null
 
   const {
