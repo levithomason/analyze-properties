@@ -50,9 +50,9 @@ const bgForText = (bgColor, textColor) => {
         .lighten(textContrast * 0.4)
 }
 
-const lightestGray = Color.hsl(0, 0, 95)
-const lighterGray = Color.hsl(0, 0, 80)
-const lightGray = Color.hsl(0, 0, 70)
+const lightestGray = Color.hsl(0, 0, 96)
+const lighterGray = Color.hsl(0, 0, 84)
+const lightGray = Color.hsl(0, 0, 72)
 const gray = Color.hsl(0, 0, 60)
 const darkGray = Color.hsl(0, 0, 50)
 const darkerGray = Color.hsl(0, 0, 40)

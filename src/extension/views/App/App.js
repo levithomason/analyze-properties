@@ -22,15 +22,12 @@ const rules = {
 }
 
 class App extends Component {
-  state = {}
+  state = {
+    isOpen: true,
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.handleDocumentKeyDown)
-
-    this.setState(prevState => ({
-      activeTab: 'Analyze',
-      isOpen: true,
-    }))
   }
 
   componentWillUnmount() {
@@ -45,29 +42,15 @@ class App extends Component {
     }
   }
 
-  handleTabChange = (e, { activeTab }) => {
-    console.debug('App.handleTabChange()')
-    return this.setState((prevState, props) => ({ activeTab }))
-  }
-
   render() {
-    const { isFetching, isOpen, activeTab } = this.state
-    const { isSuperAdmin, propertyId, styles } = this.props
+    const { isOpen } = this.state
+    const { propertyId, styles } = this.props
 
     if (!isOpen) return null
 
     return (
       <div className={styles.root}>
-        <Loader active={isFetching} />
-        <Tabs
-          onTabChange={this.handleTabChange}
-          activeTab={activeTab}
-          panes={[
-            { menuItem: 'Analyze', render: () => <Analyze propertyId={propertyId} /> },
-            { menuItem: 'Criteria', render: () => <Criteria /> },
-            isSuperAdmin && { menuItem: 'Debug', render: () => <Debug propertyId={propertyId} /> },
-          ].filter(Boolean)}
-        />
+        <AnalyzeTabs propertyId={propertyId} />
       </div>
     )
   }

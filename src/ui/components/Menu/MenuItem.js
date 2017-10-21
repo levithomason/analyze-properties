@@ -9,10 +9,10 @@ export const rules = {
         display: 'block',
         padding: '1em',
         cursor: 'pointer',
-        color: theme.grayscale.gray.hex(),
+        color: theme.grayscale.darkGray.hex(),
       },
       active && {
-        color: theme.textColors.gray.hex(),
+        color: theme.grayscale.darkerGray.hex(),
         background: theme.grayscale.white.hex(),
       },
     ),

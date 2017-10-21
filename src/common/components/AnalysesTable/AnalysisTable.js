@@ -9,6 +9,8 @@ import AnalysesTableRow from './AnalysesTableRow'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 
+import Button from '../../../ui/components/Button/Button'
+
 class AnalysesTable extends Component {
   static propTypes = {
     onRowClick: PropTypes.func,
@@ -19,6 +21,7 @@ class AnalysesTable extends Component {
 
   state = {
     analyses: null,
+    onlyFavorites: true,
     sortBy: null,
     sortDirection: null,
   }
@@ -81,41 +84,53 @@ class AnalysesTable extends Component {
     })
   }
 
+  toggleOnlyFavorites = () =>
+    this.setState(prevState => ({ onlyFavorites: !prevState.onlyFavorites }))
+
   render() {
     const { onRowClick, selectedPropertyId, styles } = this.props
-    const { analyses } = this.state
+    const { analyses, onlyFavorites } = this.state
 
     if (_.isEmpty(analyses)) return null
 
-    return (
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th className={styles.headerCell}>{/* Location */}</th>
-            {COLUMNS.map(({ key, label }) => (
-              <th key={key} className={styles.headerCell}>
-                {label}
-              </th>
-            ))}
-            <th className={styles.headerCell}>{/* Favorite */}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {analyses.slice(0).map(analysis => {
-            const propertyId = _.get('propertyId', analysis)
-            const active = selectedPropertyId && propertyId === selectedPropertyId
+    const filteredAnalyses = onlyFavorites ? _.filter('favorite', analyses) : analyses
 
-            return (
-              <AnalysesTableRow
-                key={propertyId}
-                active={active}
-                propertyId={propertyId}
-                onClick={onRowClick}
-              />
-            )
-          })}
-        </tbody>
-      </table>
+    return (
+      <div>
+        <div>
+          <Button onClick={this.toggleOnlyFavorites}>
+            Show {onlyFavorites ? 'all deals' : 'favorites'}
+          </Button>
+        </div>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th className={styles.headerCell}>{/* Location */}</th>
+              {COLUMNS.map(({ key, label }) => (
+                <th key={key} className={styles.headerCell}>
+                  {label}
+                </th>
+              ))}
+              <th className={styles.headerCell}>{/* Favorite */}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAnalyses.map(analysis => {
+              const propertyId = _.get('propertyId', analysis)
+              const active = selectedPropertyId && propertyId === selectedPropertyId
+
+              return (
+                <AnalysesTableRow
+                  key={propertyId}
+                  active={active}
+                  propertyId={propertyId}
+                  onClick={onRowClick}
+                />
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
     )
   }
 }

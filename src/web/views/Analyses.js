@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 
 import AnalysesTable from '../../common/components/AnalysesTable'
-import Analyze from '../../common/views/Analyze'
+import AnalyzeTabs from '../../common/components/AnalyzeTabs'
 import * as styles from '../../common/styles'
 
 const rootStyle = {
@@ -34,7 +34,7 @@ class Analyses extends Component {
         />
 
         <div style={styles.sidePanel({ side: 'left' })}>
-          <Analyze propertyId={selectedPropertyId} />
+          <AnalyzeTabs propertyId={selectedPropertyId} />
         </div>
       </div>
     )

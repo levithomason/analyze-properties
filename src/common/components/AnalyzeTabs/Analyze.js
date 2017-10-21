@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 
-import AnalysisStats from '../components/AnalysisStats'
-import AnalysisWorksheet from '../components/AnalysisWorksheet'
-import NewAnalysisButton from '../components/NewAnalysisButton'
-import FavoriteButton from '../components/FavoriteButton'
-import Trend from '../components/Trend'
+import AnalysisStats from '../AnalysisStats'
+import AnalysisWorksheet from '../AnalysisWorksheet'
+import NewAnalysisButton from '../NewAnalysisButton'
+import FavoriteButton from '../FavoriteButton'
+import Trend from '../Trend'
 
-import Divider from '../../ui/components/Divider'
+import Divider from '../../../ui/components/Divider/Divider'
 
-class Analyze extends Component {
+class AnalyzeTabs extends Component {
   static propTypes = {
     propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }
@@ -38,4 +38,4 @@ class Analyze extends Component {
   }
 }
 
-export default Analyze
+export default AnalyzeTabs
