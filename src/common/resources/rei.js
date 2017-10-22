@@ -175,8 +175,8 @@ export const estimatedRent = (bed, bath) => 200 + bed * 200 + bath * 200
 export const propertyInfoToAnalysis = info => {
   const purchasePrice = info.price || 0
 
-  const beds = _.get('beds', info) || ''
-  const baths = _.get('baths', info) || ''
+  const beds = _.get('beds', info) || 0
+  const baths = _.get('baths', info) || 0
   const grossMonthlyRent = estimatedRent(beds, baths)
 
   const downRate = 0.2
