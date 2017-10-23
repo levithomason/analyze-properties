@@ -43,8 +43,14 @@ const tableStyles = {
     )
   },
   headerCell: props => ({
-    padding: '0.25em 0.5em',
+    padding: '1em 0.5em',
     textAlign: 'right',
+    cursor: 'pointer',
+    color: theme.textColors.gray.hex(),
+    borderBottom: `1px solid ${theme.grayscale.lighterGray.hex()}`,
+    onHover: {
+      color: theme.textColors.black.hex(),
+    },
   }),
 }
 

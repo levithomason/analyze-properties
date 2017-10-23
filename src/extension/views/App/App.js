@@ -1,16 +1,11 @@
+import keyboardKey from 'keyboard-key'
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
-import Loader from '../../../ui/components/Loader'
-import Tabs from '../../../ui/components/Tabs'
-import keyboardKey from 'keyboard-key'
-
-import Analyze from '../../../common/views/Analyze'
-import Debug from '../Debug'
-import Criteria from '../Criteria'
+import AnalyzeTabs from '../../../common/components/AnalyzeTabs'
 
 const rules = {
   root: props => ({

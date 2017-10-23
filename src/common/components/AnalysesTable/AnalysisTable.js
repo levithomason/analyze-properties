@@ -53,13 +53,13 @@ class AnalysesTable extends Component {
       _.orderBy(
         ..._.unzip([
           ['favorite', 'desc'],
-          ['cashFlow', 'desc'],
-          ['cashNeeded', 'asc'],
           ['cashOnCash', 'desc'],
-          ['capRate', 'desc'],
-          ['rentToValue', 'desc'],
+          ['cashNeeded', 'asc'],
+          ['cashFlow', 'desc'],
+          // ['capRate', 'desc'],
+          // ['rentToValue', 'desc'],
           ['grossRentMultiplier', 'desc'],
-          ['debtServiceCoverageRatio', 'desc'],
+          // ['debtServiceCoverageRatio', 'desc'],
         ]),
       ),
     )(analyses)
@@ -76,11 +76,11 @@ class AnalysesTable extends Component {
       // changed headers, sort asc
       // same header, toggle direction
       const sortDirection =
-        prevState.sortBy !== sortBy ? 'asc' : prevState.sortDirection === 'asc' ? 'desc' : 'asc'
+        prevState.sortBy !== sortBy ? 'asc' : prevState.sortDirection === 'asc' ? 'desc' : null
 
-      const analyses = _.orderBy([sortBy], [sortDirection], prevState.analyses)
+      if (sortDirection === null) sortBy = null
 
-      return { analyses, sortBy, sortDirection }
+      return { sortBy, sortDirection }
     })
   }
 
@@ -89,11 +89,15 @@ class AnalysesTable extends Component {
 
   render() {
     const { onRowClick, selectedPropertyId, styles } = this.props
-    const { analyses, onlyFavorites } = this.state
+    const { analyses, onlyFavorites, sortBy, sortDirection } = this.state
 
     if (_.isEmpty(analyses)) return null
 
-    const filteredAnalyses = onlyFavorites ? _.filter('favorite', analyses) : analyses
+    const orderedAnalyses = _.orderBy(
+      [sortBy],
+      [sortDirection],
+      onlyFavorites ? _.filter('favorite', analyses) : analyses,
+    )
 
     return (
       <div>
@@ -107,7 +111,12 @@ class AnalysesTable extends Component {
             <tr>
               <th className={styles.headerCell}>{/* Location */}</th>
               {COLUMNS.map(({ key, label }) => (
-                <th key={key} className={styles.headerCell}>
+                <th key={key} className={styles.headerCell} onClick={this.sortBy(key)}>
+                  {sortBy === key ? (
+                    <i className={`fa fa-sort-${sortDirection === 'asc' ? 'asc' : 'desc'}`} />
+                  ) : (
+                    <i className="fa fa-sort" />
+                  )}{' '}
                   {label}
                 </th>
               ))}
@@ -115,7 +124,7 @@ class AnalysesTable extends Component {
             </tr>
           </thead>
           <tbody>
-            {filteredAnalyses.map(analysis => {
+            {orderedAnalyses.map(analysis => {
               const propertyId = _.get('propertyId', analysis)
               const active = selectedPropertyId && propertyId === selectedPropertyId
 
