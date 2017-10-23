@@ -872,7 +872,7 @@
         "downRate" : 0.25,
         "equity" : 99975,
         "expenseIncreaseRate" : 0.02,
-        "favorite" : true,
+        "favorite" : false,
         "grossMonthlyRent" : 3100,
         "grossPotentialRent" : 37200,
         "grossRentMultiplier" : 10.75,
@@ -2698,6 +2698,138 @@
         "year" : 2003,
         "zip" : "83814"
       },
+      "2422292027" : {
+        "address" : "1916 N 13th St",
+        "afterRepairValue" : 375000,
+        "amountFinanced" : 300000,
+        "appreciationRate" : 0.03,
+        "baths" : 4,
+        "beds" : 8,
+        "capRate" : 0.0546112,
+        "capitalExpendituresRate" : 0.1,
+        "cashFlow" : 186.54407052234342,
+        "cashOnCash" : 0.024872542736312456,
+        "city" : "Coeur D Alene",
+        "county" : "Kootenai",
+        "debtService" : 1520.0559294776567,
+        "debtServiceCoverageRatio" : 1.1227218465484006,
+        "downAmount" : 75000,
+        "downRate" : 0.2,
+        "equity" : 75000,
+        "expenseIncreaseRate" : 0.02,
+        "favorite" : true,
+        "grossMonthlyRent" : 2600,
+        "grossPotentialRent" : 31200,
+        "grossRentMultiplier" : 12.01923076923077,
+        "image" : "https://ap.rdcpix.com/763873936/c7b43cc4c3d6d8613398bfb30f7730f1l-m0x.jpg",
+        "incomeIncreaseRate" : 0.02,
+        "insurance" : 670,
+        "isFinanced" : true,
+        "landValue" : 63525,
+        "lat" : 47.694585,
+        "loanToValue" : 0.8,
+        "lon" : -116.767281,
+        "lotAcres" : 0.26000918273645546,
+        "maintenanceRate" : 0.05,
+        "managementRate" : 0.08,
+        "marketValue" : 375000,
+        "mlsNumber" : "17-10990",
+        "mortgageInsuranceRecurringRate" : 0,
+        "mortgageInsuranceUpfrontRate" : 0,
+        "netOperatingIncome" : 20479.2,
+        "notes" : "4 2x1 @ $650\n\nMust be sold with identical 1916 N 13th",
+        "operatingExpenseAmount" : 9160.8,
+        "operatingExpenseRate" : 0.30906882591093116,
+        "operatingIncome" : 29640,
+        "otherExpenses" : 0,
+        "otherIncome" : 0,
+        "propertyId" : 2422292027,
+        "purchaseCostsAmount" : 15000,
+        "purchaseCostsRate" : 0.04,
+        "purchasePrice" : 375000,
+        "rate" : 0.045,
+        "rehabCosts" : 0,
+        "rentToValue" : 0.006933333333333333,
+        "returnOnInvestment" : -0.39179412393035423,
+        "sellingCostRate" : 0.06,
+        "sellingCostsAmount" : 22500,
+        "sqft" : 3840,
+        "state" : "ID",
+        "taxes" : 3686,
+        "term" : 30,
+        "totalCashNeeded" : 90000,
+        "type" : "multi_family",
+        "url" : "http://www.realtor.com/realestateandhomes-detail/1916-N-13th-St_Coeur-D-Alene_ID_83814_M24222-92027",
+        "vacancyRate" : 0.05,
+        "year" : 1978,
+        "zip" : "83814"
+      },
+      "2422441091" : {
+        "address" : "1912 N 13th St",
+        "afterRepairValue" : 375000,
+        "amountFinanced" : 288750,
+        "appreciationRate" : 0.03,
+        "baths" : 4,
+        "beds" : 8,
+        "capRate" : 0.06029226666666666,
+        "capitalExpendituresRate" : 0.1,
+        "cashFlow" : 421.0795012110884,
+        "cashOnCash" : 0.049905718662054926,
+        "city" : "Coeur D Alene",
+        "county" : "Kootenai",
+        "debtService" : 1463.0538321222448,
+        "debtServiceCoverageRatio" : 1.287808617814348,
+        "downAmount" : 86250,
+        "downRate" : 0.23,
+        "equity" : 86250,
+        "expenseIncreaseRate" : 0.02,
+        "favorite" : true,
+        "grossMonthlyRent" : 2800,
+        "grossPotentialRent" : 33600,
+        "grossRentMultiplier" : 11.160714285714286,
+        "image" : "https://ap.rdcpix.com/476952352/c0d0e95452c94bff6e4589e21fd176b8l-m0x.jpg",
+        "incomeIncreaseRate" : 0.02,
+        "insurance" : 450,
+        "isFinanced" : true,
+        "landValue" : 63525,
+        "lat" : 47.694366,
+        "loanToValue" : 0.77,
+        "lon" : -116.767279,
+        "lotAcres" : 0.26000918273645546,
+        "maintenanceRate" : 0.05,
+        "managementRate" : 0.08,
+        "marketValue" : 375000,
+        "mlsNumber" : "17-10986",
+        "mortgageInsuranceRecurringRate" : 0,
+        "mortgageInsuranceUpfrontRate" : 0,
+        "netOperatingIncome" : 22609.6,
+        "notes" : "4 2x1 @ $650\n\nMust be sold with identical 1912 N 13th",
+        "operatingExpenseAmount" : 9310.4,
+        "operatingExpenseRate" : 0.2916791979949875,
+        "operatingIncome" : 31920,
+        "otherExpenses" : 0,
+        "otherIncome" : 0,
+        "propertyId" : 2422441091,
+        "purchaseCostsAmount" : 15000,
+        "purchaseCostsRate" : 0.04,
+        "purchasePrice" : 375000,
+        "rate" : 0.045,
+        "rehabCosts" : 0,
+        "rentToValue" : 0.007466666666666667,
+        "returnOnInvestment" : -0.3204646517083155,
+        "sellingCostRate" : 0.06,
+        "sellingCostsAmount" : 22500,
+        "sqft" : 3840,
+        "state" : "ID",
+        "taxes" : 3686,
+        "term" : 30,
+        "totalCashNeeded" : 101250,
+        "type" : "multi_family",
+        "url" : "http://www.realtor.com/realestateandhomes-detail/1912-N-13th-St_Coeur-D-Alene_ID_83814_M24224-41091",
+        "vacancyRate" : 0.05,
+        "year" : 1978,
+        "zip" : "83814"
+      },
       "2490637764" : {
         "address" : "6381 E Borley Rd",
         "afterRepairValue" : 125000,
@@ -4277,6 +4409,208 @@
         "year" : 1960,
         "zip" : "33713"
       }
+    },
+    "dvrDsXjOE1anydf2nQcNoX2EhFJ2" : {
+      "1190957327" : {
+        "address" : "8447 Salmonberry",
+        "afterRepairValue" : 372900,
+        "amountFinanced" : 298320,
+        "appreciationRate" : 0.03,
+        "baths" : 3,
+        "beds" : 4,
+        "capRate" : 0.03354572271386431,
+        "capitalExpendituresRate" : 0.1,
+        "cashFlow" : -469.1102829392487,
+        "cashOnCash" : -0.06290027928925297,
+        "city" : "Hayden",
+        "county" : "Kootenai",
+        "debtService" : 1511.543616272582,
+        "debtServiceCoverageRatio" : 0.6896481994373013,
+        "downAmount" : 74580,
+        "downRate" : 0.2,
+        "equity" : 74580,
+        "expenseIncreaseRate" : 0.02,
+        "favorite" : false,
+        "grossMonthlyRent" : 1600,
+        "grossPotentialRent" : 19200,
+        "grossRentMultiplier" : 19.421875,
+        "image" : "https://ap.rdcpix.com/965768929/0ebfa31a6a4f835c4a2f17190ae8e1f7l-m0x.jpg",
+        "incomeIncreaseRate" : 0.02,
+        "insurance" : 600,
+        "isFinanced" : true,
+        "landValue" : 57500,
+        "lat" : 47.750101,
+        "loanToValue" : 0.8,
+        "lon" : -116.819818,
+        "lotAcres" : 0.21999540863177228,
+        "maintenanceRate" : 0.05,
+        "managementRate" : 0.08,
+        "marketValue" : 372900,
+        "mlsNumber" : "17-9225",
+        "mortgageInsuranceRecurringRate" : 0,
+        "mortgageInsuranceUpfrontRate" : 0,
+        "netOperatingIncome" : 12509.2,
+        "notes" : "",
+        "operatingExpenseAmount" : 5730.8,
+        "operatingExpenseRate" : 0.3141885964912281,
+        "operatingIncome" : 18240,
+        "otherExpenses" : 0,
+        "otherIncome" : 0,
+        "propertyId" : 1190957327,
+        "purchaseCostsAmount" : 14916,
+        "purchaseCostsRate" : 0.04,
+        "purchasePrice" : 372900,
+        "rate" : 0.045,
+        "rehabCosts" : 0,
+        "rentToValue" : 0.004290694556181282,
+        "returnOnInvestment" : -0.47956694595591964,
+        "sellingCostRate" : 0.06,
+        "sellingCostsAmount" : 22374,
+        "sqft" : 3591,
+        "state" : "ID",
+        "taxes" : 2174,
+        "term" : 30,
+        "totalCashNeeded" : 89496,
+        "type" : "single_family",
+        "url" : "http://www.realtor.com/realestateandhomes-detail/8447-Salmonberry_Hayden_ID_83835_M11909-57327",
+        "vacancyRate" : 0.05,
+        "year" : 2008,
+        "zip" : "83835"
+      },
+      "2826180311" : {
+        "address" : "32526 N 3rd Ave",
+        "afterRepairValue" : 66000,
+        "amountFinanced" : 52800,
+        "appreciationRate" : 0.03,
+        "baths" : 2,
+        "beds" : 3,
+        "capRate" : 0.15096060606060605,
+        "capitalExpendituresRate" : 0.1,
+        "cashFlow" : 562.7534897452657,
+        "cashOnCash" : 0.22039953906472548,
+        "city" : "Spirit Lake",
+        "county" : "Kootenai",
+        "debtService" : 267.5298435880676,
+        "debtServiceCoverageRatio" : 3.1035166850834495,
+        "downAmount" : 13200,
+        "downRate" : 0.2,
+        "equity" : 13200,
+        "expenseIncreaseRate" : 0.02,
+        "favorite" : false,
+        "grossMonthlyRent" : 1200,
+        "grossPotentialRent" : 14400,
+        "grossRentMultiplier" : 4.583333333333333,
+        "image" : "https://ap.rdcpix.com/451822026/027aa50d2cdf10777b86f03e91de80e3l-m0x.jpg",
+        "incomeIncreaseRate" : 0.02,
+        "insurance" : 600,
+        "isFinanced" : true,
+        "landValue" : 16100,
+        "lat" : 47.968755,
+        "loanToValue" : 0.8,
+        "lon" : -116.871111,
+        "lotAcres" : 0.16000918273645545,
+        "maintenanceRate" : 0.05,
+        "managementRate" : 0.08,
+        "marketValue" : 66000,
+        "mlsNumber" : "17-10793",
+        "mortgageInsuranceRecurringRate" : 0,
+        "mortgageInsuranceUpfrontRate" : 0,
+        "netOperatingIncome" : 9963.4,
+        "notes" : "",
+        "operatingExpenseAmount" : 3716.6,
+        "operatingExpenseRate" : 0.2716812865497076,
+        "operatingIncome" : 13680,
+        "otherExpenses" : 0,
+        "otherIncome" : 0,
+        "propertyId" : 2826180311,
+        "purchaseCostsAmount" : 2640,
+        "purchaseCostsRate" : 0.04,
+        "purchasePrice" : 66000,
+        "rate" : 0.045,
+        "rehabCosts" : 14800,
+        "rentToValue" : 0.01818181818181818,
+        "returnOnInvestment" : -0.47803388130080976,
+        "sellingCostRate" : 0.06,
+        "sellingCostsAmount" : 3960,
+        "sqft" : 1144,
+        "state" : "ID",
+        "taxes" : 899,
+        "term" : 30,
+        "totalCashNeeded" : 30640,
+        "type" : "single_family",
+        "url" : "http://www.realtor.com/realestateandhomes-detail/32526-N-3rd-Ave_Spirit-Lake_ID_83869_M28261-80311",
+        "vacancyRate" : 0.05,
+        "year" : 1995,
+        "zip" : "83869"
+      }
+    },
+    "zJ2YlznG0zaslgKHdGUwib6ea8o2" : {
+      "1334413260" : {
+        "address" : "1901 N Compton St",
+        "afterRepairValue" : 274900,
+        "amountFinanced" : 219920,
+        "appreciationRate" : 0.03,
+        "baths" : 4,
+        "beds" : 4,
+        "capRate" : 0.04966024008730448,
+        "capitalExpendituresRate" : 0.1,
+        "cashFlow" : 23.330999964245848,
+        "cashOnCash" : 0.0042435431000810925,
+        "city" : "Post Falls",
+        "county" : "Kootenai",
+        "debtService" : 1114.3023333690876,
+        "debtServiceCoverageRatio" : 1.0209377646134012,
+        "downAmount" : 54980,
+        "downRate" : 0.2,
+        "equity" : 54980,
+        "expenseIncreaseRate" : 0.02,
+        "favorite" : false,
+        "grossMonthlyRent" : 1800,
+        "grossPotentialRent" : 21600,
+        "grossRentMultiplier" : 12.726851851851851,
+        "image" : "https://ap.rdcpix.com/1338387076/53cfc99ef994de84e8d319157e2445del-m0x.jpg",
+        "incomeIncreaseRate" : 0.02,
+        "insurance" : 600,
+        "isFinanced" : true,
+        "landValue" : 42000,
+        "lat" : 47.726671,
+        "loanToValue" : 0.8,
+        "lon" : -116.951377,
+        "lotAcres" : 0.21999540863177228,
+        "maintenanceRate" : 0.05,
+        "managementRate" : 0.08,
+        "marketValue" : 274900,
+        "mlsNumber" : "17-10939",
+        "mortgageInsuranceRecurringRate" : 0,
+        "mortgageInsuranceUpfrontRate" : 0,
+        "netOperatingIncome" : 13651.6,
+        "notes" : "",
+        "operatingExpenseAmount" : 6868.4,
+        "operatingExpenseRate" : 0.33471734892787525,
+        "operatingIncome" : 20520,
+        "otherExpenses" : 0,
+        "otherIncome" : 0,
+        "propertyId" : 1334413260,
+        "purchaseCostsAmount" : 10996,
+        "purchaseCostsRate" : 0.04,
+        "purchasePrice" : 274900,
+        "rate" : 0.045,
+        "rehabCosts" : 0,
+        "rentToValue" : 0.0065478355765733,
+        "returnOnInvestment" : -0.41242312356658556,
+        "sellingCostRate" : 0.06,
+        "sellingCostsAmount" : 16494,
+        "sqft" : 1920,
+        "state" : "ID",
+        "taxes" : 2942,
+        "term" : 30,
+        "totalCashNeeded" : 65976,
+        "type" : "multi_family",
+        "url" : "http://www.realtor.com/realestateandhomes-detail/1901-N-Compton-St_Post-Falls_ID_83854_M13344-13260",
+        "vacancyRate" : 0.05,
+        "year" : 1992,
+        "zip" : "83854"
+      }
     }
   },
   "criteria" : {
@@ -4312,7 +4646,71 @@
         "max" : 69500
       }
     },
+    "QETLA5qx6fZsFCDwiraR2yyOTdb2" : {
+      "capRate" : {
+        "min" : 0.06
+      },
+      "cashFlow" : {
+        "min" : 100
+      },
+      "cashOnCash" : {
+        "min" : 0.05
+      },
+      "debtServiceCoverageRatio" : {
+        "min" : 1
+      },
+      "grossRentMultiplier" : {
+        "max" : 15
+      },
+      "income" : 50000,
+      "internalRateOfReturn" : {
+        "min" : 0
+      },
+      "mortgages" : 850,
+      "netOperatingIncome" : {
+        "min" : 0
+      },
+      "otherDebts" : 0,
+      "rentToValue" : {
+        "min" : 0.005
+      },
+      "totalCashNeeded" : {
+        "max" : 75000
+      }
+    },
     "XsewcTQfbqNGVz3xdvi0RZ0Aosh2" : {
+      "capRate" : {
+        "min" : 0.06
+      },
+      "cashFlow" : {
+        "min" : 100
+      },
+      "cashOnCash" : {
+        "min" : 0.05
+      },
+      "debtServiceCoverageRatio" : {
+        "min" : 1
+      },
+      "grossRentMultiplier" : {
+        "max" : 15
+      },
+      "income" : 50000,
+      "internalRateOfReturn" : {
+        "min" : 0
+      },
+      "mortgages" : 850,
+      "netOperatingIncome" : {
+        "min" : 0
+      },
+      "otherDebts" : 0,
+      "rentToValue" : {
+        "min" : 0.005
+      },
+      "totalCashNeeded" : {
+        "max" : 75000
+      }
+    },
+    "dvrDsXjOE1anydf2nQcNoX2EhFJ2" : {
       "capRate" : {
         "min" : 0.06
       },
@@ -4376,7 +4774,7 @@
         "max" : 75000
       }
     },
-    "QETLA5qx6fZsFCDwiraR2yyOTdb2" : {
+    "zJ2YlznG0zaslgKHdGUwib6ea8o2" : {
       "capRate" : {
         "min" : 0.06
       },
@@ -4414,7 +4812,9 @@
       "1ipKfRwn37P2HgfFDKlqLpJBr662" : true,
       "QETLA5qx6fZsFCDwiraR2yyOTdb2" : true,
       "XsewcTQfbqNGVz3xdvi0RZ0Aosh2" : true,
-      "mVO6orqNKyWTxTpsPbjdmixpoN03" : true
+      "dvrDsXjOE1anydf2nQcNoX2EhFJ2" : true,
+      "mVO6orqNKyWTxTpsPbjdmixpoN03" : true,
+      "zJ2YlznG0zaslgKHdGUwib6ea8o2" : true
     },
     "superAdmin" : {
       "1ipKfRwn37P2HgfFDKlqLpJBr662" : true
@@ -4457,6 +4857,18 @@
         "uid" : "105732340024755462762"
       } ]
     },
+    "dvrDsXjOE1anydf2nQcNoX2EhFJ2" : {
+      "avatarUrl" : "https://lh6.googleusercontent.com/-Sipr49WCsDQ/AAAAAAAAAAI/AAAAAAAAAAk/efU6-KJ_Hck/photo.jpg",
+      "displayName" : "Kyle Wagner",
+      "email" : "kylewagner@kw.com",
+      "providerData" : [ {
+        "displayName" : "Kyle Wagner",
+        "email" : "kylewagner@kw.com",
+        "photoURL" : "https://lh6.googleusercontent.com/-Sipr49WCsDQ/AAAAAAAAAAI/AAAAAAAAAAk/efU6-KJ_Hck/photo.jpg",
+        "providerId" : "google.com",
+        "uid" : "113550970359214391499"
+      } ]
+    },
     "mVO6orqNKyWTxTpsPbjdmixpoN03" : {
       "avatarUrl" : "https://lh4.googleusercontent.com/-4HrQCynCqAg/AAAAAAAAAAI/AAAAAAAABEo/plJgTIIWXUg/photo.jpg",
       "displayName" : "David Zukowski",
@@ -4468,6 +4880,19 @@
         "providerId" : "google.com",
         "uid" : "101353977622884214128"
       } ]
+    },
+    "zJ2YlznG0zaslgKHdGUwib6ea8o2" : {
+      "avatarUrl" : "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
+      "displayName" : "Jerica Thomason",
+      "email" : "sparrowbleuphotography@gmail.com",
+      "providerData" : [ {
+        "displayName" : "Jerica Thomason",
+        "email" : "sparrowbleuphotography@gmail.com",
+        "photoURL" : "https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg",
+        "providerId" : "google.com",
+        "uid" : "100468579479220072169"
+      } ]
     }
   }
 }
+
