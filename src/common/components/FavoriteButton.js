@@ -1,3 +1,4 @@
+import cx from 'classnames'
 import _ from 'lodash/fp'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
@@ -5,13 +6,15 @@ import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
+import theme from '../../ui/styles/theme'
 
 const rules = {
   root: props => ({}),
-  image: ({ icon }) => ({
-    marginRight: icon ? '0' : '0.325em',
-    verticalAlign: 'middle',
-    height: '1em',
+  icon: ({ icon }) => ({
+    color: theme.textColors.red.hex(),
+    // marginRight: icon ? '0' : '0.325em',
+    // verticalAlign: 'middle',
+    // height: '1em',
   }),
   text: ({ icon }) =>
     Object.assign(
@@ -37,14 +40,11 @@ class FavoriteButton extends Component {
 
     if (!analysis) return null
 
-    const src = analysis.favorite
-      ? '//image.flaticon.com/icons/png/128/179/179539.png'
-      : '//image.flaticon.com/icons/png/128/126/126471.png'
+    const classes = analysis.favorite ? 'fa fa-heart' : 'fa fa-heart-o'
 
     return (
       <Button basic={icon} icon className={styles.root} onClick={this.handleClick} {...rest}>
-        <img className={styles.image} src={src} alt="Favorite button" />
-        <span className={styles.text}>Favorite</span>
+        <i className={cx(classes, styles.icon)} /> <span className={styles.text}>Favorite</span>
       </Button>
     )
   }
