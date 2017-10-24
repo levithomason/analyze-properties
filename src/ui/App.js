@@ -11,6 +11,7 @@ import Form from './components/Form'
 import Grid from './components/Grid'
 import Header from './components/Header'
 import Input from './components/Input'
+import Label from './components/Label'
 import Loader from './components/Loader'
 import Menu from './components/Menu'
 import Message from './components/Message'
@@ -21,7 +22,7 @@ import Tabs from './components/Tabs'
 import theme from './styles/theme'
 
 const DocHeader = ({ children }) => (
-  <h1>
+  <h1 id={children}>
     <a
       href={`#${children}`}
       style={{ color: '#000', opacity: 0.4, fontWeight: 100, textDecoration: 'none' }}
@@ -160,7 +161,19 @@ class App extends Component {
         <Button basic>Cancel</Button>
 
         {renderColors(Button)}
+        {renderColors(Button, { basic: true })}
         {renderRelaxed(Button)}
+
+        <DocSubheader>icon</DocSubheader>
+        <Button icon>
+          <i className="fa fa-home" />
+        </Button>
+        <Button icon>
+          <i className="fa fa-dashboard" />
+        </Button>
+        <Button icon>
+          <i className="fa fa-user" />
+        </Button>
 
         <DocHeader>Code</DocHeader>
         <Code>const greet = name => console.debug(`Hi ${name}!`)</Code>
@@ -195,6 +208,23 @@ class App extends Component {
 
         <DocHeader>Input</DocHeader>
         <Input />
+
+        <DocHeader>Label</DocHeader>
+
+        <DocSubheader>Default</DocSubheader>
+        <Label>Default</Label>
+
+        <DocSubheader>Inline</DocSubheader>
+        <p>
+          An inline <Label inline>Label</Label> sits nicely in text.
+        </p>
+
+        <DocSubheader>basic</DocSubheader>
+        <Label basic>Cancel</Label>
+
+        {renderColors(Label)}
+        {renderColors(Label, { basic: true })}
+        {renderRelaxed(Label)}
 
         <DocHeader>Loader</DocHeader>
         <Loader />
