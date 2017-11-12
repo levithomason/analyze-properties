@@ -28,11 +28,15 @@ class Menu extends Component {
   renderItems = () => {
     const { activeItem, items = [] } = this.props
 
-    return items.map(item => (
-      <MenuItem onClick={this.handleItemClick} name={item} key={item} active={activeItem === item}>
-        {item}
-      </MenuItem>
-    ))
+    return items.map(item => {
+      return MenuItem.create(item, {
+        defaultProps: {
+          onClick: this.handleItemClick,
+          name: item,
+          active: activeItem === item,
+        },
+      })
+    })
   }
 
   render() {

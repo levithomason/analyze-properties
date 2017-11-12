@@ -9,7 +9,7 @@ import Trend from '../Trend'
 
 import Divider from '../../../ui/components/Divider/Divider'
 
-class AnalyzeTabs extends Component {
+class Analyze extends Component {
   static propTypes = {
     propertyId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }
@@ -38,4 +38,4 @@ class AnalyzeTabs extends Component {
   }
 }
 
-export default AnalyzeTabs
+export default Analyze

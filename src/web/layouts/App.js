@@ -1,61 +1,36 @@
-import _ from 'lodash/fp'
-import React, { Component } from 'react'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
+import React, { createElement, Component } from 'react'
+import { withRoute } from 'react-router5'
 
-import Box from '../../ui/components/Box'
-import Divider from '../../ui/components/Divider'
-import Image from '../../ui/components/Image'
-import Button from '../../ui/components/Button'
-
+import Nav from '../components/Nav'
+import Login from '../../common/layouts/Login'
 import Analyses from '../views/Analyses'
-import Logo from '../../common/components/Logo'
-import * as styles from '../../common/styles'
+import Settings from '../views/Settings'
+import Users from '../views/Users'
 
 const rootStyle = {
-  marginLeft: styles.sidePanel({ side: 'left' }).width,
-  padding: '0 1em',
+  padding: '4em 1em 0 1em',
+}
+
+const routeComponents = {
+  analyses: Analyses,
+  login: Login,
+  settings: Settings,
+  users: Users,
 }
 
 class App extends Component {
   state = {}
 
-  handleLogout = () => {
-    const { firebase } = this.props
-    firebase.logout()
-  }
-
   render() {
-    const { profile = {} } = this.props
+    const { route } = this.props
 
     return (
       <div style={rootStyle}>
-        <Box align="center" justify="space-between">
-          <Box align="center" justifySelf="flex-start">
-            <Logo /> Analyze Properties
-          </Box>
-          <Box align="center" justifySelf="flex-end">
-            <Image avatar src={profile.avatarUrl} /> {profile.displayName}
-            <Button relaxed="left" onClick={this.handleLogout}>
-              Logout
-            </Button>
-          </Box>
-        </Box>
-
-        <Divider />
-
-        <Analyses />
+        <Nav />
+        {createElement(routeComponents[route.name])}
       </div>
     )
   }
 }
 
-export default _.flow(
-  firebaseConnect(['/analyses']),
-  reduxConnect(({ firebase: { auth, authError, data: { analyses }, profile } }) => ({
-    auth,
-    authError,
-    profile,
-    analyses: _.get(auth.uid, analyses),
-  })),
-)(App)
+export default withRoute(App)

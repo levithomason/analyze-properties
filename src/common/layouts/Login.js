@@ -31,7 +31,7 @@ const Layout = ({ header = 'Analyze Properties', children }) => {
   )
 }
 
-class LoginLayout extends Component {
+class Login extends Component {
   state = {
     error: null,
     user: null,
@@ -50,28 +50,29 @@ class LoginLayout extends Component {
     )
   }
 
+  // TODO this creates default Criteria as part of the sign up process, ideally a server side op
   createDefaultCriteria = () => {
     const { auth, firebase } = this.props
-    console.log('LoginLayout.createDefaultCriteria()', { uid: auth.uid })
+    console.log('Login.createDefaultCriteria()', { uid: auth.uid })
 
     firebase
       .ref(`/criteria/${auth.uid}`)
       .once('value')
       .then(snapshot => {
         const existingCriteria = snapshot.val()
-        console.log('LoginLayout.createDefaultCriteria() existingCriteria', existingCriteria)
+        console.log('Login.createDefaultCriteria() existingCriteria', existingCriteria)
         if (!existingCriteria) {
           rei
             .getDefaultCriteria()
             .then(defaultCriteria => {
-              console.log('LoginLayout.createDefaultCriteria() defaultCriteria', {
+              console.log('Login.createDefaultCriteria() defaultCriteria', {
                 uid: auth.uid,
                 defaultCriteria,
               })
               firebase.set(`/criteria/${auth.uid}`, defaultCriteria)
             })
             .catch(error => {
-              console.log('LoginLayout.createDefaultCriteria() error', error)
+              console.log('Login.createDefaultCriteria() error', error)
               throw error
             })
         }
@@ -263,7 +264,7 @@ class LoginLayout extends Component {
       )
     }
 
-    return React.Children.only(children)
+    return <div>You are already logged in</div>
   }
 }
 
@@ -278,4 +279,4 @@ export default _.flow(
     authError,
     profile,
   })),
-)(LoginLayout)
+)(Login)

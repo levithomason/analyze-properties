@@ -4,6 +4,8 @@ import icon16 from '../../public/icon16.png'
 import icon48 from '../../public/icon48.png'
 import icon128 from '../../public/icon128.png'
 
+import { Image } from 'semantic-ui-react'
+
 const iconsBySize = {
   small: icon16,
   medium: icon48,
@@ -16,7 +18,7 @@ const widthBySize = {
   large: 64,
 }
 
-const Logo = ({ size }) => <img width={widthBySize[size]} src={iconsBySize[size]} alt="Logo" />
+const Logo = ({ size }) => <Image width={widthBySize[size]} src={iconsBySize[size]} alt="Logo" />
 
 Logo.propTypes = {
   size: PropTypes.oneOf(['small', 'medium', 'large']),

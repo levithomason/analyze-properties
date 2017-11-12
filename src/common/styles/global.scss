@@ -1,0 +1,18 @@
+#analyze-properties {
+  //
+  // Scrollbars
+  //
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #A0A4AF;
+    border-radius: 0;
+    border: 1px solid white;
+  }
+}

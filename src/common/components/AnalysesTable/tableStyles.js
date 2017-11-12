@@ -12,11 +12,18 @@ const tableStyles = {
   tableCellCollapse: () => ({
     width: '1px',
   }),
-  tableValueCell: ({ active }) => ({
-    padding: '0.5em',
-    fontFamily: 'monospace',
-    textAlign: 'right',
-  }),
+  tableValueCell: ({ active }) => {
+    return Object.assign(
+      {
+        padding: '0.5em',
+        fontFamily: 'monospace',
+        textAlign: 'right',
+      },
+      active && {
+        fontWeight: 'bold',
+      },
+    )
+  },
   tableRow: ({ active, analysis = {} }) => {
     return Object.assign(
       {
@@ -27,17 +34,17 @@ const tableStyles = {
         filter: 'grayscale() brightness(1.1) contrast(0.9)',
       },
       !active && {
-        transform: 'scale3d(0.98, 0.98, 0.98)',
+        // transform: 'scale3d(0.98, 0.98, 0.98)',
         cursor: 'pointer',
         onHover: {
           background: 'rgba(0, 0, 0, 0.03)',
         },
       },
       active && {
-        transform: 'scale3d(1, 1, 1)',
+        // transform: 'scale3d(1, 1, 1)',
         boxShadow: [
-          '0 0 2em rgba(0, 0, 0, 0.2)',
-          `inset 0 0 0 1px ${theme.colors.blue.fade(0.5).rgb()}`,
+          '0 0 1em rgba(0, 0, 0, 0.2)',
+          // `inset 0 0 0 1px ${theme.colors.blue.fade(0.5).rgb()}`,
         ].join(),
       },
     )

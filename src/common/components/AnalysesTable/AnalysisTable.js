@@ -1,15 +1,15 @@
+import cx from 'classnames'
 import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
+import { Checkbox, Icon, Input, Label, Menu } from 'semantic-ui-react'
 
 import AnalysesTableRow from './AnalysesTableRow'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
-
-import Button from '../../../ui/components/Button/Button'
 
 class AnalysesTable extends Component {
   static propTypes = {
@@ -26,7 +26,7 @@ class AnalysesTable extends Component {
     sortDirection: null,
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState((prevState, props) => ({
       analyses: this.sortAnalysesByBestDeal(this.props.analyses),
     }))
@@ -45,6 +45,8 @@ class AnalysesTable extends Component {
       }))
     }
   }
+
+  handleSearchChange = (e, { value }) => this.setState(() => ({ searchQuery: value }))
 
   sortAnalysesByBestDeal = analyses => {
     const isFirstSort = _.isEmpty(this.state.analyses) && !_.isEmpty(analyses)
@@ -73,7 +75,7 @@ class AnalysesTable extends Component {
 
   sortBy = sortBy => () => {
     this.setState((prevState, props) => {
-      // changed headers, sort asc
+      // changed headers, sort ascending
       // same header, toggle direction
       const sortDirection =
         prevState.sortBy !== sortBy ? 'asc' : prevState.sortDirection === 'asc' ? 'desc' : null
@@ -84,27 +86,61 @@ class AnalysesTable extends Component {
     })
   }
 
-  toggleOnlyFavorites = () =>
+  toggleOnlyFavorites = () => {
     this.setState(prevState => ({ onlyFavorites: !prevState.onlyFavorites }))
+  }
+
+  clearSort = () => this.setState(() => ({ sortBy: null, sortDirection: null }))
 
   render() {
     const { onRowClick, selectedPropertyId, styles } = this.props
-    const { analyses, onlyFavorites, sortBy, sortDirection } = this.state
+    const { analyses, onlyFavorites, searchQuery, sortBy, sortDirection } = this.state
 
     if (_.isEmpty(analyses)) return null
 
-    const orderedAnalyses = _.orderBy(
-      [sortBy],
-      [sortDirection],
-      onlyFavorites ? _.filter('favorite', analyses) : analyses,
-    )
+    const orderedAnalyses = _.flow(
+      _.orderBy([sortBy], [sortDirection]),
+      _.filter(analysis => {
+        const regExp = new RegExp(_.escapeRegExp(searchQuery), 'gi')
+
+        const isSearchHit = searchQuery ? _.some(val => regExp.test(val), analysis) : true
+        const isFilterMatch = onlyFavorites ? analysis.favorite : true
+
+        return isSearchHit && isFilterMatch
+      }),
+    )(analyses)
 
     return (
       <div>
+        <Menu text>
+          <Menu.Item>
+            <Input
+              icon="search"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={this.handleSearchChange}
+            />
+          </Menu.Item>
+          <Menu.Item>
+            <Checkbox
+              label="Favorites only"
+              onChange={this.toggleOnlyFavorites}
+              checked={onlyFavorites}
+            />
+          </Menu.Item>
+        </Menu>
+        {sortBy && (
+          <Label
+            horizontal
+            basic
+            color="blue"
+            content={_.find({ key: sortBy }, COLUMNS).label}
+            detail={_.capitalize(sortDirection) + 'ending'}
+            onRemove={this.clearSort}
+          />
+        )}
         <div>
-          <Button onClick={this.toggleOnlyFavorites}>
-            Show {onlyFavorites ? 'all deals' : 'favorites'}
-          </Button>
+          <strong>{orderedAnalyses.length.toLocaleString()}</strong>&nbsp;results
         </div>
         <table className={styles.table}>
           <thead>
@@ -112,11 +148,7 @@ class AnalysesTable extends Component {
               <th className={styles.headerCell}>{/* Location */}</th>
               {COLUMNS.map(({ key, label }) => (
                 <th key={key} className={styles.headerCell} onClick={this.sortBy(key)}>
-                  {sortBy === key ? (
-                    <i className={`fa fa-sort-${sortDirection === 'asc' ? 'asc' : 'desc'}`} />
-                  ) : (
-                    <i className="fa fa-sort" />
-                  )}{' '}
+                  <Icon name={cx('sort', sortBy === key && sortDirection + 'ending')} />
                   {label}
                 </th>
               ))}

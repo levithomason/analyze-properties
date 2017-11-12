@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createElement } from 'react'
 import ReactDOM from 'react-dom'
 
 import { Provider as ReactReduxProvider } from 'react-redux'
@@ -11,11 +11,11 @@ import friendlyPseudoClass from 'fela-plugin-friendly-pseudo-class'
 import placeholderPrefixer from 'fela-plugin-placeholder-prefixer'
 import prefixer from 'fela-plugin-prefixer'
 import fallbackValue from 'fela-plugin-fallback-value'
-// import important from 'fela-plugin-important'
 import validator from 'fela-plugin-validator'
 import unit from 'fela-plugin-unit'
 
 import store from './modules/store'
+import './styles/global.scss'
 
 const createIndex = ({ styles = {}, importRoot }) => {
   // Mount node
@@ -34,7 +34,6 @@ const createIndex = ({ styles = {}, importRoot }) => {
       prefixer(), // Adds all vendor prefixes to the styles
       fallbackValue(), // Resolves arrays of fallback values (required after prefixer)
       unit(), // Automatically adds units to values if needed
-      // important(), // Adds !important to every declaration value (mostly for in-page extension)
     ],
   }
 
@@ -66,7 +65,13 @@ const createIndex = ({ styles = {}, importRoot }) => {
         <ReactReduxProvider store={store}>
           <ThemeProvider theme={theme}>
             <FelaProvider renderer={styleRenderer}>
-              <Root />
+              <div>
+                <Root />
+                {__DEV__ &&
+                  createElement(require('mobx-react-devtools').default, {
+                    position: { bottom: 0, right: '1em' },
+                  })}
+              </div>
             </FelaProvider>
           </ThemeProvider>
         </ReactReduxProvider>,

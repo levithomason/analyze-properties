@@ -32,6 +32,7 @@ const thumb = {
   overflow: 'visible',
   width: thumbWidth,
   height: trackHeight,
+  background: thumbColor,
   border: `${thumbBorderWidth} solid ${thumbBorderColor}`,
   borderRadius: thumbRadius,
   cursor: 'pointer',
@@ -44,26 +45,31 @@ const hoverFocus = {
   '&::-webkit-slider-thumb': {
     background: thumbHoverColor,
     height: thumbHeight,
-    transform: 'translateY(0)',
+    // transform: 'translateY(0)',
   },
 
   '&::-moz-range-thumb': {
     background: thumbHoverColor,
     height: thumbHeight,
+    // transform: 'translateY(0)',
   },
 
   '&::-ms-thumb': {
     background: thumbHoverColor,
     height: thumbHeight,
+    // transform: 'translateY(0)',
   },
   '&::-webkit-slider-runnable-track': {
     background: trackHoverColor,
+    // transform: 'translateY(0)',
   },
   '&::-ms-fill-lower': {
     background: trackHoverColor,
+    // transform: 'translateY(0)',
   },
   '&::-ms-fill-upper': {
     background: thumbHoverColor,
+    // transform: 'translateY(0)',
   },
 }
 

@@ -1,4 +1,3 @@
-// This is used
 export const sidePanel = ({ side }) => ({
   position: 'fixed',
   top: 0,

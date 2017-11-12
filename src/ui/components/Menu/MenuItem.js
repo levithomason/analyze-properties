@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import createComponent from '../../lib/createComponent'
 
 export const rules = {
@@ -20,12 +21,12 @@ export const rules = {
 
 class MenuItem extends Component {
   handleClick = e => {
-    const { onClick, name } = this.props
-    if (onClick) onClick(e, { name })
+    const { onClick, index } = this.props
+    if (onClick) onClick(e, { index })
   }
 
   render() {
-    const { ElementType, styles, theme, active, children, name, onClick, ...rest } = this.props
+    const { ElementType, styles, theme, active, children, index, onClick, ...rest } = this.props
     return (
       <ElementType {...rest} onClick={this.handleClick}>
         {children}

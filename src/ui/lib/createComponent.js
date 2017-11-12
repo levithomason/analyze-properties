@@ -59,7 +59,7 @@ const createComponent = (config = {}) => WrappedComponent => {
     )
   }
 
-  class BaseComponent extends Component {
+  class UIBaseComponent extends Component {
     displayName = `createComponent(${displayName})`
 
     getElementType = () => {
@@ -69,14 +69,11 @@ const createComponent = (config = {}) => WrappedComponent => {
 
     getClassNames = () => {
       const { className, styles } = this.props
-      return cx(styles.global, styles.root, className)
+      return cx(displayName, styles.global, styles.root, className)
     }
 
     render() {
       const { as, className, styles, theme, relaxed, ...rest } = this.props
-
-      // make browser debug easier
-      rest[`data-ui-${displayName}`] = true
 
       return (
         <WrappedComponent
@@ -92,7 +89,7 @@ const createComponent = (config = {}) => WrappedComponent => {
 
   return compose(felaConnect(rules), StyledComponent =>
     hoistNonReactStatics(StyledComponent, WrappedComponent),
-  )(BaseComponent)
+  )(UIBaseComponent)
 }
 
 export default createComponent

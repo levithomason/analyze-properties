@@ -5,12 +5,32 @@ import React, { Component } from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
+import { Icon } from 'semantic-ui-react'
 
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
 import FavoriteButton from '../../components/FavoriteButton'
 import theme from '../../../ui/styles/theme'
 import * as rei from '../../resources/rei'
+
+const overlayTextStyle = {
+  position: 'absolute',
+  padding: '0.125em',
+  width: '100%',
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  color: 'rgba(255, 255, 255, 0.9)',
+  fontSize: '11px',
+  lineHeight: '1.5',
+  textAlign: 'right',
+  textShadow: '0 0.5px 1px rgba(0, 0, 0, 0.75)',
+  whiteSpace: 'nowrap',
+  textTransform: 'uppercase',
+  background: `linear-gradient(transparent, rgba(0, 0, 0, 0.5))`,
+}
 
 class AnalysesTableRow extends Component {
   static propTypes = {
@@ -45,9 +65,11 @@ class AnalysesTableRow extends Component {
 
     if (!analysis || !criteria) return null
 
-    const { url, image, address, city, state, zip } = analysis
+    const { beds, baths, url, image, address, city, state, zip } = analysis
 
     const check = rei.checkDeal(analysis, criteria)
+    const isGoodDeal = _.every(_.identity, _.values(check))
+    const checkColor = theme.statusTextColors[isGoodDeal ? 'success' : 'error'].hex()
 
     return (
       <tr onClick={this.handleClick} className={styles.tableRow}>
@@ -59,33 +81,22 @@ class AnalysesTableRow extends Component {
               display: 'block',
               width: '12em',
               height: '8em',
+              borderLeft: `3px solid ${checkColor}`,
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
+              opacity: active ? 1 : 0.9,
             }}
             target="_blank"
           >
-            <span
-              style={{
-                position: 'absolute',
-                padding: '0.125em',
-                width: '100%',
-                bottom: '0',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontSize: '11px',
-                textShadow: '0 1px rgba(0, 0, 0, 0.75)',
-                whiteSpace: 'nowrap',
-                textTransform: 'uppercase',
-                background: `linear-gradient(transparent, rgba(0, 0, 0, 0.5))`,
-              }}
-            >
+            <div style={overlayTextStyle}>
+              <Icon name="bed" /> {beds} <Icon name="bath" /> {baths}
+              <br />
               {address}
               <br />
               {city}, {state} {zip}
-            </span>
+            </div>
           </a>
         </td>
         {COLUMNS.map(({ key, format }) => (
@@ -95,7 +106,7 @@ class AnalysesTableRow extends Component {
             style={{
               color: _.has(key, check)
                 ? theme.textColors[check[key] ? 'green' : 'red'].hex()
-                : null,
+                : 'none',
             }}
           >
             {format(analysis[key])}

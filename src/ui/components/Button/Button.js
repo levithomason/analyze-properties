@@ -27,7 +27,7 @@ export const rules = {
           color: theme.textColors.white.hex(),
           onHover: {
             background: background.darken(0.1).hex(),
-            color: null,
+            color: 'none',
           },
           onActive: {
             // instantly change background on tap, transition is too slow
@@ -44,12 +44,12 @@ export const rules = {
           boxShadow: 'none',
           color: theme.textColors[color || 'gray'].lighten(0.2).hex(),
           onHover: {
-            background: null,
+            background: 'none',
             boxShadow: 'inset 0 0 0 2px ' + background.lighten(0.5).hex(),
             color: theme.textColors[color || 'gray'].hex(),
           },
           onActive: {
-            background: null,
+            background: 'none',
             boxShadow: 'inset 0 0 0 2px ' + background.hex(),
             color: theme.textColors[color || 'gray'].darken(0.1).hex(),
           },

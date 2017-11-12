@@ -1,5 +1,8 @@
-import 'normalize.css'
-import '../ui/styles/ui.scss'
+// import 'normalize.css'
+// import '../ui/styles/ui.scss'
+
+import 'font-awesome/css/font-awesome.css'
+import 'semantic-ui-css/semantic.css'
 
 import createIndex from '../common/createIndex'
 

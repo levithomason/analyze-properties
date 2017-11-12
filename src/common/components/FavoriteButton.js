@@ -9,20 +9,20 @@ import Button from '../../ui/components/Button'
 import theme from '../../ui/styles/theme'
 
 const rules = {
-  root: props => ({}),
   icon: ({ icon }) => ({
     color: theme.textColors.red.hex(),
     // marginRight: icon ? '0' : '0.325em',
     // verticalAlign: 'middle',
     // height: '1em',
   }),
-  text: ({ icon }) =>
-    Object.assign(
+  text: ({ icon }) => {
+    return Object.assign(
       {},
       icon && {
         display: 'none',
       },
-    ),
+    )
+  },
 }
 
 class FavoriteButton extends Component {
@@ -43,7 +43,7 @@ class FavoriteButton extends Component {
     const classes = analysis.favorite ? 'fa fa-heart' : 'fa fa-heart-o'
 
     return (
-      <Button basic={icon} icon className={styles.root} onClick={this.handleClick} {...rest}>
+      <Button basic={icon} icon onClick={this.handleClick} {...rest}>
         <i className={cx(classes, styles.icon)} /> <span className={styles.text}>Favorite</span>
       </Button>
     )

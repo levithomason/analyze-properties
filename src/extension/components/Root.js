@@ -2,7 +2,7 @@ import _ from 'lodash/fp'
 import React, { Component } from 'react'
 
 import Loader from '../../ui/components/Loader'
-import LoginLayout from '../../common/layouts/LoginLayout'
+import Login from '../../common/layouts/Login'
 import * as styles from '../../common/styles'
 
 import App from '../views/App'
@@ -86,13 +86,13 @@ class Root extends Component {
 
     return (
       <div style={{ ...style }}>
-        <LoginLayout>
+        <Login>
           {!propertyId ? (
             <Loader active>Waiting for property id...</Loader>
           ) : (
             <App propertyId={propertyId} />
           )}
-        </LoginLayout>
+        </Login>
       </div>
     )
   }
