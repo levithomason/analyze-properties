@@ -11,6 +11,8 @@ import Divider from '../../ui/components/Divider'
 import Header from '../../ui/components/Header'
 import Message from '../../ui/components/Message'
 
+import router from '../router'
+
 const Layout = ({ header = 'Analyze Properties', children }) => {
   const layoutStyle = {
     padding: __EXTENSION__ ? '1em' : 0,
@@ -35,6 +37,20 @@ class Login extends Component {
   state = {
     error: null,
     user: null,
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { firebase, analyses, auth, roles } = this.props
+    if (
+      !firebase.isInitializing &&
+      auth.isLoaded &&
+      !auth.isEmpty &&
+      roles &&
+      this.isApproved() &&
+      !_.isEmpty(analyses)
+    ) {
+      router.navigate('users')
+    }
   }
 
   logout = () => {
@@ -125,8 +141,14 @@ class Login extends Component {
     }
   }
 
+  isApproved = () => {
+    const { auth, roles } = this.props
+
+    return _.get(['approved', auth.uid], roles)
+  }
+
   render() {
-    const { firebase, analyses, auth, authError, children, profile, roles } = this.props
+    const { firebase, analyses, auth, authError, profile, roles } = this.props
     const { error } = this.state
 
     const errorMessage = authError.message || _.get('message', error)
@@ -173,10 +195,9 @@ class Login extends Component {
 
     if (!roles) return <Layout header="Checking access..." />
 
-    const isApproved = _.get(['approved', auth.uid], roles)
     const firstName = (_.get('displayName', profile) || '').split(' ')[0]
 
-    if (!isApproved) {
+    if (!this.isApproved()) {
       return (
         <Layout header={_.compact(['Thanks for joining', firstName]).join(', ') + '!'}>
           <p>Your access request is being reviewed.</p>
@@ -240,7 +261,7 @@ class Login extends Component {
 
           <div style={{ opacity: 0.5 }}>
             <p>
-              We currently support {' '}
+              We currently support{' '}
               <a
                 rel="noopener noreferrer"
                 target="_blank"
@@ -264,7 +285,8 @@ class Login extends Component {
       )
     }
 
-    return <div>You are already logged in</div>
+    // CDU navigates us to users in this case...
+    return null
   }
 }
 

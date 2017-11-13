@@ -56,8 +56,14 @@ path /roles {
 path /users/{uid} is User {
   create() { isAuthenticated() }
   read() { isCurrentUser(uid) }
-  update() { isCurrentUser(uid) }
+  update() { isSuperAdmin() || isCurrentUser(uid) }
   delete() { isSuperAdmin() }
+
+  /roles {
+    update() {
+      isSuperAdmin()
+    }
+  }
 }
 
 // ------------------------------------------------------------
@@ -193,6 +199,7 @@ type User {
   displayName: String,
   email: String,
   providerData: Object | Null,
+  roles: Map<String, Boolean> | Null,
 }
 
 // ------------------------------------------------------------

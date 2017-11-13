@@ -112,7 +112,7 @@ class AnalysesTable extends Component {
 
     return (
       <div>
-        <Menu text>
+        <Menu text style={{ display: 'inline-flex' }}>
           <Menu.Item>
             <Input
               icon="search"
@@ -137,6 +137,7 @@ class AnalysesTable extends Component {
             content={_.find({ key: sortBy }, COLUMNS).label}
             detail={_.capitalize(sortDirection) + 'ending'}
             onRemove={this.clearSort}
+            style={{ margin: '0 1em' }}
           />
         )}
         <div>
