@@ -24,6 +24,7 @@ const snapshotToRecord = snapshot => {
 
 /**
  * A class for working with lists of firebase records.
+ * Firebase keys objects by id. FirebaseRecordList adds/removes an `id` key to each object on request.
  * Each firebase child is converted to/from an object with an `id` equal to the firebase `key`.
  */
 class FirebaseRecordList {
@@ -62,14 +63,16 @@ class FirebaseRecordList {
       .then(snapshotToRecord)
   }
 
-  /** Update the child from a record with an `id`. */
-  update = record => {
+  /** Update the child record by `id`. */
+  update = (id, record) => {
     console.debug('FirebaseRecordList.update', this._ref.key, record)
-    const { id, ...data } = record
+    // ensure we don't persist an id in the record
+    // we are keying by id on firebase
+    const update = { ...record, id: null }
 
     return this._ref
       .child(id)
-      .update(data)
+      .update(update)
       .then(snapshotToRecord)
   }
 
@@ -79,7 +82,7 @@ class FirebaseRecordList {
     return this._ref.child(id).remove()
   }
 
-  /** Get all children at this `path` as records. */
+  /** Get all children at this `path` as an array of records. */
   list = () => {
     console.debug('FirebaseRecordList.list', this._ref.key)
     return this._ref.once('value').then(snapshot => {

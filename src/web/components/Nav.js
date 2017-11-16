@@ -2,6 +2,7 @@ import _ from 'lodash/fp'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
+import { firebaseConnect } from 'react-redux-firebase'
 import { Link } from 'react-router5'
 
 import { Button, Image, Menu } from 'semantic-ui-react'
@@ -19,6 +20,10 @@ const menuStyle = {
 const menuItemStyle = { background: 'none' }
 
 class Nav extends Component {
+  static propTypes = {
+    profile: PropTypes.object,
+  }
+
   handleLogout = () => {
     const { firebase } = this.props
     firebase.logout()
@@ -51,6 +56,7 @@ class Nav extends Component {
 }
 
 export default _.flow(
+  firebaseConnect(),
   reduxConnect(({ firebase: { profile } }) => ({
     profile,
   })),

@@ -2,6 +2,7 @@ import React, { createElement } from 'react'
 import ReactDOM from 'react-dom'
 
 import { Provider as ReactReduxProvider } from 'react-redux'
+import { Provider as MobXProvider } from 'mobx-react'
 
 import { createRenderer } from 'fela'
 import { Provider as FelaProvider, ThemeProvider } from 'react-fela'
@@ -15,6 +16,7 @@ import validator from 'fela-plugin-validator'
 import unit from 'fela-plugin-unit'
 
 import store from './modules/store'
+import rootStore from './stores/rootStore'
 import './styles/global.scss'
 
 const createIndex = ({ styles = {}, importRoot }) => {
@@ -57,27 +59,28 @@ const createIndex = ({ styles = {}, importRoot }) => {
 
   // Render App
   const render = () => {
-    Promise.all([
-      importRoot(),
-      import('../ui/styles/theme'),
-    ]).then(([{ default: Root }, { default: theme }]) => {
-      ReactDOM.render(
-        <ReactReduxProvider store={store}>
-          <ThemeProvider theme={theme}>
-            <FelaProvider renderer={styleRenderer}>
-              <div>
-                <Root />
-                {__DEV__ &&
-                  createElement(require('mobx-react-devtools').default, {
-                    position: { bottom: 0, right: '1em' },
-                  })}
-              </div>
-            </FelaProvider>
-          </ThemeProvider>
-        </ReactReduxProvider>,
-        mountNode,
-      )
-    })
+    Promise.all([importRoot(), import('../ui/styles/theme')]).then(
+      ([{ default: Root }, { default: theme }]) => {
+        ReactDOM.render(
+          <MobXProvider {...rootStore}>
+            <ReactReduxProvider store={store}>
+              <ThemeProvider theme={theme}>
+                <FelaProvider renderer={styleRenderer}>
+                  <div>
+                    <Root />
+                    {__DEV__ &&
+                      createElement(require('mobx-react-devtools').default, {
+                        position: { bottom: 0, right: '1em' },
+                      })}
+                  </div>
+                </FelaProvider>
+              </ThemeProvider>
+            </ReactReduxProvider>
+          </MobXProvider>,
+          mountNode,
+        )
+      },
+    )
   }
 
   if (module.hot) {

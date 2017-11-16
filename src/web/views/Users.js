@@ -1,56 +1,50 @@
 import _ from 'lodash/fp'
-import { observer } from 'mobx-react'
+import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { Checkbox, Dropdown, Image, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Image, Table } from 'semantic-ui-react'
 
-import UserStore from '../../common/models/UserStore'
-import * as transport from '../../common/lib/transport'
-
+@inject('roleStore')
+@inject('userStore')
 @observer
 class Users extends Component {
   state = {}
 
   componentDidMount() {
-    const tom = UserStore.records.find(u => u.email === 'tomthomason1963@gmail.com')
-    tom.startSyncing()
-
-    transport.roles.list().then(roles => {
-      this.setState(() => ({ roles }))
+    const { roleStore, userStore } = this.props
+    roleStore.fetch().then(roles => {
+      console.log('Users componentDidMount roleStore.fetch', roles)
+      roleStore.getRoleById('superAdmin').startSyncing()
+      userStore.fetch()
     })
   }
 
-  handleRoleChange = user => (e, { value }) => {
-    console.log('Users handleRoleChange', user.displayName, value)
+  handleToggleRole = (user, role) => () => {
+    const hasRole = user.hasRole(role)
+    console.log('Users handleToggleRole', user.displayName, role, !hasRole)
 
-    user.setRoles(value)
+    if (hasRole) user.removeRole(role)
+    else user.addRole(role)
   }
 
-  setRole = (user, role) => (e, { checked }) => {
-    console.log('Users setRole', role, checked)
-    user.setRole(role, checked)
-  }
+  toggleDebug = () => this.setState(prevState => ({ debug: !prevState.debug }))
 
   render() {
-    const { roles } = this.state
-    const approvedRoles = _.find({ id: 'approved' }, roles)
-    const superAdminRoles = _.find({ id: 'superAdmin' }, roles)
+    const { roleStore, userStore } = this.props
+    const { debug } = this.state
+
+    const otherRoles = roleStore.roleIds.filter(id => id !== 'approved')
 
     return (
       <div>
-        {/*<pre>*/}
-        {/*<code>{JSON.stringify(roles, null, 2)}</code>*/}
-        {/*</pre>*/}
-        {/*<pre>*/}
-        {/*<code>{JSON.stringify(UserStore.asJSON, null, 2)}</code>*/}
-        {/*</pre>*/}
-        <Table compact>
+        <Button onClick={this.toggleDebug}>Debug</Button>
+        <Table compact singleLine>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell collapsing>Approved</Table.HeaderCell>
-              <Table.HeaderCell>User</Table.HeaderCell>
-              <Table.HeaderCell>Email</Table.HeaderCell>
-              <Table.HeaderCell>roles</Table.HeaderCell>
-              <Table.HeaderCell>Super Admin</Table.HeaderCell>
+              <Table.HeaderCell collapsing>User</Table.HeaderCell>
+              <Table.HeaderCell collapsing>Email</Table.HeaderCell>
+              {_.map(role => <Table.HeaderCell key={role}>{role}</Table.HeaderCell>, otherRoles)}
+              <Table.HeaderCell>id</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -60,36 +54,44 @@ class Users extends Component {
                   <Table.Cell>
                     <Checkbox
                       toggle
-                      checked={_.has(user.id, approvedRoles)}
-                      onChange={this.setRole(user, 'approved')}
+                      checked={user.hasRole('approved')}
+                      onChange={this.handleToggleRole(user, 'approved')}
                     />
                   </Table.Cell>
                   <Table.Cell>
                     <Image avatar src={user.avatarUrl} /> {user.displayName}
                   </Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>
-                    <Dropdown
-                      multiple
-                      search
-                      selection
-                      options={_.map(role => ({ text: role, value: role }), [
-                        'approved',
-                        'superAdmin',
-                      ])}
-                      onChange={this.handleRoleChange(user)}
-                      value={_.keys(_.pickBy(_.identity, user.roles))}
-                    />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Checkbox checked={_.has(user.id, superAdminRoles)} />
-                  </Table.Cell>
+                  {_.map(
+                    role => (
+                      <Table.Cell key={role}>
+                        <Checkbox
+                          checked={user.hasRole(role)}
+                          onChange={this.handleToggleRole(user, role)}
+                        />
+                      </Table.Cell>
+                    ),
+                    otherRoles,
+                  )}
+                  <Table.Cell>{user.id}</Table.Cell>
                 </Table.Row>
               ),
-              UserStore.records,
+              userStore.records,
             )}
           </Table.Body>
         </Table>
+        {debug && (
+          <div>
+            <h2>Roles</h2>
+            <pre>
+              <code>{JSON.stringify(roleStore.asJSON, null, 2)}</code>
+            </pre>
+            <h2>Users</h2>
+            <pre>
+              <code>{JSON.stringify(userStore.asJSON, null, 2)}</code>
+            </pre>
+          </div>
+        )}
       </div>
     )
   }

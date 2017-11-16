@@ -8,7 +8,7 @@ import Settings from '../views/Settings'
 import Users from '../views/Users'
 
 const rootStyle = {
-  padding: '4em 1em 0 1em',
+  padding: '5em 1em 0 1em',
 }
 
 const routeComponents = {
