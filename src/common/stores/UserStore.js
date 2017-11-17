@@ -7,8 +7,8 @@ export class UserStore {
   /** Array of individual instance */
   @observable records = []
 
-  // /** Array of handler disposers to be called when the store is disposed. */
-  // handlers = []
+  /** Array of handler disposers to be called when the store is disposed. */
+  disposers = []
 
   fetch = () => {
     return transport.users.list().then(users => {
@@ -29,15 +29,9 @@ export class UserStore {
   @action
   add = record => {
     if (_.find({ id: record.id }, this.records)) return
-    console.log('UserStore.add', record)
+    // console.log('UserStore.add', record)
 
     const recordToAdd = record instanceof User ? record : new User(this, record)
-
-    const isTom = recordToAdd.email === 'tomthomason1963@gmail.com'
-    if (isTom) {
-      console.log('SYNC', isTom)
-      recordToAdd.startSyncing()
-    }
 
     this.records.push(recordToAdd)
   }
@@ -54,37 +48,48 @@ export class UserStore {
     return _.map(instance => instance.asJSON, this.records)
   }
 
-  // addListeners = () => {
-  //   this.handlers = [
-  //     transport.users.onChildAdded(this.add),
-  //     transport.users.onChildRemoved(this.remove),
-  //   ]
-  // }
-  //
-  // removeListeners = () => {
-  //   while (this.handlers.length) {
-  //     const handler = this.handlers.pop()
-  //     handler()
-  //   }
-  // }
+  startSyncing = () => {
+    // enable sync on all child records
+    this.records.forEach(record => record.startSyncing())
+
+    this.disposers = [
+      transport.users.onChildAdded(this.add),
+      transport.users.onChildRemoved(this.remove),
+    ]
+  }
+
+  stopSyncing = () => {
+    // disable sync on all child records
+    this.records.forEach(record => record.stopSyncing())
+
+    while (this.disposers.length) {
+      const handler = this.disposers.pop()
+      handler()
+    }
+  }
 }
 
 export class User {
   /** unique id of this user, immutable. */
   id = null
-  @observable avatarUrl = ''
-  @observable displayName = ''
-  @observable email = ''
-  @observable providerData = {}
+
+  /** Whether or not changes should sync to/from the server. */
+  isSyncEnabled = true
 
   /**
-   * A reference to the store for this instance
+   * A reference to the store for this instance.
    * @type UserStore
    */
   store = null
 
   /** Array of handler disposers to be called when the instance is disposed. */
-  handlers = []
+  disposers = []
+
+  /** User record data/ */
+  @observable avatarUrl = ''
+  @observable displayName = ''
+  @observable email = ''
+  @observable providerData = {}
 
   constructor(store, json) {
     console.log('User new', json)
@@ -123,10 +128,11 @@ export class User {
 
   /** Start syncing model changes to/from the server. */
   startSyncing = () => {
-    if (this.hasHandlers()) return
+    if (this.isSyncEnabled) return
+    this.isSyncEnabled = true
     console.log('User.startSyncing', this)
 
-    this.handlers = [
+    this.disposers = [
       // from the server
       transport.users.onChange(this.id, json => {
         if (_.isEqual(this.asJSON, json)) return
@@ -150,23 +156,23 @@ export class User {
 
   /** Stop syncing model changes to/from the server. */
   stopSyncing = () => {
-    if (!this.hasHandlers()) return
+    if (!this.isSyncEnabled) return
+    this.isSyncEnabled = false
     console.log('User.stopSyncing', this)
 
-    while (!_.isEmpty(this.handlers)) {
-      const handler = this.handlers.pop()
+    while (this.disposers.length) {
+      const handler = this.disposers.pop()
       handler()
     }
   }
 
-  hasHandlers = () => !_.isEmpty(this.handlers)
-
   /** Perform some work with sync disabled and restore() sync state when done. */
   withoutSyncing = cb => {
-    const wasSyncing = this.hasHandlers()
-    if (wasSyncing) this.stopSyncing()
+    const wasSyncEnabled = this.isSyncEnabled
 
-    const restore = () => wasSyncing && this.startSyncing()
+    this.stopSyncing()
+
+    const restore = () => wasSyncEnabled && this.startSyncing()
 
     cb(restore)
   }
@@ -203,9 +209,9 @@ export class User {
    *
    * @param {string} roleId - A role id string (i.e the role name).
    */
-  hasRole = roleId => roleStore.isUserInRole(this.id, roleId)
-  addRole = roleId => roleStore.addUserToRole(this.id, roleId)
-  removeRole = roleId => roleStore.removeUserFromRole(this.id, roleId)
+  isInRole = roleId => roleStore.isUserInRole(this.id, roleId)
+  addToRole = roleId => roleStore.addUserToRole(this.id, roleId)
+  fromFromRole = roleId => roleStore.removeUserFromRole(this.id, roleId)
 
   @computed
   get roles() {

@@ -11,19 +11,16 @@ class Users extends Component {
 
   componentDidMount() {
     const { roleStore, userStore } = this.props
-    roleStore.fetch().then(roles => {
-      console.log('Users componentDidMount roleStore.fetch', roles)
-      roleStore.getRoleById('superAdmin').startSyncing()
-      userStore.fetch()
-    })
+    userStore.fetch()
+    roleStore.fetch()
   }
 
   handleToggleRole = (user, role) => () => {
-    const hasRole = user.hasRole(role)
+    const hasRole = user.isInRole(role)
     console.log('Users handleToggleRole', user.displayName, role, !hasRole)
 
-    if (hasRole) user.removeRole(role)
-    else user.addRole(role)
+    if (hasRole) user.fromFromRole(role)
+    else user.addToRole(role)
   }
 
   toggleDebug = () => this.setState(prevState => ({ debug: !prevState.debug }))
@@ -54,7 +51,7 @@ class Users extends Component {
                   <Table.Cell>
                     <Checkbox
                       toggle
-                      checked={user.hasRole('approved')}
+                      checked={user.isInRole('approved')}
                       onChange={this.handleToggleRole(user, 'approved')}
                     />
                   </Table.Cell>
@@ -66,7 +63,7 @@ class Users extends Component {
                     role => (
                       <Table.Cell key={role}>
                         <Checkbox
-                          checked={user.hasRole(role)}
+                          checked={user.isInRole(role)}
                           onChange={this.handleToggleRole(user, role)}
                         />
                       </Table.Cell>

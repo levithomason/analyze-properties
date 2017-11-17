@@ -13,7 +13,7 @@ class EventStack {
     // console.debug('EventStack.compactProcessors()', eventName)
 
     // empty stack, remove processor
-    if (_.isEmpty(this.handlers[eventName])) {
+    if (_.isEmpty(this.disposers[eventName])) {
       // console.debug('...EventStack: stack is empty, remove document listener')
       document.removeEventListener(eventName, this.processors[eventName])
       delete this.processors[eventName]
@@ -23,7 +23,7 @@ class EventStack {
   // TODO right now this treats all handlers as "once" handlers
   processor = eventName => event => {
     // console.debug('EventStack.processor()', eventName)
-    const nextHandler = this.handlers[eventName].pop()
+    const nextHandler = this.disposers[eventName].pop()
 
     if (nextHandler) nextHandler(event)
 
@@ -32,13 +32,13 @@ class EventStack {
 
   sub = (eventName, handler) => {
     // console.debug('EventStack.sub()', eventName, handler)
-    this.handlers[eventName] = this.handlers[eventName] || []
+    this.disposers[eventName] = this.disposers[eventName] || []
 
-    this.handlers[eventName].push(handler)
+    this.disposers[eventName].push(handler)
     // console.debug('...EventStack: handlers', this.handlers[eventName])
 
     // stack has handlers and there is no processor, add processor
-    if (!_.isEmpty(this.handlers[eventName]) && !this.processors[eventName]) {
+    if (!_.isEmpty(this.disposers[eventName]) && !this.processors[eventName]) {
       // console.debug('...EventStack: stack has handler, add document listener')
       this.processors[eventName] = this.processor(eventName)
       document.addEventListener(eventName, this.processors[eventName])
@@ -47,7 +47,7 @@ class EventStack {
 
   unsub = (eventName, handler) => {
     // console.debug('EventStack.unsub()', eventName, handler)
-    this.handlers[eventName] = this.handlers[eventName].filter(h => h !== handler)
+    this.disposers[eventName] = this.disposers[eventName].filter(h => h !== handler)
     // console.debug('...EventStack: handlers', this.handlers[eventName])
 
     this.compactProcessors(eventName)

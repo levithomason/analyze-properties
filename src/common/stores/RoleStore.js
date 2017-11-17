@@ -19,7 +19,7 @@ export class RoleStore {
 
   fetch = () => {
     return transport.roles.list().then(roles => {
-      _.map(this.add, roles)
+      _.forEach(this.add, roles)
       return roles
     })
   }
@@ -27,13 +27,15 @@ export class RoleStore {
   // TODO add syncing to handle roles added/removed from the system
 
   isUserInRole = (userId, roleId) => {
-    return this.getRoleById(roleId).includesUser(userId)
+    const role = this.getRoleById(roleId)
+
+    return !!role && role.includesUser(userId)
   }
 
   getRoleById = roleId => {
-    const role = _.find({ id: roleId }, this.records)
+    const role = _.find({ id: roleId }, this.records) || null
 
-    if (!role) throw new Error(`RoleStore.getRoleById() roleId "${roleId}" not found.`)
+    if (!role) console.warn(`RoleStore.getRoleById() roleId "${roleId}" does not exist in the store.`)
 
     return role
   }
@@ -82,9 +84,16 @@ export class RoleStore {
 }
 
 export class Role {
+  /** Immutable id from the server. */
   id = null
-  /** Whether or not changes should sync to/from the server */
-  shouldSync = true
+
+  /** Array of handler disposers to be called when the store is disposed. */
+  disposers = []
+
+  /** Whether or not changes should sync to/from the server. */
+  isSyncEnabled = true
+
+  /** List of userIds in this role */
   @observable users = []
 
   constructor(json) {
@@ -119,11 +128,11 @@ export class Role {
 
   /** Start syncing model changes to/from the server. */
   startSyncing = () => {
-    if (this.hasHandlers()) return
-    this.shouldSync = true
+    if (this.isSyncEnabled) return
+    this.isSyncEnabled = true
     console.log('Role.startSyncing', this)
 
-    this.handlers = [
+    this.disposers = [
       // from the server
       transport.roles.onChange(this.id, json => {
         if (_.isEqual(this.asJSON, json)) return
@@ -133,25 +142,25 @@ export class Role {
     ]
   }
 
-  hasHandlers = () => !_.isEmpty(this.handlers)
-
   /** Stop syncing model changes to/from the server. */
   stopSyncing = () => {
-    this.shouldSync = false
+    if (!this.isSyncEnabled) return
+    this.isSyncEnabled = false
     console.log('Role.stopSyncing', this)
 
-    while (this.hasHandlers()) {
-      const handler = this.handlers.pop()
+    while (this.disposers.length) {
+      const handler = this.disposers.pop()
       handler()
     }
   }
 
   /** Perform some work with sync disabled and restore() sync state when done. */
   withoutSyncing = cb => {
-    const wasSyncing = this.hasHandlers()
-    if (wasSyncing) this.stopSyncing()
+    const wasSyncEnabled = this.isSyncEnabled
 
-    const restore = () => wasSyncing && this.startSyncing()
+    this.stopSyncing()
+
+    const restore = () => wasSyncEnabled && this.startSyncing()
 
     cb(restore)
   }
@@ -165,7 +174,7 @@ export class Role {
 
     this.users.push(userId)
 
-    if (this.shouldSync) {
+    if (this.isSyncEnabled) {
       transport.roles.update(this.id, { [userId]: true }).catch(err => {
         this.users.remove(userId)
         console.error('Role failed to sync to server, reverting to server copy', err)
@@ -179,7 +188,7 @@ export class Role {
     console.log('Role.removeUser', this.id, userId)
     this.users.remove(userId)
 
-    if (this.shouldSync) {
+    if (this.isSyncEnabled) {
       const update = { [userId]: null }
       transport.roles.update(this.id, update).catch(err => {
         this.users.add(userId)
