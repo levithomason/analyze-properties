@@ -1,5 +1,5 @@
 import _ from 'lodash/fp'
-import { action, computed, observable, runInAction } from 'mobx'
+import { action, observable, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import React, { Component } from 'react'
 import { Form, Grid, Icon, Label } from 'semantic-ui-react'
@@ -7,6 +7,8 @@ import { Form, Grid, Icon, Label } from 'semantic-ui-react'
 // import FirebaseListAdapter from '../../common/resources/FirebaseListAdapter'
 import { makeDebugger } from '../../common/lib'
 import { firebase } from '../../common/modules/firebase'
+
+const db = firebase.database()
 
 import Slider from '../../ui/components/Slider'
 
@@ -16,10 +18,48 @@ class FirebaseMapAdapter {
   @observable isSyncingFromServer = false
   @observable isSyncingToServer = false
 
-  constructor(path) {
+  constructor(path, opts) {
     this._map = observable(new Map())
-    this._ref = firebase.database().ref(path)
+    this._ref = db.ref(path)
     this._lastChangeFromServer = { type: null, key: null, value: null }
+    this._opts = opts
+  }
+
+  @action
+  resolveRelations = () => {
+    _.forEach(relation => {
+      debug('resolve relation', relation)
+      db
+        .ref(relation.usingKeys)
+        .once('value')
+        .then(snapshot => {
+          const usingJSON = snapshot.toJSON()
+          debug('relation using', usingJSON)
+
+          const keys = Object.keys(usingJSON)
+          debug('relation using keys', keys)
+
+          const promises = keys.map(usingKey => {
+            return db
+              .ref(relation.from)
+              .child(usingKey)
+              .child(this._ref.key)
+              .once('value')
+              .then(snapshot => ({ [usingKey]: snapshot.toJSON() }))
+          })
+
+          return Promise.all(promises)
+        })
+        .then(relations => {
+          const result = Object.assign({}, ...relations)
+
+          debug('relations results', result)
+
+          runInAction(() => {
+            this._map.set(relation.to, result)
+          })
+        })
+    }, this._opts.relations)
   }
 
   @action
@@ -31,7 +71,12 @@ class FirebaseMapAdapter {
     return this._ref
       .once('value')
       .then(snapshot => {
-        this._map.replace(snapshot.toJSON())
+        runInAction(() => {
+          this._map.replace(snapshot.toJSON())
+        })
+        return this.resolveRelations()
+      })
+      .then(() => {
         this._ref.on('child_added', this._handleServerChildAdded)
         this._ref.on('child_removed', this._handleServerChildRemoved)
         this._ref.on('child_changed', this._handleServerChildChanged)
@@ -70,6 +115,7 @@ class FirebaseMapAdapter {
     this._localObserver()
   }
 
+  @action
   _handleLocalChange = change => {
     const { name, newValue = null, oldValue, type } = change
 
@@ -148,17 +194,27 @@ class FirebaseMapAdapter {
   }
 }
 
-const store = new FirebaseMapAdapter('validRoles')
-store.startSyncingFromServer().then(() => {
-  store.startSyncingToServer()
+const path = 'stage/users/1ipKfRwn37P2HgfFDKlqLpJBr662'
+
+const store = new FirebaseMapAdapter(path, {
+  relations: [
+    {
+      usingKeys: 'validRoles',
+      from: 'roles',
+      to: 'roles',
+    },
+  ],
 })
+// store.startSyncingFromServer().then(() => {
+//   store.startSyncingToServer()
+// })
 
 @observer
 class ValidRoles extends Component {
   state = {}
 
   componentDidMount() {
-    this._ref = firebase.database().ref('validRoles')
+    this._ref = db.ref(path)
 
     this._ref.on('value', this.handleDataBaseChange)
   }
@@ -179,6 +235,15 @@ class ValidRoles extends Component {
     const booleanKeys = storeKeys.filter(x => _.isBoolean(store._map.get(x)))
     const stringKeys = storeKeys.filter(x => _.isString(store._map.get(x)))
 
+    const preStyle = {
+      overflowX: 'hidden',
+      overflowY: 'auto',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.875em',
+      maxHeight: '20em',
+      background: 'whitesmoke',
+    }
+
     return (
       <Grid padded columns="equal">
         <Grid.Column>
@@ -195,7 +260,7 @@ class ValidRoles extends Component {
             />
             Firebase
           </h2>
-          <pre>{JSON.stringify(database, null, 2)}</pre>
+          <pre style={preStyle}>{JSON.stringify(database, null, 2)}</pre>
           <h2>
             <Icon
               link
@@ -209,7 +274,7 @@ class ValidRoles extends Component {
             />
             Store
           </h2>
-          <pre>{JSON.stringify(store._map.toJS(), null, 2)}</pre>
+          <pre style={preStyle}>{JSON.stringify(store._map.toJS(), null, 2)}</pre>
         </Grid.Column>
         <Grid.Column>
           <h2>Store Form</h2>
@@ -270,29 +335,31 @@ class ValidRoles extends Component {
                 booleanKeys,
               )}
             </Form.Field>
-            <Form.Dropdown
-              value={booleanKeys.filter(x => store._map.get(x))}
-              onChange={action((e, data) => {
-                booleanKeys.forEach(key => {
-                  store._map.set(key, _.includes(key, data.value))
-                })
-              })}
-              onAddItem={action((e, data) => {
-                store._map.set(data.value, true)
-              })}
-              options={booleanKeys.map(key => ({ key, text: key, value: key }))}
-              search
-              selection
-              multiple
-              allowAdditions
-            />
+            {!_.isEmpty(booleanKeys) && (
+              <Form.Dropdown
+                value={booleanKeys.filter(x => store._map.get(x))}
+                onChange={action((e, data) => {
+                  booleanKeys.forEach(key => {
+                    store._map.set(key, _.includes(key, data.value))
+                  })
+                })}
+                onAddItem={action((e, data) => {
+                  store._map.set(data.value, true)
+                })}
+                options={booleanKeys.map(key => ({ key, text: key, value: key }))}
+                search
+                selection
+                multiple
+                allowAdditions
+              />
+            )}
             {_.map(
               key => (
                 <Form.TextArea
                   label={key}
                   key={key}
                   rows={1}
-                  style={{ maxHeight: '4em' }}
+                  style={{ maxHeight: '8em' }}
                   value={String(store._map.get(key))}
                   onChange={action(e => {
                     store._map.set(key, e.target.value)

@@ -65,6 +65,11 @@ path /validRoles {
   write() { isSuperAdmin() }
 }
 
+path /stage {
+  read() { isSuperAdmin() }
+  write() { isSuperAdmin() }
+}
+
 // ------------------------------------------------------------
 // Types
 // ------------------------------------------------------------
