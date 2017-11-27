@@ -60,6 +60,11 @@ path /users/{uid} is User {
   delete() { isSuperAdmin() }
 }
 
+path /validRoles {
+  read() { isSuperAdmin() }
+  write() { isSuperAdmin() }
+}
+
 // ------------------------------------------------------------
 // Types
 // ------------------------------------------------------------
@@ -192,7 +197,9 @@ type User {
   avatarUrl: String,
   displayName: String,
   email: String,
+  photoURL: String | Null,
   providerData: Object | Null,
+  roles: Object | Null,
 }
 
 // ------------------------------------------------------------

@@ -46,6 +46,9 @@ export const crunch = analysis => {
   x.operatingExpenseAmount = _.sum([
     x.taxes,
     x.insurance,
+    // TODO BUG BUG BUG BUG
+    // Mgmt rate * rent * (1 - vacancy)
+    // Otherwise, this is only counting costs for the vacancy period
     x.managementRate * x.grossPotentialRent * x.vacancyRate,
     x.maintenanceRate * x.grossPotentialRent,
     x.capitalExpendituresRate * x.grossPotentialRent,
@@ -90,14 +93,13 @@ export const getPropertyInfo = propertyId => {
   // console.debug('REI: getting property info', propertyId)
   const params = { client_id: 'rdc_mobile_native,8.3.3,android' }
 
-  return request(
-    `https://mapi-ng.rdc.moveaws.com/api/v1/properties/${propertyId}`,
-    params,
-  ).then(json => {
-    const property = json.properties[0]
-    // console.debug('REI: got property info', property)
-    return property
-  })
+  return request(`https://mapi-ng.rdc.moveaws.com/api/v1/properties/${propertyId}`, params).then(
+    json => {
+      const property = json.properties[0]
+      // console.debug('REI: got property info', property)
+      return property
+    },
+  )
 }
 
 export const suggest = input => {

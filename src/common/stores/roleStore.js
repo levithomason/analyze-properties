@@ -1,24 +1,26 @@
 import _ from 'lodash/fp'
-import { action, computed, observe, observable, reaction } from 'mobx'
-import * as transport from '../lib/index'
+import { action, computed, observable, runInAction } from 'mobx'
+
+import { makeDebugger } from '../lib'
+import { roles } from '../resources'
+
+const debug = makeDebugger('stores:role')
 
 export class RoleStore {
   /** Array of individual instance */
-  @observable records = []
+  @observable models = []
 
   /** Array of available roles */
   @observable roleIds = []
 
   @computed
   get asJSON() {
-    return this.records.reduce((acc, next) => {
-      _.merge(acc, next.asJSON)
-      return acc
-    }, {})
+    return this.models.map(model => model.asJSON)
   }
 
   fetch = () => {
-    return transport.roles.list().then(roles => {
+    debug('fetch')
+    return roles.list().then(roles => {
       _.forEach(this.add, roles)
       return roles
     })
@@ -27,59 +29,74 @@ export class RoleStore {
   // TODO add syncing to handle roles added/removed from the system
 
   isUserInRole = (userId, roleId) => {
-    const role = this.getRoleById(roleId)
+    if (!userId || !roleId) return false
 
-    return !!role && role.includesUser(userId)
+    return this.getRoleById(roleId).then(role => role.includesUser(userId))
   }
 
+  @action
   getRoleById = roleId => {
-    const role = _.find({ id: roleId }, this.records) || null
+    return Promise.resolve().then(() => {
+      return roles.read(roleId).then(role => {
+        if (!role) {
+          throw new Error(`RoleStore.getRoleById() roleId "${roleId}" does not exist.`)
+        }
 
-    if (!role) console.warn(`RoleStore.getRoleById() roleId "${roleId}" does not exist in the store.`)
+        runInAction(() => {
+          this.remove(roleId)
+          this.add(role)
+        })
 
-    return role
+        return this.ensureModel(role)
+      })
+    })
   }
 
   getRolesForUser = userId => {
-    return this.records.filter(record => record.includesUser(userId)).map(({ id }) => id)
+    return this.fetch().then(() => {
+      return this.models.filter(model => model.includesUser(userId)).map(({ id }) => id)
+    })
   }
 
   //
   // Actions
   //
 
-  /** Add a record to the store. The record can either be JSON or a model instance. */
+  ensureModel = role => (role instanceof Role ? role : new Role(role))
+
+  /** Add a model to the store. The model can either be JSON or a model instance. */
   @action
-  add = record => {
-    // already exists
-    if (_.find({ id: record.id }, this.records)) return
-    console.log('RoleStore.add', record)
+  add = role => {
+    debug('add', role)
+    this.remove(role.id)
 
-    // ensure it is a Role instance (handles adding from json)
-    const recordToAdd = record instanceof Role ? record : new Role(record)
+    const model = this.ensureModel(role)
 
-    this.records.push(recordToAdd)
-    this.roleIds.push(recordToAdd.id)
+    this.models.push(model)
+    this.roleIds.push(model.id)
   }
 
-  /** Remove a record from the store. */
+  /** Remove a model from the store. */
   @action
-  remove = record => {
-    console.log('RoleStore.remove', record)
-    const index = this.records.findIndex(({ id }) => id === record.id)
+  remove = roleId => {
+    debug('remove', roleId)
+    const model = _.find({ id: roleId }, this.models)
 
-    this.records.remove(this.records[index])
-    this.roleIds.remove(record.id)
+    if (!model) return
+
+    model.stopSyncing()
+    _.pull(model, this.models)
+    _.pull(model.id, this.roleIds)
   }
 
   @action
   addUserToRole = (userId, roleId) => {
-    return this.getRoleById(roleId).addUser(userId)
+    return this.getRoleById(roleId).then(role => role.addUser(userId))
   }
 
   @action
   removeUserFromRole = (userId, roleId) => {
-    return this.getRoleById(roleId).removeUser(userId)
+    return this.getRoleById(roleId).then(role => role.removeUser(userId))
   }
 }
 
@@ -97,7 +114,7 @@ export class Role {
   @observable users = []
 
   constructor(json) {
-    console.log('Role new', json)
+    debug('new Role()', json)
     this.fromJSON(json)
   }
 
@@ -113,7 +130,7 @@ export class Role {
   /** Update this role with information from the server. */
   @action
   fromJSON = json => {
-    console.log('Role.fromJSON', json)
+    debug('fromJSON', json)
 
     const { id, ...userIdsMap } = json
 
@@ -130,13 +147,13 @@ export class Role {
   startSyncing = () => {
     if (this.isSyncEnabled) return
     this.isSyncEnabled = true
-    console.log('Role.startSyncing', this)
+    debug('startSyncing', this)
 
     this.disposers = [
       // from the server
-      transport.roles.onChange(this.id, json => {
+      roles.onChange(this.id, json => {
         if (_.isEqual(this.asJSON, json)) return
-        console.log('Role syncing from server', JSON.stringify(json, null, 2))
+        debug('Role syncing from server', JSON.stringify(json, null, 2))
         this.fromJSON(json)
       }),
     ]
@@ -146,7 +163,7 @@ export class Role {
   stopSyncing = () => {
     if (!this.isSyncEnabled) return
     this.isSyncEnabled = false
-    console.log('Role.stopSyncing', this)
+    debug('stopSyncing', this)
 
     while (this.disposers.length) {
       const handler = this.disposers.pop()
@@ -169,28 +186,28 @@ export class Role {
 
   @action
   addUser = userId => {
-    console.log('Role.addUser', this.id, userId)
+    debug('addUser', this.id, userId)
     if (this.includesUser(userId)) return
 
     this.users.push(userId)
 
     if (this.isSyncEnabled) {
-      transport.roles.update(this.id, { [userId]: true }).catch(err => {
+      roles.update(this.id, { [userId]: true }).catch(err => {
         this.users.remove(userId)
         console.error('Role failed to sync to server, reverting to server copy', err)
-        transport.roles.read(this.id).then(this.fromJSON)
+        roles.read(this.id).then(this.fromJSON)
       })
     }
   }
 
   @action
   removeUser = userId => {
-    console.log('Role.removeUser', this.id, userId)
+    debug('removeUser', this.id, userId)
     this.users.remove(userId)
 
     if (this.isSyncEnabled) {
       const update = { [userId]: null }
-      transport.roles.update(this.id, update).catch(err => {
+      roles.update(this.id, update).catch(err => {
         this.users.add(userId)
         console.error('Role failed to sync to server', update, err)
       })

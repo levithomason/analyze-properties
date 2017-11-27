@@ -22,7 +22,7 @@ module.exports = {
     chrome: false,
   },
   rules: {
-    // 'no-console': 'off',
+    'no-console': 'off',
     // 'no-constant-condition': ['error', { checkLoops: false }],
     // 'no-fallthrough': 'off',
     // 'no-unused-expressions': 'off',

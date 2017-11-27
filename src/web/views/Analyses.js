@@ -47,7 +47,7 @@ class Analyses extends Component {
           {/*<AnalysisStats propertyId={propertyId} />*/}
 
           {/*<div style={{ padding: '1em' }}>*/}
-            {/*<FavoriteButton propertyId={propertyId} fluid />*/}
+          {/*<FavoriteButton propertyId={propertyId} fluid />*/}
           {/*</div>*/}
 
           <div style={{ flex: '1' }}>

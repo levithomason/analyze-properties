@@ -1,7 +1,9 @@
+import _ from 'lodash/fp'
 import React, { Component } from 'react'
 
 import createComponent from '../../lib/createComponent'
 import { percent, ratio, usd } from '../../../common/lib'
+import keyboardKey from 'keyboard-key'
 
 const thumbWidth = '16px'
 const thumbHeight = '16px'
@@ -36,41 +38,27 @@ const thumb = {
   border: `${thumbBorderWidth} solid ${thumbBorderColor}`,
   borderRadius: thumbRadius,
   cursor: 'pointer',
-  transform: `translateY(${thumbHeight} / 2 - ${trackHeight} / 2)`,
+}
+
+const hoverFocusThumb = {
+  background: thumbHoverColor,
+  height: thumbHeight,
+  transform: `translateY(calc(-${thumbHeight} / 2 + ${trackHeight} / 2))`,
+}
+const hoverFocusTrack = {
+  background: trackHoverColor,
 }
 
 const hoverFocus = {
   outline: 0,
 
-  '&::-webkit-slider-thumb': {
-    background: thumbHoverColor,
-    height: thumbHeight,
-    // transform: 'translateY(0)',
-  },
+  '&::-webkit-slider-thumb': hoverFocusThumb,
+  '&::-moz-range-thumb': hoverFocusThumb,
+  '&::-ms-thumb': hoverFocusThumb,
 
-  '&::-moz-range-thumb': {
-    background: thumbHoverColor,
-    height: thumbHeight,
-    // transform: 'translateY(0)',
-  },
-
-  '&::-ms-thumb': {
-    background: thumbHoverColor,
-    height: thumbHeight,
-    // transform: 'translateY(0)',
-  },
-  '&::-webkit-slider-runnable-track': {
-    background: trackHoverColor,
-    // transform: 'translateY(0)',
-  },
-  '&::-ms-fill-lower': {
-    background: trackHoverColor,
-    // transform: 'translateY(0)',
-  },
-  '&::-ms-fill-upper': {
-    background: thumbHoverColor,
-    // transform: 'translateY(0)',
-  },
+  '&::-webkit-slider-runnable-track': hoverFocusTrack,
+  '&::-ms-fill-lower': hoverFocusTrack,
+  '&::-ms-fill-upper': hoverFocusTrack,
 }
 
 export const rules = {
@@ -147,27 +135,41 @@ class Slider extends Component {
     value: 0,
   }
 
+  handleBlur = e => {
+    this.hideInput()
+
+    const event = this.computeInputEvent(e)
+    this.handleChange(event)
+  }
+
   handleChange = e => {
     const { onChange } = this.props
     if (onChange) onChange(e)
   }
 
   handleInputKeyDown = e => {
-    const { keyCode } = e
-    if (keyCode === 13 || keyCode === 27) {
-      e.nativeEvent.stopImmediatePropagation()
-      e.preventDefault()
-      e.stopPropagation()
-      this.hideInput(e)
-    }
-  }
+    switch (keyboardKey.getCode(e)) {
+      case keyboardKey.Enter: {
+        this.hideInput()
 
-  handleSliderKeyDown = e => {
-    const { keyCode, target: { value } } = e
-    // number row keys
-    if (keyCode >= 48 && keyCode <= 57) {
-      this.handleChange(e)
-      this.showInput()
+        e.nativeEvent.stopImmediatePropagation()
+        e.stopPropagation()
+        e.preventDefault()
+
+        const event = this.computeInputEvent(e)
+        this.handleChange(event)
+        break
+      }
+
+      case keyboardKey.Escape: {
+        this.hideInput()
+        break
+      }
+
+      case keyboardKey.Tab: {
+        this.hideInput()
+        break
+      }
     }
   }
 
@@ -178,11 +180,60 @@ class Slider extends Component {
     this.inputRef.select()
   }
 
-  showInput = e => this.setState(() => ({ showInput: true }))
+  handleRangeRef = ref => {
+    if (!ref) return
+    this.rangeRef = ref
+  }
 
-  hideInput = e => {
-    this.handleChange(e)
-    this.setState(() => ({ showInput: false }))
+  isValidNumberKey = e => {
+    return _.includes(keyboardKey.getCode(e), [
+      keyboardKey.Digit0,
+      keyboardKey.Digit1,
+      keyboardKey.Digit2,
+      keyboardKey.Digit3,
+      keyboardKey.Digit4,
+      keyboardKey.Digit5,
+      keyboardKey.Digit6,
+      keyboardKey.Digit7,
+      keyboardKey.Digit8,
+      keyboardKey.Digit9,
+      keyboardKey.Decimal,
+      keyboardKey.Enter,
+    ])
+  }
+
+  handleSliderKeyDown = e => {
+    if (this.isValidNumberKey(e)) {
+      this.handleChange(e)
+      this.showInput()
+    }
+  }
+
+  showInput = () => this.setState(() => ({ showInput: true }))
+
+  focusRange = () => {
+    if (!this.rangeRef) return
+
+    this.rangeRef.focus()
+  }
+
+  hideInput = () => {
+    this.setState(() => ({ showInput: false }), this.focusRange)
+  }
+
+  computeInputValue = () => {
+    const { unit, value } = this.props
+
+    return unit === 'percent' ? (value * 100).toFixed(3) : value
+  }
+
+  computeInputEvent = e => {
+    const { unit } = this.props
+    const event = { ...e }
+
+    event.target.value = unit === 'percent' ? (e.target.value / 100).toFixed(6) : e.target.value
+
+    return event
   }
 
   render() {
@@ -200,9 +251,9 @@ class Slider extends Component {
         {showInput ? (
           <input
             ref={this.handleInputRef}
-            onBlur={this.hideInput}
+            onBlur={this.handleBlur}
             onKeyDown={this.handleInputKeyDown}
-            defaultValue={value}
+            defaultValue={this.computeInputValue()}
             className={styles.input}
           />
         ) : (
@@ -212,6 +263,7 @@ class Slider extends Component {
         )}
         <input
           {...rest}
+          ref={this.handleRangeRef}
           type="range"
           onKeyDown={this.handleSliderKeyDown}
           onChange={this.handleChange}

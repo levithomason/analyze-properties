@@ -24,6 +24,7 @@ const AnalysisStats = ({ analysis, criteria }) => {
     // returns
     capRate,
     cashOnCash,
+    returnOnInvestment,
 
     // ratios
     rentToValue,
@@ -71,7 +72,7 @@ const AnalysisStats = ({ analysis, criteria }) => {
           />
         </Grid.Column>
         <Grid.Column>
-          <Stat label="IRR" value={'todo'} status={check.internalRateOfReturn} />
+          <Stat label="ROI" value={percent(returnOnInvestment)} status={check.returnOnInvestment} />
         </Grid.Column>
       </Grid>
     </div>

@@ -44,6 +44,8 @@ const globalBaseConfig = {
     'hoist-non-react-statics',
     'keyboard-key',
     'lodash',
+    'mobx',
+    'mobx-react',
     'normalize.css',
     'react',
     'react-dom',

@@ -42,11 +42,11 @@ const COLUMNS = [
     label: 'DSCR',
     format: ratio,
   },
-  // {
-  //   key: 'internalRateOfReturn',
-  //   label: 'IRR',
-  //   format: percent,
-  // },
+  {
+    key: 'returnOnInvestment',
+    label: 'ROI',
+    format: percent,
+  },
 ]
 
 export default COLUMNS

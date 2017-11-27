@@ -1,10 +1,4 @@
-import Analysis from './Analysis'
-import Criteria from './Criteria'
-import Property from './Property'
-import Worksheet from './Worksheet'
-
-const property = new Property()
-const worksheet = new Worksheet()
-
-const criteria = new Criteria()
-const analysis = new Analysis()
+export { default as Analysis } from './Analysis'
+export { default as Criteria } from './Criteria'
+export { default as Property } from './Property'
+export { default as Worksheet } from './Worksheet'

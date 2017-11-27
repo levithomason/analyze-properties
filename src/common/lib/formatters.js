@@ -9,13 +9,13 @@ export const usd = x =>
 export const percent = x =>
   (+x).toLocaleString('en', {
     style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
   })
 
 export const ratio = x =>
   (+x).toLocaleString('en', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   })
 

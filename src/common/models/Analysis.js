@@ -79,7 +79,8 @@ class Analysis {
     x.capRate = x.netOperatingIncome / x.purchasePrice
     x.cashOnCash = x.cashFlow * 12 / this.totalCashNeeded
     x.returnOnInvestment =
-      (x.cashFlow * 12 + this.equity - x.sellingCostsAmount - this.totalCashNeeded) / this.totalCashNeeded
+      (x.cashFlow * 12 + this.equity - x.sellingCostsAmount - this.totalCashNeeded) /
+      this.totalCashNeeded
     // TODO IRR, verify how the 'years' work here, uses ROI which includes equity, need amortization schedule?
     // const years = 1
     // x.internalRateOfReturn = Math.pow(1 + x.returnOnInvestment, 1 / years) - 1

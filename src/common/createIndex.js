@@ -16,7 +16,7 @@ import validator from 'fela-plugin-validator'
 import unit from 'fela-plugin-unit'
 
 import store from './modules/store'
-import rootStore from './stores/rootStore'
+import * as stores from './stores'
 import './styles/global.scss'
 
 const createIndex = ({ styles = {}, importRoot }) => {
@@ -62,7 +62,7 @@ const createIndex = ({ styles = {}, importRoot }) => {
     Promise.all([importRoot(), import('../ui/styles/theme')]).then(
       ([{ default: Root }, { default: theme }]) => {
         ReactDOM.render(
-          <MobXProvider {...rootStore}>
+          <MobXProvider {...stores}>
             <ReactReduxProvider store={store}>
               <ThemeProvider theme={theme}>
                 <FelaProvider renderer={styleRenderer}>

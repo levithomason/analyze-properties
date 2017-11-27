@@ -1,4 +1,5 @@
 import _ from 'lodash/fp'
+import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
@@ -33,6 +34,8 @@ const Layout = ({ header = 'Analyze Properties', children }) => {
   )
 }
 
+@inject('sessionStore')
+@observer
 class Login extends Component {
   state = {
     error: null,
@@ -49,7 +52,7 @@ class Login extends Component {
       this.isApproved() &&
       !_.isEmpty(analyses)
     ) {
-      router.navigate('users')
+      router.navigate('validRoles')
     }
   }
 
@@ -96,6 +99,12 @@ class Login extends Component {
   }
 
   handleOAuthLogin = provider => () => {
+    const { sessionStore } = this.props
+
+    sessionStore.login(provider)
+
+    return
+
     const { firebase } = this.props
 
     if (__EXTENSION__) {
@@ -148,7 +157,7 @@ class Login extends Component {
   }
 
   render() {
-    const { firebase, analyses, auth, authError, profile, roles } = this.props
+    const { firebase, analyses, auth, authError, profile, roles, sessionStore } = this.props
     const { error } = this.state
 
     const errorMessage = authError.message || _.get('message', error)
