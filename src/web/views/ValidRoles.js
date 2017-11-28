@@ -1,121 +1,108 @@
 import _ from 'lodash/fp'
-import { action, observable, runInAction } from 'mobx'
+import { action, computed, observable, runInAction } from 'mobx'
 import { observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { Form, Grid, Icon, Label } from 'semantic-ui-react'
+import { Button, Form, Grid, Icon, Label } from 'semantic-ui-react'
 
 // import FirebaseListAdapter from '../../common/resources/FirebaseListAdapter'
 import { makeDebugger } from '../../common/lib'
 import { firebase } from '../../common/modules/firebase'
 
-const db = firebase.database()
-
 import Slider from '../../ui/components/Slider'
 
-const debug = makeDebugger('stores:validRoles')
+const debug = makeDebugger('FirebaseMapAdapter')
 
 class FirebaseMapAdapter {
   @observable isSyncingFromServer = false
   @observable isSyncingToServer = false
+  @observable map = new Map()
 
-  constructor(path, opts) {
-    this._map = observable(new Map())
-    this._ref = db.ref(path)
-    this._lastChangeFromServer = { type: null, key: null, value: null }
-    this._opts = opts
+  _lastChangeFromServer = { type: null, key: null, value: null }
+  _localObserver = null
+  _ref = null
+
+  constructor(firebase, path) {
+    this._ref = firebase.database().ref(path)
   }
 
-  @action
-  resolveRelations = () => {
-    _.forEach(relation => {
-      debug('resolve relation', relation)
-      db
-        .ref(relation.usingKeys)
-        .once('value')
-        .then(snapshot => {
-          const usingJSON = snapshot.toJSON()
-          debug('relation using', usingJSON)
+  save = () => {
+    if (this.isSyncingToServer) return
 
-          const keys = Object.keys(usingJSON)
-          debug('relation using keys', keys)
-
-          const promises = keys.map(usingKey => {
-            return db
-              .ref(relation.from)
-              .child(usingKey)
-              .child(this._ref.key)
-              .once('value')
-              .then(snapshot => ({ [usingKey]: snapshot.toJSON() }))
-          })
-
-          return Promise.all(promises)
-        })
-        .then(relations => {
-          const result = Object.assign({}, ...relations)
-
-          debug('relations results', result)
-
-          runInAction(() => {
-            this._map.set(relation.to, result)
-          })
-        })
-    }, this._opts.relations)
+    return this._ref.set(this.map.toJS()).catch(err => {
+      console.error('Failed to save:', err)
+    })
   }
 
-  @action
-  startSyncingFromServer = () => {
+  fetch = () => {
     if (this.isSyncingFromServer) return
-    debug('startSyncingFromServer')
-    this.isSyncingFromServer = true
 
     return this._ref
       .once('value')
       .then(snapshot => {
         runInAction(() => {
-          this._map.replace(snapshot.toJSON())
+          this.map.replace(snapshot.toJSON())
         })
-        return this.resolveRelations()
       })
+      .catch(err => {
+        console.error('Failed to fetch:', err)
+      })
+  }
+
+  startSyncingFromServer = () => {
+    if (this.isSyncingFromServer) return
+    debug('startSyncingFromServer')
+
+    return this.fetch()
       .then(() => {
-        this._ref.on('child_added', this._handleServerChildAdded)
-        this._ref.on('child_removed', this._handleServerChildRemoved)
-        this._ref.on('child_changed', this._handleServerChildChanged)
+        runInAction(() => {
+          this._ref.on('child_added', this._handleServerChildAdded)
+          this._ref.on('child_removed', this._handleServerChildRemoved)
+          this._ref.on('child_changed', this._handleServerChildChanged)
+
+          this.isSyncingFromServer = true
+        })
       })
       .catch(err => {
         throw new Error('Failed to start syncing from server: ' + err)
       })
   }
 
-  @action
   stopSyncingFromServer = () => {
     if (!this.isSyncingFromServer) return
     debug('stopSyncingFromServer')
-    this.isSyncingFromServer = false
     this._ref.off('child_added', this._handleServerChildAdded)
     this._ref.off('child_removed', this._handleServerChildRemoved)
     this._ref.off('child_changed', this._handleServerChildChanged)
+    runInAction(() => {
+      this.isSyncingFromServer = false
+    })
   }
 
-  @action
   startSyncingToServer = () => {
     if (this.isSyncingToServer) return
     debug('startSyncingToServer')
-    this.isSyncingToServer = true
-    this._ref.set(this._map.toJS()).catch(err => {
-      throw new Error('Failed to start syncing to server: ' + err)
-    })
-    this._localObserver = this._map.observe(_.debounce(200, this._handleLocalChange))
+
+    return this.save()
+      .then(() => {
+        this._localObserver = this.map.observe(_.debounce(300, this._handleLocalChange))
+        runInAction(() => {
+          this.isSyncingToServer = true
+        })
+      })
+      .catch(err => {
+        throw new Error('Failed to start syncing to server: ' + err)
+      })
   }
 
-  @action
   stopSyncingToServer = () => {
     if (!this.isSyncingToServer) return
     debug('stopSyncingToServer')
-    this.isSyncingToServer = false
     this._localObserver()
+    runInAction(() => {
+      this.isSyncingToServer = false
+    })
   }
 
-  @action
   _handleLocalChange = change => {
     const { name, newValue = null, oldValue, type } = change
 
@@ -124,29 +111,41 @@ class FirebaseMapAdapter {
 
     debug('_handleLocalChange', change)
 
-    const ref = this._ref.child(name)
-
     switch (type) {
       case 'add':
-        ref.set(newValue).catch(err => {
-          console.error(err)
-          runInAction('rollback local add', () => {
-            this._map.set(name, oldValue)
+        this._ref
+          .child(name)
+          .set(newValue)
+          .catch(err => {
+            console.error(err)
+            runInAction('rollback local add', () => {
+              this.map.set(name, oldValue)
+            })
           })
-        })
         break
 
       case 'update':
-        ref.set(newValue).catch(err => {
-          console.error(err)
-          runInAction('rollback local update', () => {
-            this._map.set(name, oldValue)
+        this._ref
+          .child(name)
+          .set(newValue)
+          .catch(err => {
+            console.error(err)
+            runInAction('rollback local update', () => {
+              this.map.set(name, oldValue)
+            })
           })
-        })
         break
 
       case 'delete':
-        ref.remove()
+        this._ref
+          .child(name)
+          .remove()
+          .catch(err => {
+            console.error(err)
+            runInAction('rollback local delete', () => {
+              this.map.set(name, oldValue)
+            })
+          })
         break
 
       default:
@@ -154,73 +153,66 @@ class FirebaseMapAdapter {
     }
   }
 
-  @action
   _handleServerChildAdded = snapshot => {
     const key = snapshot.key
     const json = snapshot.toJSON()
 
-    if (_.isEqual(this._map.get(key), json)) return
+    if (_.isEqual(this.map.get(key), json)) return
 
     debug('_handleServerChildAdded', key, json)
 
     this._lastChangeFromServer = { type: 'add', name: key, newValue: json }
-    this._map.set(key, json)
+    runInAction(() => {
+      this.map.set(key, json)
+    })
   }
 
-  @action
   _handleServerChildChanged = snapshot => {
     const key = snapshot.key
     const json = snapshot.toJSON()
 
-    if (_.isEqual(this._map.get(key), json)) return
+    if (_.isEqual(this.map.get(key), json)) return
 
     debug('_handleServerChildChanged', key, json)
 
     this._lastChangeFromServer = { type: 'update', name: key, newValue: json }
-    this._map.set(key, json)
+    runInAction(() => {
+      this.map.set(key, json)
+    })
   }
 
-  @action
   _handleServerChildRemoved = snapshot => {
     const key = snapshot.key
     const json = snapshot.toJSON()
 
-    if (!this._map.has(key)) return
+    if (!this.map.has(key)) return
 
     debug('_handleServerChildRemoved', key, json)
 
     this._lastChangeFromServer = { type: 'delete', name: key }
-    this._map.delete(key)
+    runInAction(() => {
+      this.map.delete(key)
+    })
   }
 }
 
-const path = 'stage/users/1ipKfRwn37P2HgfFDKlqLpJBr662'
-
-const store = new FirebaseMapAdapter(path, {
-  relations: [
-    {
-      usingKeys: 'validRoles',
-      from: 'roles',
-      to: 'roles',
-    },
-  ],
-})
-// store.startSyncingFromServer().then(() => {
-//   store.startSyncingToServer()
-// })
+const path = 'validRoles'
+const store = new FirebaseMapAdapter(firebase, path)
 
 @observer
 class ValidRoles extends Component {
   state = {}
 
   componentDidMount() {
-    this._ref = db.ref(path)
+    this._ref = firebase.database().ref(path)
 
     this._ref.on('value', this.handleDataBaseChange)
   }
 
   componentWillUnmount() {
     this._ref.off('value', this.handleDataBaseChange)
+    store.stopSyncingFromServer()
+    store.stopSyncingToServer()
   }
 
   handleDataBaseChange = snapshot => {
@@ -231,9 +223,9 @@ class ValidRoles extends Component {
   render() {
     const { database } = this.state
 
-    const storeKeys = store._map.keys()
-    const booleanKeys = storeKeys.filter(x => _.isBoolean(store._map.get(x)))
-    const stringKeys = storeKeys.filter(x => _.isString(store._map.get(x)))
+    const storeKeys = store.map.keys()
+    const booleanKeys = storeKeys.filter(x => _.isBoolean(store.map.get(x)))
+    const stringKeys = storeKeys.filter(x => _.isString(store.map.get(x)))
 
     const preStyle = {
       overflowX: 'hidden',
@@ -267,39 +259,49 @@ class ValidRoles extends Component {
               color="blue"
               name="pencil"
               onClick={() => {
-                const json = prompt('Replace the store._map', JSON.stringify(store._map.toJS()))
+                const json = prompt('Replace the map', JSON.stringify(store.map.toJS()))
                 const newMap = JSON.parse(json)
-                if (newMap) store._map.replace(newMap)
+                if (newMap) store.map.replace(newMap)
               }}
             />
             Store
           </h2>
-          <pre style={preStyle}>{JSON.stringify(store._map.toJS(), null, 2)}</pre>
+          <pre style={preStyle}>{JSON.stringify(store.map.toJS(), null, 2)}</pre>
         </Grid.Column>
         <Grid.Column>
           <h2>Store Form</h2>
           <Form>
             <Form.Group>
-              <Form.Button
-                icon="lightning"
-                content="From Server"
-                active={store.isSyncingFromServer}
-                onClick={() => {
-                  if (store.isSyncingFromServer) store.stopSyncingFromServer()
-                  else store.startSyncingFromServer()
-                }}
-                toggle
-              />
-              <Form.Button
-                icon="lightning"
-                content="To Server"
-                active={store.isSyncingToServer}
-                onClick={() => {
-                  if (store.isSyncingToServer) store.stopSyncingToServer()
-                  else store.startSyncingToServer()
-                }}
-                toggle
-              />
+              <Form.Field>
+                <Button.Group>
+                  <Button
+                    icon="lightning"
+                    content="From Server"
+                    active={store.isSyncingFromServer}
+                    onClick={() => {
+                      if (store.isSyncingFromServer) store.stopSyncingFromServer()
+                      else store.startSyncingFromServer()
+                    }}
+                    toggle
+                  />
+                  <Button
+                    icon="lightning"
+                    content="To Server"
+                    active={store.isSyncingToServer}
+                    onClick={() => {
+                      if (store.isSyncingToServer) store.stopSyncingToServer()
+                      else store.startSyncingToServer()
+                    }}
+                    toggle
+                  />
+                </Button.Group>
+              </Form.Field>
+              <Form.Field>
+                <Button.Group>
+                  <Button icon="cloud download" content="Fetch" onClick={store.fetch} />
+                  <Button icon="cloud upload" content="Save" onClick={store.save} />
+                </Button.Group>
+              </Form.Field>
             </Form.Group>
             <Form.Group>
               {_.map(
@@ -307,8 +309,8 @@ class ValidRoles extends Component {
                   <Form.Checkbox
                     key={key}
                     label={key}
-                    checked={!!store._map.get(key)}
-                    onChange={action((e, data) => store._map.set(key, data.checked))}
+                    checked={!!store.map.get(key)}
+                    onChange={action((e, data) => store.map.set(key, data.checked))}
                   />
                 ),
                 booleanKeys,
@@ -321,14 +323,14 @@ class ValidRoles extends Component {
                     key={key}
                     as="a"
                     content={key}
-                    color={store._map.get(key) ? 'green' : null}
+                    color={store.map.get(key) ? 'green' : null}
                     onClick={action(e => {
                       e.stopPropagation()
-                      store._map.set(key, !store._map.get(key))
+                      store.map.set(key, !store.map.get(key))
                     })}
                     onRemove={action(e => {
                       e.stopPropagation()
-                      store._map.delete(key)
+                      store.map.delete(key)
                     })}
                   />
                 ),
@@ -337,14 +339,14 @@ class ValidRoles extends Component {
             </Form.Field>
             {!_.isEmpty(booleanKeys) && (
               <Form.Dropdown
-                value={booleanKeys.filter(x => store._map.get(x))}
+                value={booleanKeys.filter(x => store.map.get(x))}
                 onChange={action((e, data) => {
                   booleanKeys.forEach(key => {
-                    store._map.set(key, _.includes(key, data.value))
+                    store.map.set(key, _.includes(key, data.value))
                   })
                 })}
                 onAddItem={action((e, data) => {
-                  store._map.set(data.value, true)
+                  store.map.set(data.value, true)
                 })}
                 options={booleanKeys.map(key => ({ key, text: key, value: key }))}
                 search
@@ -360,9 +362,9 @@ class ValidRoles extends Component {
                   key={key}
                   rows={1}
                   style={{ maxHeight: '8em' }}
-                  value={String(store._map.get(key))}
+                  value={String(store.map.get(key))}
                   onChange={action(e => {
-                    store._map.set(key, e.target.value)
+                    store.map.set(key, e.target.value)
                   })}
                   autoHeight
                 />
@@ -373,23 +375,23 @@ class ValidRoles extends Component {
           <Slider
             unit="percent"
             label="Percent"
-            value={store._map.get('percent') || 0}
+            value={store.map.get('percent') || 0}
             min={0}
             max={1}
             step={0.00005}
             onChange={action(e => {
-              store._map.set('percent', +e.target.value)
+              store.map.set('percent', +e.target.value)
             })}
           />
           <Slider
             unit="usd"
             label="Dollars"
-            value={store._map.get('dollars') || 0}
+            value={store.map.get('dollars') || 0}
             min={0}
             max={999999}
             step={1}
             onChange={action(e => {
-              store._map.set('dollars', +e.target.value)
+              store.map.set('dollars', +e.target.value)
             })}
           />
         </Grid.Column>

@@ -52,12 +52,6 @@ export class RoleStore {
     })
   }
 
-  getRolesForUser = userId => {
-    return this.fetch().then(() => {
-      return this.models.filter(model => model.includesUser(userId)).map(({ id }) => id)
-    })
-  }
-
   //
   // Actions
   //
@@ -67,8 +61,11 @@ export class RoleStore {
   /** Add a model to the store. The model can either be JSON or a model instance. */
   @action
   add = role => {
+    if (_.find({ id: role.id }, this.models)) {
+      return
+    }
+
     debug('add', role)
-    this.remove(role.id)
 
     const model = this.ensureModel(role)
 
@@ -85,8 +82,8 @@ export class RoleStore {
     if (!model) return
 
     model.stopSyncing()
-    _.pull(model, this.models)
-    _.pull(model.id, this.roleIds)
+    this.models.remove(model)
+    this.roleIds.remove(model.id)
   }
 
   @action
@@ -97,6 +94,11 @@ export class RoleStore {
   @action
   removeUserFromRole = (userId, roleId) => {
     return this.getRoleById(roleId).then(role => role.removeUser(userId))
+  }
+
+  @computed
+  get byId() {
+    return this.models.reduce((acc, next) => ({ ...acc, [next.id]: next }), {})
   }
 }
 
@@ -191,13 +193,14 @@ export class Role {
 
     this.users.push(userId)
 
-    if (this.isSyncEnabled) {
-      roles.update(this.id, { [userId]: true }).catch(err => {
-        this.users.remove(userId)
+    if (!this.isSyncEnabled) return
+
+    roles.update(this.id, { [userId]: true }).catch(err => {
+      runInAction(() => {
         console.error('Role failed to sync to server, reverting to server copy', err)
         roles.read(this.id).then(this.fromJSON)
       })
-    }
+    })
   }
 
   @action
@@ -205,13 +208,14 @@ export class Role {
     debug('removeUser', this.id, userId)
     this.users.remove(userId)
 
-    if (this.isSyncEnabled) {
-      const update = { [userId]: null }
-      roles.update(this.id, update).catch(err => {
-        this.users.add(userId)
-        console.error('Role failed to sync to server', update, err)
+    if (!this.isSyncEnabled) return
+
+    roles.update(this.id, { [userId]: null }).catch(err => {
+      runInAction(() => {
+        console.error('Role failed to sync to server, reverting to server copy', err)
+        roles.read(this.id).then(this.fromJSON)
       })
-    }
+    })
   }
 }
 

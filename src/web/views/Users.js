@@ -38,24 +38,21 @@ class Users extends Component {
   //   })
   // }
 
-  handleToggleRole = (user, role) => () => {
-    user.isInRole(role).then(hasRole => {
-      debug('handleToggleRole', user.displayName, role, !hasRole)
+  handleToggleRole = (role, user) => () => {
+    const hasRole = user.roles[role.id]
+    debug('handleToggleRole', user.displayName, role, !hasRole)
 
-      if (hasRole) user.removeFromRole(role)
-      else user.addToRole(role)
-    })
+    if (hasRole) role.removeUser(user.id)
+    else role.addUser(user.id)
   }
 
   toggleDebug = () => this.setState(prevState => ({ showDebug: !prevState.showDebug }))
 
   render() {
-    const { userStore } = this.props
+    const { roleStore, userStore } = this.props
     const { showDebug } = this.state
 
-    const otherRoles = userStore.models
-      .reduce((acc, next) => _.union(acc, _.keys(next.data)), [])
-      .filter(role => role !== 'approved')
+    const otherRoles = roleStore.models.filter(({ id }) => id !== 'approved')
 
     return (
       <div>
@@ -66,7 +63,10 @@ class Users extends Component {
               <Table.HeaderCell collapsing>Approved</Table.HeaderCell>
               <Table.HeaderCell collapsing>User</Table.HeaderCell>
               <Table.HeaderCell collapsing>Email</Table.HeaderCell>
-              {_.map(role => <Table.HeaderCell key={role}>{role}</Table.HeaderCell>, otherRoles)}
+              {_.map(
+                role => <Table.HeaderCell key={role.id}>{role.id}</Table.HeaderCell>,
+                otherRoles,
+              )}
               <Table.HeaderCell>id</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
@@ -77,8 +77,8 @@ class Users extends Component {
                   <Table.Cell>
                     <Checkbox
                       toggle
-                      checked={!!user.data.approved}
-                      onChange={this.handleToggleRole(user, 'approved')}
+                      checked={!!user.roles.approved}
+                      onChange={this.handleToggleRole(roleStore.byId.approved, user)}
                     />
                   </Table.Cell>
                   <Table.Cell>
@@ -87,10 +87,10 @@ class Users extends Component {
                   <Table.Cell>{user.email}</Table.Cell>
                   {_.map(
                     role => (
-                      <Table.Cell key={role}>
+                      <Table.Cell key={role.id}>
                         <Checkbox
-                          checked={!!user.data[role]}
-                          onChange={this.handleToggleRole(user, role)}
+                          checked={!!role.includesUser(user.id)}
+                          onChange={this.handleToggleRole(role, user)}
                         />
                       </Table.Cell>
                     ),

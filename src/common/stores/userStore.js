@@ -90,11 +90,6 @@ export class User {
   @observable email = null
   @observable phoneNumber = null
   @observable photoURL = null
-  @observable
-  roles = {
-    approved: false,
-    superAdmin: false,
-  }
 
   constructor(json) {
     debug('new User()', json)
@@ -104,9 +99,7 @@ export class User {
   resolve = () => {
     // .................................
     roleStore.fetch().then(() => {
-      roleStore.roleIds.forEach(role => {
-
-      })
+      roleStore.roleIds.forEach(role => {})
     })
   }
 
@@ -223,12 +216,14 @@ export class User {
    *
    * @param {string} roleId - A role id string (i.e the role name).
    */
-  isInRole = roleId => roleStore.isUserInRole(this.id, roleId)
   addToRole = roleId => roleStore.addUserToRole(this.id, roleId)
   removeFromRole = roleId => roleStore.removeUserFromRole(this.id, roleId)
 
-  fetchRoles() {
-    return roleStore.getRolesForUser(this.id)
+  @computed
+  get roles() {
+    return roleStore.models
+      .filter(role => role.includesUser(this.id))
+      .reduce((acc, next) => ({ ...acc, [next.id]: true }), {})
   }
 }
 
