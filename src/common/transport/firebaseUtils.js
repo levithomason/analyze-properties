@@ -1,14 +1,12 @@
-import _ from 'lodash/fp'
+import FirebaseMapAdapter from './FirebaseMapAdapter'
 
 /** Converts a firebase snapshot to a "model" shape (object with an id). */
-export const snapshotToValueOrModel = snapshot => {
+export const snapshotToValueOrMap = snapshot => {
   if (!snapshot) return null
 
-  const val = snapshot.val()
+  if (snapshot.hasChildren()) return new FirebaseMapAdapter(snapshot.ref)
 
-  if (_.isPlainObject(val)) return { id: snapshot.key, ...val }
-
-  return val
+  return snapshot.toJSON()
 }
 
 /** Converts a firebase auth user object to a "model" shape (object with an id). */
@@ -22,4 +20,15 @@ export const authUserToModel = user => {
     phoneNumber: userObj.phoneNumber || null,
     photoURL: userObj.photoURL || null,
   }
+}
+
+export const getPath = ref => {
+  const path = []
+
+  while (ref) {
+    path.unshift(ref.key)
+    ref = ref.parent
+  }
+
+  return path.join('/')
 }

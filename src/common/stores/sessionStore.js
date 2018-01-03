@@ -2,10 +2,17 @@ import { action, computed, extendObservable, observable } from 'mobx'
 
 import { makeDebugger } from '../lib'
 import { session } from '../resources'
-import { authUserToModel } from '../resources/firebaseUtils'
 
-import roleStore from './roleStore'
-import userStore, { User } from './userStore'
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO
+//
+// This is a circular import.  Session should be base store, importing no other stores.
+// Other stores should react to session store changes.
+// Probably need to abstract a currentUserStore.
+//
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO
+// TODO TODO TODO TODO TODO TODO TODO TODO TODO
+import { userStore, User } from './'
 
 const debug = makeDebugger('stores:session')
 
@@ -23,6 +30,15 @@ export class SessionStore {
   /** User record data. */
   @observable currentUser = new User()
 
+  @computed
+  get asJS() {
+    return {
+      currentUser: this.currentUser ? this.currentUser.asJS : null,
+      error: this.error,
+      isAuthenticated: this.isAuthenticated,
+    }
+  }
+
   constructor() {
     session.onAuthStateChanged(this._handleUserChange, this._handleAuthError)
   }
@@ -38,8 +54,6 @@ export class SessionStore {
       userStore.add(user)
       this.currentUser = userStore.getById(user.id)
       this.isAuthenticated = true
-      userStore.fetch()
-      roleStore.fetch()
     } else {
       this.currentUser = new User()
       this.isAuthenticated = false
@@ -56,15 +70,6 @@ export class SessionStore {
   login = session.login
 
   logout = session.logout
-
-  @computed
-  get asJSON() {
-    return {
-      currentUser: this.currentUser ? this.currentUser.asJSON : null,
-      error: this.error,
-      isAuthenticated: this.isAuthenticated,
-    }
-  }
 }
 
 const sessionStore = new SessionStore()

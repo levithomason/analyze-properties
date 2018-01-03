@@ -27,16 +27,13 @@ export const routes = [
     name: 'users',
     path: '/users',
     canActivate: router => (toState, fromState, done) => {
-      return roleStore
-        .isUserInRole(sessionStore.currentUser.id, 'superAdmin')
-        .then(isSuperAdmin => {
-          debug('canActivate /users', isSuperAdmin)
-          return isSuperAdmin
-        })
-        .catch(err => {
-          debug('currentUser !superAdmin, redirect to analyses')
-          return Promise.reject({ redirect: { name: 'analyses' } })
-        })
+      const isSuperAdmin = roleStore.isUserInRole(sessionStore.currentUser.id, 'superAdmin')
+      debug('canActivate /users', isSuperAdmin)
+
+      if (isSuperAdmin) return isSuperAdmin
+
+      debug('currentUser !superAdmin, redirect to analyses')
+      return Promise.reject({ redirect: { name: 'analyses' } })
     },
   },
   {

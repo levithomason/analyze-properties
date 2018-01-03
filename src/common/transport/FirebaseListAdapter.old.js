@@ -1,8 +1,6 @@
-import { makeDebugger } from '../lib'
+import { makeDebugger } from '../lib/index'
+import { snapshotToValueOrMap } from './firebaseUtils'
 import { firebase } from '../modules/firebase'
-import { snapshotToValueOrModel } from './firebaseUtils'
-
-const debug = makeDebugger('resources:FirebaseListAdapter')
 
 /**
  * A class for working with lists of firebase records.
@@ -14,6 +12,7 @@ const debug = makeDebugger('resources:FirebaseListAdapter')
 class FirebaseListAdapter {
   constructor(path) {
     this._ref = firebase.database().ref(path)
+    this._debug = makeDebugger(`transport:FirebaseListAdapter(${path})`)
   }
 
   // ----------------------------------------
@@ -25,7 +24,7 @@ class FirebaseListAdapter {
    * Resolves with the child from the server as a model.
    */
   create = json => {
-    debug('create', this._ref.key, json)
+    this._debug('create', this._ref.key, json)
     const { id, ...data } = json
 
     if (id) {
@@ -35,21 +34,21 @@ class FirebaseListAdapter {
       )
     }
 
-    return this._ref.push(data).then(ref => ref.once('value').then(snapshotToValueOrModel))
+    return this._ref.push(data).then(ref => ref.once('value').then(snapshotToValueOrMap))
   }
 
   /** Fetch a single child as a model. */
   read = id => {
-    debug('read', this._ref.key, id)
+    this._debug('read', this._ref.key, id)
     return this._ref
       .child(id)
       .once('value')
-      .then(snapshotToValueOrModel)
+      .then(snapshotToValueOrMap)
   }
 
   /** Update the child model by `id`. */
   update = (id, model) => {
-    debug('update', this._ref.key, model)
+    this._debug('update', this._ref.key, model)
     // ensure we don't persist an id in the model
     // we are keying by id on firebase
     const update = { ...model, id: null }
@@ -57,18 +56,18 @@ class FirebaseListAdapter {
     return this._ref
       .child(id)
       .update(update)
-      .then(snapshotToValueOrModel)
+      .then(snapshotToValueOrMap)
   }
 
   /** Delete a child by `id`. */
   delete = id => {
-    debug('delete', this._ref.key, id)
+    this._debug('delete', this._ref.key, id)
     return this._ref.child(id).remove()
   }
 
   /** Get all children as an array of records. */
   list = () => {
-    debug('list', this._ref.key)
+    this._debug('list', this._ref.key)
     return this._ref.once('value').then(snapshot => {
       if (!snapshot) return snapshot
 
@@ -76,7 +75,7 @@ class FirebaseListAdapter {
 
       // https://firebase.google.com/docs/reference/js/firebase.database.DataSnapshot#forEach
       snapshot.forEach(childSnapshot => {
-        records.push(snapshotToValueOrModel(childSnapshot))
+        records.push(snapshotToValueOrMap(childSnapshot))
       })
 
       return records
@@ -97,8 +96,8 @@ class FirebaseListAdapter {
         isInit = false
         return
       }
-      debug('onChange', this._ref.key, id)
-      cb(snapshotToValueOrModel(snapshot))
+      this._debug('onChange', this._ref.key, id)
+      cb(snapshotToValueOrMap(snapshot))
     })
 
     return () => ref.off('value', cb)
@@ -107,8 +106,8 @@ class FirebaseListAdapter {
   /** Listen for the addition of a child model. */
   onChildAdded = cb => {
     this._ref.on('child_added', snapshot => {
-      debug('onChildAdded', this._ref.key, cb)
-      cb(snapshotToValueOrModel(snapshot))
+      this._debug('onChildAdded', this._ref.key, cb)
+      cb(snapshotToValueOrMap(snapshot))
     })
 
     return () => this._ref.off('child_added', cb)
@@ -117,8 +116,8 @@ class FirebaseListAdapter {
   /** Listen for updates to child records. */
   onChildChanged = cb => {
     this._ref.on('child_changed', snapshot => {
-      debug('onChildChanged', this._ref.key, cb)
-      cb(snapshotToValueOrModel(snapshot))
+      this._debug('onChildChanged', this._ref.key, cb)
+      cb(snapshotToValueOrMap(snapshot))
     })
 
     return () => this._ref.off('child_changed', cb)
@@ -127,8 +126,8 @@ class FirebaseListAdapter {
   /** Listen for the removal of a child model. */
   onChildRemoved = cb => {
     this._ref.on('child_removed', snapshot => {
-      debug('onChildRemoved', this._ref.key, cb)
-      cb(snapshotToValueOrModel(snapshot))
+      this._debug('onChildRemoved', this._ref.key, cb)
+      cb(snapshotToValueOrMap(snapshot))
     })
 
     return () => this._ref.off('child_removed', cb)

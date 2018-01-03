@@ -1,4 +1,4 @@
-import FirebaseListAdapter from './FirebaseListAdapter'
+import FirebaseListAdapter from '../transport/FirebaseListAdapter'
 import SessionResource from './SessionResource'
 
 export const users = new FirebaseListAdapter('/users')

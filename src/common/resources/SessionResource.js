@@ -1,5 +1,5 @@
 import { makeDebugger } from '../lib'
-import { authUserToModel } from './firebaseUtils'
+import { authUserToModel } from '../transport/firebaseUtils'
 import { firebase } from '../modules/firebase'
 
 const debug = makeDebugger('resources:session')
