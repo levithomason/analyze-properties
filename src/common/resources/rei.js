@@ -46,10 +46,7 @@ export const crunch = analysis => {
   x.operatingExpenseAmount = _.sum([
     x.taxes,
     x.insurance,
-    // TODO BUG BUG BUG BUG
-    // Mgmt rate * rent * (1 - vacancy)
-    // Otherwise, this is only counting costs for the vacancy period
-    x.managementRate * x.grossPotentialRent * x.vacancyRate,
+    x.managementRate * x.grossPotentialRent * (1 - x.vacancyRate),
     x.maintenanceRate * x.grossPotentialRent,
     x.capitalExpendituresRate * x.grossPotentialRent,
     x.otherExpenses,
