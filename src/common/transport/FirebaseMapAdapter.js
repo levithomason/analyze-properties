@@ -22,7 +22,7 @@ class FirebaseMapAdapter {
   _lastChangeFromServer = { type: null, key: null, value: null }
   _localObserver = null
 
-  constructor(pathOrRef, initialMap) {
+  constructor(pathOrRef) {
     if (!pathOrRef) {
       throw new Error('FirebaseListAdapter requires a `pathOrRef`, got: ' + pathOrRef)
     }
@@ -31,7 +31,7 @@ class FirebaseMapAdapter {
     this._debug = makeDebugger(`transport:FirebaseMapAdapter(${this._ref.key})`)
     this.path = getPath(this._ref)
     this.key = this._ref.key
-    this._map = observable(new Map(initialMap))
+    this._map = observable(new Map())
   }
 
   /** Persist the map to the server. */

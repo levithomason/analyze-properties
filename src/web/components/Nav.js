@@ -1,3 +1,4 @@
+import _ from 'lodash/fp'
 import { inject, observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
@@ -47,7 +48,8 @@ class Nav extends Component {
 
           <Menu.Menu position="right">
             <Menu.Item style={menuItemStyle}>
-              <Image avatar src={currentUser.photoURL} /> {currentUser.displayName}
+              <Image avatar src={_.get('photoURL', currentUser)} />{' '}
+              {_.get('displayName', currentUser)}
             </Menu.Item>
             <Menu.Item style={menuItemStyle}>
               <Button onClick={this.handleLogout}>Logout</Button>

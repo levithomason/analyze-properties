@@ -3,16 +3,7 @@ import { action, computed, extendObservable, observable } from 'mobx'
 import { makeDebugger } from '../lib'
 import { session } from '../resources'
 
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO
-//
-// This is a circular import.  Session should be base store, importing no other stores.
-// Other stores should react to session store changes.
-// Probably need to abstract a currentUserStore.
-//
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO
-// TODO TODO TODO TODO TODO TODO TODO TODO TODO
-import { userStore, User } from './'
+import User from './User'
 
 const debug = makeDebugger('stores:session')
 
@@ -28,7 +19,7 @@ export class SessionStore {
   @observable isAuthenticated = false
 
   /** User record data. */
-  @observable currentUser = new User()
+  @observable currentUser = null
 
   @computed
   get asJS() {
@@ -48,16 +39,12 @@ export class SessionStore {
     debug('_handleUserChanged()', user)
 
     if (user.id) {
-      // create a new user
-      // ensure it is in the store
-      // set currentUser to a reference to the user in the store
-      userStore.add(user)
-      this.currentUser = userStore.getById(user.id)
       this.isAuthenticated = true
+      this.currentUser = new User(`/users/${user.id}`)
+      this.currentUser.pullOnce()
     } else {
-      this.currentUser = new User()
       this.isAuthenticated = false
-      userStore.remove(this.currentUser.id)
+      this.currentUser = null
     }
   }
 

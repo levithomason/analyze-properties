@@ -1,6 +1,7 @@
 import { computed, reaction } from 'mobx'
 
-import { User, sessionStore } from './'
+import User from './User'
+import sessionStore from './sessionStore'
 import { FirebaseListAdapter } from '../transport'
 
 export class UserStore extends FirebaseListAdapter {

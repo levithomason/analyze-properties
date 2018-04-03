@@ -12,7 +12,7 @@ import Slider from '../../ui/components/Slider'
 
 const debug = makeDebugger('views:validRoles')
 const path = 'validRoles'
-const store = new FirebaseMapAdapter(firebase, path)
+const store = new FirebaseMapAdapter(path)
 
 @observer
 class ValidRoles extends Component {
@@ -38,9 +38,9 @@ class ValidRoles extends Component {
   render() {
     const { database } = this.state
 
-    const storeKeys = store.map.keys()
-    const booleanKeys = storeKeys.filter(x => _.isBoolean(store.map.get(x)))
-    const stringKeys = storeKeys.filter(x => _.isString(store.map.get(x)))
+    const storeKeys = store._map.keys()
+    const booleanKeys = storeKeys.filter(x => _.isBoolean(store._map.get(x)))
+    const stringKeys = storeKeys.filter(x => _.isString(store._map.get(x)))
 
     const preStyle = {
       overflowX: 'hidden',
@@ -74,14 +74,14 @@ class ValidRoles extends Component {
               color="blue"
               name="pencil"
               onClick={() => {
-                const json = prompt('Replace the map', JSON.stringify(store.map.toJS()))
+                const json = prompt('Replace the map', JSON.stringify(store._map.toJS()))
                 const newMap = JSON.parse(json)
-                if (newMap) store.map.replace(newMap)
+                if (newMap) store._map.replace(newMap)
               }}
             />
             Store
           </h2>
-          <pre style={preStyle}>{JSON.stringify(store.map.toJS(), null, 2)}</pre>
+          <pre style={preStyle}>{JSON.stringify(store._map.toJS(), null, 2)}</pre>
         </Grid.Column>
         <Grid.Column>
           <h2>Store Form</h2>
@@ -113,8 +113,8 @@ class ValidRoles extends Component {
               </Form.Field>
               <Form.Field>
                 <Button.Group>
-                  <Button icon="cloud download" content="Pull" onClick={store.pull} />
-                  <Button icon="cloud upload" content="Push" onClick={store.push} />
+                  <Button icon="cloud download" content="Pull" onClick={store.pullOnce} />
+                  <Button icon="cloud upload" content="Push" onClick={store.pushOnce} />
                 </Button.Group>
               </Form.Field>
             </Form.Group>
@@ -124,8 +124,8 @@ class ValidRoles extends Component {
                   <Form.Checkbox
                     key={key}
                     label={key}
-                    checked={!!store.map.get(key)}
-                    onChange={action((e, data) => store.map.set(key, data.checked))}
+                    checked={!!store._map.get(key)}
+                    onChange={action((e, data) => store._map.set(key, data.checked))}
                   />
                 ),
                 booleanKeys,
@@ -138,14 +138,14 @@ class ValidRoles extends Component {
                     key={key}
                     as="a"
                     content={key}
-                    color={store.map.get(key) ? 'green' : null}
+                    color={store._map.get(key) ? 'green' : null}
                     onClick={action(e => {
                       e.stopPropagation()
-                      store.map.set(key, !store.map.get(key))
+                      store._map.set(key, !store._map.get(key))
                     })}
                     onRemove={action(e => {
                       e.stopPropagation()
-                      store.map.delete(key)
+                      store._map.delete(key)
                     })}
                   />
                 ),
@@ -154,14 +154,14 @@ class ValidRoles extends Component {
             </Form.Field>
             {!_.isEmpty(booleanKeys) && (
               <Form.Dropdown
-                value={booleanKeys.filter(x => store.map.get(x))}
+                value={booleanKeys.filter(x => store._map.get(x))}
                 onChange={action((e, data) => {
                   booleanKeys.forEach(key => {
-                    store.map.set(key, _.includes(key, data.value))
+                    store._map.set(key, _.includes(key, data.value))
                   })
                 })}
                 onAddItem={action((e, data) => {
-                  store.map.set(data.value, true)
+                  store._map.set(data.value, true)
                 })}
                 options={booleanKeys.map(key => ({ key, text: key, value: key }))}
                 search
@@ -177,9 +177,9 @@ class ValidRoles extends Component {
                   key={key}
                   rows={1}
                   style={{ maxHeight: '8em' }}
-                  value={String(store.map.get(key))}
+                  value={String(store._map.get(key))}
                   onChange={action(e => {
-                    store.map.set(key, e.target.value)
+                    store._map.set(key, e.target.value)
                   })}
                   autoHeight
                 />
@@ -190,23 +190,23 @@ class ValidRoles extends Component {
           <Slider
             unit="percent"
             label="Percent"
-            value={store.map.get('percent') || 0}
+            value={store._map.get('percent') || 0}
             min={0}
             max={1}
             step={0.00005}
             onChange={action(e => {
-              store.map.set('percent', +e.target.value)
+              store._map.set('percent', +e.target.value)
             })}
           />
           <Slider
             unit="usd"
             label="Dollars"
-            value={store.map.get('dollars') || 0}
+            value={store._map.get('dollars') || 0}
             min={0}
             max={999999}
             step={1}
             onChange={action(e => {
-              store.map.set('dollars', +e.target.value)
+              store._map.set('dollars', +e.target.value)
             })}
           />
         </Grid.Column>

@@ -1,12 +1,18 @@
-import { action, computed, reaction } from 'mobx'
+import { computed } from 'mobx'
 
-import { sessionStore } from './'
+import Role from './Role'
+import { session } from '../resources'
+import { FirebaseListAdapter } from '../transport'
 import { makeDebugger } from '../lib'
-import { FirebaseListAdapter, FirebaseMapAdapter } from '../transport'
 
-const debug = makeDebugger('stores:role')
+const debug = makeDebugger('stores:roles')
 
 export class RoleStore extends FirebaseListAdapter {
+  constructor() {
+    super(Role, '/roles')
+    session.onAuthStateChanged(this.reset, this.reset)
+  }
+
   /** Map of role keys to map adapters */
   @computed
   get roles() {
@@ -20,12 +26,8 @@ export class RoleStore extends FirebaseListAdapter {
     return this._map.keys()
   }
 
-  constructor() {
-    super(Role, '/roles')
-    reaction(() => sessionStore.asJS, this.reset)
-  }
-
   isUserInRole = (userId, roleId) => {
+    debug('RoleStore.isUserInRole(userId, roleId)', userId, roleId)
     if (!userId || !roleId) return false
 
     const role = this._map.get(roleId)
@@ -38,40 +40,22 @@ export class RoleStore extends FirebaseListAdapter {
   //
 
   addUserToRole = (userId, roleId) => {
+    debug('RoleStore.addUserToRole(userId, roleId)', userId, roleId)
     const role = this._map.get(roleId)
 
     return !!role && role.addUser(userId)
   }
 
   removeUserFromRole = (userId, roleId) => {
+    debug('RoleStore.removeUserFromRole(userId, roleId)', userId, roleId)
     const role = this._map.get(roleId)
 
     return !!role && role.removeUser(userId)
   }
 
   getRolesForUser = userId => {
+    debug('RoleStore.getRolesForUser(userId)', userId)
     return roleStore.roles.filter(role => role.includesUser(userId))
-  }
-}
-
-export class Role extends FirebaseMapAdapter {
-  constructor(pathOrRef, initialMap) {
-    super(pathOrRef, initialMap)
-    debug('new Role()', pathOrRef, initialMap)
-  }
-
-  @action
-  addUser = userId => {
-    debug('addUser', this.path, userId)
-    this._map.set(userId, true)
-  }
-
-  includesUser = userId => !!this._map.get(userId)
-
-  @action
-  removeUser = userId => {
-    debug('removeUser', this.path, userId)
-    this._map.remove(userId)
   }
 }
 
