@@ -1,5 +1,5 @@
 import _ from 'lodash/fp'
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import Loader from '../../ui/components/Loader'
 import Login from '../../common/layouts/Login'
@@ -47,7 +47,7 @@ const getMoveData = () => {
   })
 }
 
-class Root extends Component {
+class Root extends React.Component {
   state = { propertyId: null, isOpen: false }
 
   componentDidMount() {

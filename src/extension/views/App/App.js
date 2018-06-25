@@ -1,6 +1,6 @@
 import keyboardKey from 'keyboard-key'
 import _ from 'lodash/fp'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { connect as felaConnect } from 'react-fela'
 import { connect as reduxConnect } from 'react-redux'
 import { firebaseConnect } from 'react-redux-firebase'
@@ -16,7 +16,7 @@ const rules = {
   }),
 }
 
-class App extends Component {
+class App extends React.Component {
   state = {
     isOpen: true,
   }

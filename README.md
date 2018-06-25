@@ -3,7 +3,6 @@
 This repo contains 4 projects:
 
 - `src/extension` Chrome extension
-- `src/mobile` TODO React Native app
 - `src/ui` A UI component lib
 - `src/web` A web app
 
@@ -36,7 +35,6 @@ yarn start:web
 Build an app:
 ```
 yarn build:extension
-yarn build:mobile
 yarn build:ui
 yarn build:web
 ```
