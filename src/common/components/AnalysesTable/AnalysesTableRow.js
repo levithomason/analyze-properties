@@ -81,7 +81,7 @@ class AnalysesTableRow extends Component {
               display: 'block',
               width: '12em',
               height: '8em',
-              borderLeft: `3px solid ${checkColor}`,
+              borderLeft: `4px solid ${checkColor}`,
               backgroundImage: `url(${image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
