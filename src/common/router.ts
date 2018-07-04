@@ -11,8 +11,6 @@ import { roleStore, routerStore, sessionStore } from './stores'
 
 const debug = makeDebugger('router')
 
-const router = createRouter()
-
 // router5 only consumes name, path, canActivate, and canDeactivate properties.
 // We export the config so we can add more properties and access the config directly.
 export const routes = [
@@ -33,7 +31,7 @@ export const routes = [
     name: 'analyses',
     path: '/analyses',
     canActivate: router => (toState, fromState, done) => {
-      const canActivate = sessionStore.isAuthenticated
+      const canActivate = !!sessionStore.currentUser
       debug('canActivate /analyses', canActivate)
       return canActivate
     },
@@ -42,7 +40,7 @@ export const routes = [
     name: 'settings',
     path: '/settings',
     canActivate: router => (toState, fromState, done) => {
-      const canActivate = sessionStore.isAuthenticated
+      const canActivate = !!sessionStore.currentUser
       debug('canActivate /settings', canActivate)
       return canActivate
     },
@@ -51,7 +49,7 @@ export const routes = [
     name: 'login',
     path: '/login',
     canActivate: router => (toState, fromState, done) => {
-      const canActivate = !sessionStore.isAuthenticated
+      const canActivate = !sessionStore.currentUser
       debug('canActivate /login', canActivate)
       return canActivate || Promise.reject({ redirect: { name: 'analyses' } })
     },
@@ -62,7 +60,7 @@ export const routes = [
   },
 ]
 
-router.add(routes)
+const router = createRouter(routes)
 
 router
   .setOption('useTrailingSlash', false) // force no trailing slashes

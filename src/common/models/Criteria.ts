@@ -11,11 +11,6 @@ class Criteria {
   grossRentMultiplier = { max: 0 }
   debtServiceCoverageRatio = { min: 0 }
   internalRateOfReturn = { min: 0 }
-
-  // debt to income
-  income = 50000
-  mortgages = 850
-  otherDebts = 0
 }
 
 export default Criteria

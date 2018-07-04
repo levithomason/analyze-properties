@@ -59,7 +59,7 @@ class Users extends React.Component<IUsersProps> {
                         <Table.Cell>
                           <Checkbox
                             toggle
-                            checked={!!roleStore.isUserInRole(user.key, 'approved')}
+                            checked={roleStore.isUserInRole(user.key, 'approved')}
                             onChange={this.handleToggleRole(roleStore.rolesById.approved, user)}
                           />
                         </Table.Cell>

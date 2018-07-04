@@ -1,16 +1,16 @@
 import { computed } from 'mobx'
 
 import Role from './Role'
-import { session } from '../resources'
 import { FirebaseListAdapter } from '../transport'
 import { makeDebugger } from '../lib'
+import { firebase } from "../modules/firebase"
 
 const debug = makeDebugger('stores:roles')
 
 export class RoleStore extends FirebaseListAdapter {
   constructor() {
     super(Role, '/roles')
-    session.onAuthStateChanged(this.reset, this.reset)
+    firebase.auth().onAuthStateChanged(this.reset, this.reset)
   }
 
   @computed
@@ -32,7 +32,7 @@ export class RoleStore extends FirebaseListAdapter {
     return Array.from(this._map.keys())
   }
 
-  isUserInRole = (userId, roleId) => {
+  isUserInRole = (userId, roleId): boolean => {
     debug('RoleStore.isUserInRole(userId, roleId)', userId, roleId)
     if (!userId || !roleId) return false
 
@@ -47,14 +47,14 @@ export class RoleStore extends FirebaseListAdapter {
 
   addUserToRole = (userId, roleId) => {
     debug('RoleStore.addUserToRole(userId, roleId)', userId, roleId)
-    const role = this._map.get(roleId)
+    const role = this.rolesById[roleId]
 
     return !!role && role.addUser(userId)
   }
 
   removeUserFromRole = (userId, roleId) => {
     debug('RoleStore.removeUserFromRole(userId, roleId)', userId, roleId)
-    const role = this._map.get(roleId)
+    const role = this.rolesById[roleId]
 
     return !!role && role.removeUser(userId)
   }

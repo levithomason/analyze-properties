@@ -3,10 +3,8 @@ import icon16 from '../../public/icon16.png'
 import icon48 from '../../public/icon48.png'
 import icon128 from '../../public/icon128.png'
 
-import { Image } from 'semantic-ui-react'
-
 export interface ILogoProps {
-  size?: 'small'| 'medium'| 'large'
+  size?: 'small' | 'medium' | 'large'
 }
 
 const iconsBySize = {
@@ -21,7 +19,14 @@ const widthBySize = {
   large: 64,
 }
 
-const Logo: React.SFC = ({ size }: ILogoProps) => <Image width={widthBySize[size]} src={iconsBySize[size]} alt="Logo" />
+const Logo: React.SFC<ILogoProps> = ({ size }) => (
+  <img
+    alt="Logo"
+    src={iconsBySize[size]}
+    style={{ width: widthBySize[size], verticalAlign: 'bottom' }}
+  />
+
+)
 
 Logo.defaultProps = {
   size: 'medium',

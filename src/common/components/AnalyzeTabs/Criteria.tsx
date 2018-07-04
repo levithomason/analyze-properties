@@ -24,11 +24,6 @@ class Criteria extends React.Component<ICriteriaProps> {
       grossRentMultiplier: { max: 0 },
       debtServiceCoverageRatio: { min: 0 },
       internalRateOfReturn: { min: 0 },
-
-      // debt to income
-      income: 50000,
-      mortgages: 850,
-      otherDebts: 0,
     },
   }
 
@@ -177,35 +172,6 @@ class Criteria extends React.Component<ICriteriaProps> {
           max={0.2}
           step={0.001}
           onChange={this.handleChange('internalRateOfReturn.min')}
-        />
-
-        <Header textAlign="center">Debt to Income</Header>
-        <Slider
-          unit="usd"
-          label="Income"
-          value={income}
-          min={20000}
-          max={200000}
-          step={10}
-          onChange={this.handleChange('income')}
-        />
-        <Slider
-          unit="usd"
-          label="Mortgages"
-          value={mortgages}
-          min={0}
-          max={5000}
-          step={5}
-          onChange={this.handleChange('mortgages')}
-        />
-        <Slider
-          unit="usd"
-          label="Other Debts"
-          value={otherDebts}
-          min={0}
-          max={5000}
-          step={5}
-          onChange={this.handleChange('otherDebts')}
         />
       </div>
     )

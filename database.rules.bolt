@@ -186,11 +186,6 @@ type Criteria {
   grossRentMultiplier: MinMaxObject,
   debtServiceCoverageRatio: MinMaxObject,
   internalRateOfReturn: MinMaxObject,
-
-  // debt to income
-  income: Number,
-  mortgages: Number,
-  otherDebts: Number,
 }
 
 type User {
@@ -199,7 +194,6 @@ type User {
   email: String,
   photoURL: String | Null,
   providerData: Object | Null,
-  roles: Object | Null,
 }
 
 // ------------------------------------------------------------

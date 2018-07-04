@@ -26,7 +26,7 @@ export const checkDeal = (analysis, criteria) => {
   }, {})
 }
 
-export const crunch = analysis => {
+export const crunch = (analysis: IAnalysis): IAnalysis => {
   const x = analysis
 
   // Purchase & Rehab
@@ -171,7 +171,7 @@ export const estimatedRent = (bed, bath) => 200 + bed * 200 + bath * 200
  * @param {object} info - A propertyInfo() call result.
  * @returns {object}
  */
-export const propertyInfoToAnalysis = info => {
+export const propertyInfoToAnalysis = (info): IAnalysis => {
   const purchasePrice = info.price || 0
 
   const beds = _.get('beds', info) || 0
@@ -266,7 +266,8 @@ export const getDefaultAnalysis = propertyId => {
     })
 }
 
-export const getDefaultCriteria = () => {
+export const getDefaultCriteria = (): Promise<ICriteria> => {
+  // TODO store default criteria for each user, fetch from firebase
   return Promise.resolve({
     cashFlow: { min: 100 },
     capRate: { min: 0.06 },
@@ -277,8 +278,5 @@ export const getDefaultCriteria = () => {
     grossRentMultiplier: { max: 15 },
     debtServiceCoverageRatio: { min: 1 },
     internalRateOfReturn: { min: 0 },
-    income: 50000,
-    mortgages: 850,
-    otherDebts: 0,
   })
 }

@@ -22,6 +22,11 @@ class User extends FirebaseMapAdapter {
   }
 
   @computed
+  get firstName() {
+    return this._map.get('displayName').split(' ')[0]
+  }
+
+  @computed
   get phoneNumber() {
     return this._map.get('phoneNumber')
   }

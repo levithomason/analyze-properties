@@ -9,19 +9,6 @@ export const snapshotToValueOrMap = snapshot => {
   return snapshot.toJSON()
 }
 
-/** Converts a firebase auth user object to a "model" shape (object with an id). */
-export const authUserToModel = user => {
-  const userObj = user || {}
-
-  return {
-    id: userObj.uid || null,
-    displayName: userObj.displayName || null,
-    email: userObj.email || null,
-    phoneNumber: userObj.phoneNumber || null,
-    photoURL: userObj.photoURL || null,
-  }
-}
-
 export const getPath = ref => {
   const path = []
 

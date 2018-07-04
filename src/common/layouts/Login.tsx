@@ -1,20 +1,24 @@
 import _ from 'lodash/fp'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
-
-import Logo from '../../common/components/Logo'
-import * as rei from '../../common/resources/rei'
 
 import Button from '../../ui/components/Button'
 import Divider from '../../ui/components/Divider'
 import Header from '../../ui/components/Header'
 import Message from '../../ui/components/Message'
 
+import Logo from '../components/Logo'
 import router from '../router'
+import { default as roleStore, RoleStore } from "../stores/roleStore"
+import { SessionStore } from "../stores/sessionStore"
+import { AnalysesStore } from '../stores/analysesStore'
 
-const Layout = ({ header = 'Analyze Properties', children }) => {
+interface ILayoutProps {
+  header?: string
+  children?: React.ReactNode
+}
+
+const Layout: React.SFC<ILayoutProps> = ({ header, children }) => {
   const layoutStyle = {
     padding: process.env.EXTENSION ? '1em' : 0,
     margin: '0 auto',
@@ -34,141 +38,126 @@ const Layout = ({ header = 'Analyze Properties', children }) => {
   )
 }
 
+Layout.defaultProps = { header: 'Analyze Properties' }
+
+interface ILoginProps {
+  analysesStore: AnalysesStore
+  roleStore: RoleStore
+  sessionStore: SessionStore
+}
+
+@inject('analysesStore')
+@inject('roleStore')
 @inject('sessionStore')
 @observer
-class Login extends React.Component {
+class Login extends React.Component<ILoginProps> {
   state = {
     error: null,
     user: null,
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { firebase, analyses, auth, roles } = this.props
-    if (
-      !firebase.isInitializing &&
-      auth.isLoaded &&
-      !auth.isEmpty &&
-      roles &&
-      this.isApproved() &&
-      !_.isEmpty(analyses)
-    ) {
+    if (this.isApproved()) {
       router.navigate('analyses')
     }
   }
 
-  logout = () => {
-    const { firebase } = this.props
-
-    firebase.logout().then(
-      () => {
-        this.setState({ error: null })
-      },
-      error => {
-        this.setState({ error })
-      },
-    )
-  }
-
   // TODO this creates default Criteria as part of the sign up process, ideally a server side op
-  createDefaultCriteria = () => {
-    const { auth, firebase } = this.props
-    console.log('Login.createDefaultCriteria()', { uid: auth.uid })
-
-    firebase
-      .ref(`/criteria/${auth.uid}`)
-      .once('value')
-      .then(snapshot => {
-        const existingCriteria = snapshot.val()
-        console.log('Login.createDefaultCriteria() existingCriteria', existingCriteria)
-        if (!existingCriteria) {
-          rei
-            .getDefaultCriteria()
-            .then(defaultCriteria => {
-              console.log('Login.createDefaultCriteria() defaultCriteria', {
-                uid: auth.uid,
-                defaultCriteria,
-              })
-              firebase.set(`/criteria/${auth.uid}`, defaultCriteria)
-            })
-            .catch(error => {
-              console.log('Login.createDefaultCriteria() error', error)
-              throw error
-            })
-        }
-      })
-  }
+  // createDefaultCriteria = () => {
+  //   const { auth, firebase } = this.props
+  //   console.log('Login.createDefaultCriteria()', { uid: auth.uid })
+  //
+  //   firebase
+  //     .ref(`/criteria/${auth.uid}`)
+  //     .once('value')
+  //     .then(snapshot => {
+  //       const existingCriteria = snapshot.val()
+  //       console.log('Login.createDefaultCriteria() existingCriteria', existingCriteria)
+  //       if (!existingCriteria) {
+  //         rei
+  //           .getDefaultCriteria()
+  //           .then(defaultCriteria => {
+  //             console.log('Login.createDefaultCriteria() defaultCriteria', {
+  //               uid: auth.uid,
+  //               defaultCriteria,
+  //             })
+  //             firebase.set(`/criteria/${auth.uid}`, defaultCriteria)
+  //           })
+  //           .catch(error => {
+  //             console.log('Login.createDefaultCriteria() error', error)
+  //             throw error
+  //           })
+  //       }
+  //     })
+  // }
 
   handleOAuthLogin = provider => () => {
     const { sessionStore } = this.props
 
     sessionStore.login(provider)
 
-    return
-
-    const { firebase } = this.props
-
-    if (process.env.EXTENSION) {
-      chrome.runtime.sendMessage({ type: `getAuthToken:${provider}` }, response => {
-        console.log('CONTENT RESPONSE', JSON.stringify(response, null, 2))
-        if (response.error) {
-          return this.setState(() => ({ error: response.error }))
-        }
-
-        let credential
-
-        switch (provider) {
-          case 'google':
-            credential = firebase.auth.GoogleAuthProvider.credential(null, response.payload)
-            break
-
-          case 'facebook':
-            credential = firebase.auth.FacebookAuthProvider.credential(response.payload)
-            break
-
-          default:
-            break
-        }
-
-        firebase
-          .login({ credential })
-          .then(() => {
-            this.createDefaultCriteria()
-          })
-          .catch(error => {
-            this.setState({ error })
-          })
-      })
-    } else {
-      firebase
-        .login({ provider, type: 'popup' })
-        .then(() => {
-          this.createDefaultCriteria()
-        })
-        .catch(error => {
-          this.setState({ error })
-        })
-    }
+    // TODO finish porting this flow to the session store flow
+    // TODO default criteria need to be created still
+    //
+    // const { firebase } = this.props
+    //
+    // if (process.env.EXTENSION) {
+    //   chrome.runtime.sendMessage({ type: `getAuthToken:${provider}` }, response => {
+    //     console.log('CONTENT RESPONSE', JSON.stringify(response, null, 2))
+    //     if (response.error) {
+    //       return this.setState(() => ({ error: response.error }))
+    //     }
+    //
+    //     let credential
+    //
+    //     switch (provider) {
+    //       case 'google':
+    //         credential = firebase.auth.GoogleAuthProvider.credential(null, response.payload)
+    //         break
+    //
+    //       case 'facebook':
+    //         credential = firebase.auth.FacebookAuthProvider.credential(response.payload)
+    //         break
+    //
+    //       default:
+    //         break
+    //     }
+    //
+    //     firebase
+    //       .login({ credential })
+    //       .then(() => {
+    //         this.createDefaultCriteria()
+    //       })
+    //       .catch(error => {
+    //         this.setState({ error })
+    //       })
+    //   })
+    // } else {
+    //   firebase
+    //     .login({ provider, type: 'popup' })
+    //     .then(() => {
+    //       this.createDefaultCriteria()
+    //     })
+    //     .catch(error => {
+    //       this.setState({ error })
+    //     })
+    // }
   }
 
   isApproved = () => {
-    const { auth, roles } = this.props
+    const { roleStore, sessionStore: { currentUser } } = this.props
 
-    return _.get(['approved', auth.uid], roles)
+    return currentUser && roleStore.isUserInRole(currentUser.key, 'approved')
   }
 
   render() {
-    const { firebase, analyses, auth, authError, profile, roles, sessionStore } = this.props
-    const { error } = this.state
+    const { analysesStore, roleStore, sessionStore } = this.props
 
-    if (firebase.isInitializing || !auth.isLoaded) return <Layout header="Loading..." />
-
-    const errorMessage = _.get('message', authError) || _.get('message', error)
-
-    if (auth.isEmpty) {
+    if (!sessionStore.currentUser) {
       return (
         <Layout>
-          {errorMessage ? (
-            <Message status="error">{errorMessage}</Message>
+          {sessionStore.errorMessage ? (
+            <Message status="error">{sessionStore.errorMessage}</Message>
           ) : (
             <p>The fastest and easiest way to analyze real estate investment deals.</p>
           )}
@@ -182,36 +171,18 @@ class Login extends React.Component {
           <Button fluid={process.env.EXTENSION} onClick={this.handleOAuthLogin('facebook')} color="blue">
             Sign in with Facebook
           </Button>
-          {/*
-            <div style={{ textAlign: 'left' }}>
-              <Header>errorMessage</Header>
-              <pre>
-                <code>{JSON.stringify(errorMessage, null, 2)}</code>
-              </pre>
-              <Header>this.state</Header>
-              <pre>
-                <code>{JSON.stringify(this.state, null, 2)}</code>
-              </pre>
-              <Header>this.props</Header>
-              <pre>
-                <code>{JSON.stringify(this.props, null, 2)}</code>
-              </pre>
-            </div>
-          */}
         </Layout>
       )
     }
 
-    if (!roles) return <Layout header="Checking access..." />
-
-    const firstName = (_.get('displayName', profile) || '').split(' ')[0]
+    if (!roleStore.rolesById.approved) return <Layout header="Checking access..." />
 
     if (!this.isApproved()) {
       return (
-        <Layout header={_.compact(['Thanks for joining', firstName]).join(', ') + '!'}>
+        <Layout header={_.compact(['Thanks for joining', sessionStore.currentUser.firstName]).join(', ') + '!'}>
           <p>Your access request is being reviewed.</p>
           <p>
-            <a href="javascript:" onClick={firebase.logout}>
+            <a href="javascript:" onClick={sessionStore.logout}>
               Sign out
             </a>
           </p>
@@ -219,10 +190,10 @@ class Login extends React.Component {
       )
     }
 
-    if (!process.env.EXTENSION && _.isEmpty(analyses)) {
+    if (!process.env.EXTENSION && _.isEmpty(analysesStore.analyses)) {
       return (
         <Layout>
-          <p>Welcome {firstName}! You don't have any analyzed properties, yet.</p>
+          <p>Welcome {sessionStore.currentUser.firstName}! You don't have any analyzed properties, yet.</p>
 
           <Divider section />
 
@@ -284,7 +255,7 @@ class Login extends React.Component {
                 rel="noopener noreferrer"
                 target="_blank"
                 href="javascript:"
-                onClick={firebase.logout}
+                onClick={sessionStore.logout}
               >
                 Sign out
               </a>
@@ -294,20 +265,8 @@ class Login extends React.Component {
       )
     }
 
-    // CDU navigates us to users in this case...
-    return null
+    return <Layout>...redirecting</Layout>
   }
 }
 
-export default _.flow(
-  firebaseConnect(
-    ({ auth }) => (auth.uid ? [`/roles/approved/${auth.uid}`, `/analyses/${auth.uid}`] : []),
-  ),
-  reduxConnect(({ firebase: { auth, authError, data: { analyses, roles }, profile } }) => ({
-    analyses: _.get(auth.uid, analyses),
-    roles,
-    auth,
-    authError,
-    profile,
-  })),
-)(Login)
+export default Login
