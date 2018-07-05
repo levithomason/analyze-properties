@@ -40,7 +40,7 @@ const createIndex = ({ styles = {}, importRoot }) => {
   }
 
   // Dev
-  if (process.env.DEV) {
+  if (process.env.NODE_ENV !== 'production') {
     rendererConfig.plugins = [
       ...rendererConfig.plugins,
       validator({
@@ -66,7 +66,7 @@ const createIndex = ({ styles = {}, importRoot }) => {
                 <FelaProvider renderer={styleRenderer}>
                   <div>
                     <Root />
-                    {process.env.DEV &&
+                    {process.env.NODE_ENV !== 'production' &&
                       React.createElement(require('mobx-react-devtools').default, {
                         position: { bottom: 0, right: '1em' },
                       })}

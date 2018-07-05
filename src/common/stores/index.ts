@@ -22,7 +22,7 @@ export { sessionStore }
 export { User }
 export { userStore }
 
-if (process.env.DEV) {
+if (process.env.NODE_ENV !== 'production') {
   window.stores = {
     analysesStore,
     roleStore,

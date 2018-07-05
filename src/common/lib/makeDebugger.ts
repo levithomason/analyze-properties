@@ -1,6 +1,6 @@
-let debug = (name: string) => (...msgs: any[]) => void 0;
+let debug = (name: string) => (...msgs: any[]) => void 0
 
-if (process.env.DEV) {
+if (process.env.NODE_ENV !== 'production') {
   debug = require('debug')
   // Heads Up!
   // https://github.com/visionmedia/debug/pull/331
@@ -34,7 +34,7 @@ if (process.env.DEV) {
  *
  * @returns {Function}
  */
-const makeDebugger = (namespace): (...msgs: any[]) => void => {
+const makeDebugger = (namespace): ((...msgs: any[]) => void) => {
   return debug(`ap:${namespace}`)
 }
 

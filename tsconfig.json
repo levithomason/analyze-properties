@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": ["dom", "es2016"],
     "module": "esnext",
     "moduleResolution": "node",

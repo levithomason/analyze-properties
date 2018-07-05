@@ -9,8 +9,8 @@ import Message from '../../ui/components/Message'
 
 import Logo from '../components/Logo'
 import router from '../router'
-import { default as roleStore, RoleStore } from "../stores/roleStore"
-import { SessionStore } from "../stores/sessionStore"
+import { default as roleStore, RoleStore } from '../stores/roleStore'
+import { SessionStore } from '../stores/sessionStore'
 import { AnalysesStore } from '../stores/analysesStore'
 
 interface ILayoutProps {
@@ -145,7 +145,10 @@ class Login extends React.Component<ILoginProps> {
   }
 
   isApproved = () => {
-    const { roleStore, sessionStore: { currentUser } } = this.props
+    const {
+      roleStore,
+      sessionStore: { currentUser },
+    } = this.props
 
     return currentUser && roleStore.isUserInRole(currentUser.key, 'approved')
   }
@@ -153,7 +156,7 @@ class Login extends React.Component<ILoginProps> {
   render() {
     const { analysesStore, roleStore, sessionStore } = this.props
 
-    if (!sessionStore.currentUser) {
+    if (!sessionStore.currentUser || sessionStore.errorMessage) {
       return (
         <Layout>
           {sessionStore.errorMessage ? (
@@ -164,11 +167,19 @@ class Login extends React.Component<ILoginProps> {
 
           <Divider hidden />
 
-          <Button fluid={process.env.EXTENSION} onClick={this.handleOAuthLogin('google')} color="red">
+          <Button
+            fluid={process.env.EXTENSION}
+            onClick={this.handleOAuthLogin('google')}
+            color="red"
+          >
             Sign in with Google
           </Button>
           {process.env.EXTENSION && <Divider hidden />}
-          <Button fluid={process.env.EXTENSION} onClick={this.handleOAuthLogin('facebook')} color="blue">
+          <Button
+            fluid={process.env.EXTENSION}
+            onClick={this.handleOAuthLogin('facebook')}
+            color="blue"
+          >
             Sign in with Facebook
           </Button>
         </Layout>
@@ -179,7 +190,11 @@ class Login extends React.Component<ILoginProps> {
 
     if (!this.isApproved()) {
       return (
-        <Layout header={_.compact(['Thanks for joining', sessionStore.currentUser.firstName]).join(', ') + '!'}>
+        <Layout
+          header={
+            _.compact(['Thanks for joining', sessionStore.currentUser.firstName]).join(', ') + '!'
+          }
+        >
           <p>Your access request is being reviewed.</p>
           <p>
             <a href="javascript:" onClick={sessionStore.logout}>
@@ -193,7 +208,10 @@ class Login extends React.Component<ILoginProps> {
     if (!process.env.EXTENSION && _.isEmpty(analysesStore.analyses)) {
       return (
         <Layout>
-          <p>Welcome {sessionStore.currentUser.firstName}! You don't have any analyzed properties, yet.</p>
+          <p>
+            Welcome {sessionStore.currentUser.firstName}! You don't have any analyzed properties,
+            yet.
+          </p>
 
           <Divider section />
 

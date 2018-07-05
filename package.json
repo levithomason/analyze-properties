@@ -43,6 +43,7 @@
     "router5": "^6.2.4",
     "semantic-ui-css": "^2.3.2",
     "semantic-ui-react": "^0.81.3",
+    "tslib": "^1.9.3",
     "uuid": "^3.1.0"
   },
   "devDependencies": {
@@ -62,11 +63,14 @@
     "fela-layout-debugger": "^5.0.0",
     "fela-perf": "^5.0.0",
     "fela-plugin-validator": "^5.0.0",
-    "firebase-bolt": "^0.8.2",
-    "firebase-tools": "^3.9.1",
+    "firebase-bolt": "^0.8.3",
+    "firebase-tools": "^3.19.3",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.2.0",
     "mobx-react-devtools": "^5.0.1",
     "node-sass": "^4.9.0",
     "parcel-bundler": "^1.9.3",
+    "parcel-plugin-clean-dist": "^0.0.6",
     "prettier": "^1.6.1",
     "prettier-eslint": "^8.2.0",
     "redux-logger": "^3.0.6",
@@ -75,15 +79,22 @@
     "utf8": "^2.1.2"
   },
   "scripts": {
-    "build": "cross-env WEB=true parcel build src/web/index.html",
-    "build:extension": "cross-env EXTENSION=true parcel build src/extension/index.html",
-    "build:ui": "cross-env UI=true parcel build src/ui/index.html",
+    "build": "cross-env WEB=true parcel build src/web/index.html --out-dir dist/web",
+    "build:extension": "cross-env EXTENSION=true parcel build src/extension/index.html --out-dir dist/extension",
+    "build:ui": "cross-env UI=true parcel build src/ui/index.html --out-dir dist/ui",
     "deploy": "yarn firebase:backup && yarn build && cd dist/web && firebase deploy && cd ../..",
     "deploy:database": "firebase login && firebase deploy --only database",
     "firebase:backup": "firebase login && node scripts/firebase-backup",
-    "lint": "prettier --write \"**/*.js?(on|x)\" && eslint --fix \"**/*.js?(on|x)\"",
-    "start": "cross-env DEV=true WEB=true parcel src/web/index.html",
-    "start:extension": "cross-env DEV=true EXTENSION=true parcel src/extension/index.html",
-    "start:ui": "DEV=true UI=true parcel src/ui/index.html"
+    "lint": "prettier --write \"**/*.(ts|tsx|json)\" && eslint --fix \"**/*.(ts|tsx|json)\"",
+    "precommit": "lint-staged",
+    "start": "cross-env WEB=true parcel src/web/index.html",
+    "start:extension": "cross-env EXTENSION=true parcel src/extension/index.html",
+    "start:ui": "UI=true parcel src/ui/index.html"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,json}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

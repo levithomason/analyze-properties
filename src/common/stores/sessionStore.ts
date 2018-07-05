@@ -36,6 +36,7 @@ export class SessionStore {
   _handleAuthError = error => {
     debug('_handleAuthError()', error)
     runInAction(() => {
+      this.currentUser = null
       this.errorCode = error.code
       this.errorMessage = error.message
     })
@@ -81,13 +82,19 @@ export class SessionStore {
   }
 
   login = provider => {
-    return process.env.EXTENSION
+    const promise = process.env.EXTENSION
       ? this._loginFromChromeExtension(provider)
       : this._loginFromWeb(provider)
+
+    return promise
+      .then(({ credential, user }) => {
+        return this._handleUserChange(user)
+      })
+      .catch(this._handleAuthError)
   }
 
   logout = () => {
-    console.debug('logout()')
+    debug('logout()')
     return firebase.auth().signOut()
   }
 }
