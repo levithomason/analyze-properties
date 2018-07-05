@@ -87,8 +87,9 @@ const createComponent = (config = {}) => WrappedComponent => {
     }
   }
 
-  return compose(felaConnect(rules), StyledComponent =>
-    hoistNonReactStatics(StyledComponent, WrappedComponent),
+  return compose(
+    felaConnect(rules),
+    StyledComponent => hoistNonReactStatics(StyledComponent, WrappedComponent),
   )(UIBaseComponent)
 }
 

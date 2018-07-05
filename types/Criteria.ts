@@ -1,4 +1,7 @@
-interface MinMaxObject { min?: number, max?: number }
+interface MinMaxObject {
+  min?: number
+  max?: number
+}
 
 declare interface ICriteria {
   cashFlow: MinMaxObject

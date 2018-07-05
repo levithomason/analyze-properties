@@ -48,7 +48,7 @@ class FirebaseListAdapter {
   }
 
   @action
-  removeItem = (key) => {
+  removeItem = key => {
     this._debug('removeItem')
     this._map.delete(key)
   }

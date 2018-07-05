@@ -4,10 +4,10 @@ import * as React from 'react'
 import { Button, Checkbox, Image, Tab, Table } from 'semantic-ui-react'
 
 import { makeDebugger } from '../../common/lib'
-import { RoleStore } from "../../common/stores/roleStore"
-import { UserStore } from "../../common/stores/userStore"
-import Role from "../../common/stores/Role"
-import User from "../../common/stores/User"
+import { RoleStore } from '../../common/stores/roleStore'
+import { UserStore } from '../../common/stores/userStore'
+import Role from '../../common/stores/Role'
+import User from '../../common/stores/User'
 
 const debug = makeDebugger('views:users')
 
@@ -31,22 +31,24 @@ class Users extends React.Component<IUsersProps> {
   render() {
     const { roleStore, userStore } = this.props
 
-    const otherRoles = roleStore.roles
-      .filter(role => role.key !== 'approved')
+    const otherRoles = roleStore.roles.filter(role => role.key !== 'approved')
 
     return (
       <Tab
         panes={[
           {
             menuItem: { key: 'users', icon: 'users', content: 'Manage Users' },
-            render: () => (<Table compact singleLine>
+            render: () => (
+              <Table compact singleLine>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell collapsing>Approved</Table.HeaderCell>
                     <Table.HeaderCell collapsing>User</Table.HeaderCell>
                     <Table.HeaderCell collapsing>Email</Table.HeaderCell>
                     {_.map(
-                      (role: Role) => <Table.HeaderCell key={role.key}>{role.key}</Table.HeaderCell>,
+                      (role: Role) => (
+                        <Table.HeaderCell key={role.key}>{role.key}</Table.HeaderCell>
+                      ),
                       otherRoles,
                     )}
                     <Table.HeaderCell>id</Table.HeaderCell>
@@ -88,16 +90,18 @@ class Users extends React.Component<IUsersProps> {
           },
           {
             menuItem: 'Role store',
-            render: () => (<pre>
-              <code>{JSON.stringify(roleStore.asJS, null, 2)}</code>
-            </pre>
+            render: () => (
+              <pre>
+                <code>{JSON.stringify(roleStore.asJS, null, 2)}</code>
+              </pre>
             ),
           },
           {
             menuItem: 'User store',
-            render: () => (<pre>
-              <code>{JSON.stringify(userStore.asJS, null, 2)}</code>
-            </pre>
+            render: () => (
+              <pre>
+                <code>{JSON.stringify(userStore.asJS, null, 2)}</code>
+              </pre>
             ),
           },
         ]}

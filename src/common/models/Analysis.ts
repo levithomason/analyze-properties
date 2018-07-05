@@ -77,7 +77,7 @@ class Analysis {
     x.sellingCostsAmount = x.sellingCostRate * x.purchasePrice
 
     x.capRate = x.netOperatingIncome / x.purchasePrice
-    x.cashOnCash = x.cashFlow * 12 / this.totalCashNeeded
+    x.cashOnCash = (x.cashFlow * 12) / this.totalCashNeeded
     x.returnOnInvestment =
       (x.cashFlow * 12 + this.equity - x.sellingCostsAmount - this.totalCashNeeded) /
       this.totalCashNeeded

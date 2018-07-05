@@ -13,7 +13,7 @@ import tableStyles from './tableStyles'
 export interface IAnalysesTableProps {
   onRowClick?: Function
   onInitialSort?: Function
-  selectedPropertyId?: number | string,
+  selectedPropertyId?: number | string
   analyses?: object
 }
 

@@ -9,7 +9,7 @@ import Trend from '../Trend'
 import Divider from '../../../ui/components/Divider/Divider'
 
 export interface IAnalyzeProps {
-  propertyId?: number | string,
+  propertyId?: number | string
 }
 
 class Analyze extends React.Component<IAnalyzeProps> {

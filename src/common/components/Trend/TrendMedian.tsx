@@ -53,7 +53,7 @@ const TrendBar = ({ color, label, value }) => (
 export interface ITrendMedianProps {
   analysis?: object
   firebase?: object
-  propertyId?: string| number
+  propertyId?: string | number
 }
 
 class TrendMedian extends React.Component<ITrendMedianProps> {

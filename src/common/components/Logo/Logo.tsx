@@ -25,7 +25,6 @@ const Logo: React.SFC<ILogoProps> = ({ size }) => (
     src={iconsBySize[size]}
     style={{ width: widthBySize[size], verticalAlign: 'bottom' }}
   />
-
 )
 
 Logo.defaultProps = {

@@ -8,7 +8,6 @@ import FirebaseMapAdapter from '../../common/transport/FirebaseMapAdapter'
 import { makeDebugger } from '../../common/lib'
 import { firebase } from '../../common/modules/firebase'
 
-
 const debug = makeDebugger('views:validRoles')
 const path = 'validRoles'
 const store = new FirebaseMapAdapter(path)

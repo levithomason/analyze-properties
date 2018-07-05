@@ -11,7 +11,6 @@ export interface ITrendTaxHistory {
   propertyId?: string | number
 }
 
-
 class TrendTaxHistory extends React.Component<ITrendTaxHistory> {
   cache = {}
 

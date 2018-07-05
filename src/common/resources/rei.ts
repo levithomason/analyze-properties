@@ -5,7 +5,7 @@ import { request } from '../lib'
 // Utils
 // ----------------------------------------
 export const PMT = (amount, rate, term) => {
-  return amount * rate * Math.pow(1 + rate, term) / (Math.pow(1 + rate, term) - 1)
+  return (amount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1)
 }
 
 export const checkDeal = (analysis, criteria) => {
@@ -65,7 +65,7 @@ export const crunch = (analysis: IAnalysis): IAnalysis => {
   x.sellingCostsAmount = x.sellingCostRate * x.purchasePrice
 
   x.capRate = x.netOperatingIncome / x.purchasePrice
-  x.cashOnCash = x.cashFlow * 12 / x.totalCashNeeded
+  x.cashOnCash = (x.cashFlow * 12) / x.totalCashNeeded
   x.returnOnInvestment =
     (x.cashFlow * 12 + x.equity - x.sellingCostsAmount - x.totalCashNeeded) / x.totalCashNeeded
   // TODO IRR, verify how the 'years' work here, uses ROI which includes equity, need amortization schedule?

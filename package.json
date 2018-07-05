@@ -80,7 +80,7 @@
     "deploy": "yarn firebase:backup && yarn build && cd dist/web && firebase deploy && cd ../..",
     "deploy:database": "firebase login && firebase deploy --only database",
     "firebase:backup": "firebase login && node scripts/firebase-backup",
-    "lint": "prettier --write \"**/*.(js|jsx|ts|tsx|json)\"",
+    "lint": "prettier --write \"**/*.{js,jsx,ts,tsx,json}\"",
     "precommit": "lint-staged",
     "start": "cross-env WEB=true parcel src/web/index.html",
     "start:extension": "cross-env EXTENSION=true parcel src/extension/index.html",

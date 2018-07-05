@@ -3,7 +3,7 @@ import { computed } from 'mobx'
 import Role from './Role'
 import { FirebaseListAdapter } from '../transport'
 import { makeDebugger } from '../lib'
-import { firebase } from "../modules/firebase"
+import { firebase } from '../modules/firebase'
 
 const debug = makeDebugger('stores:roles')
 
