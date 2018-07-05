@@ -55,11 +55,6 @@
     "@types/recharts": "^1.0.23",
     "chalk": "^2.1.0",
     "cross-env": "^5.2.0",
-    "eslint": "^4.4.1",
-    "eslint-config-prettier": "^2.3.0",
-    "eslint-plugin-json": "^1.2.0",
-    "eslint-plugin-prettier": "^2.1.2",
-    "eslint-plugin-react": "^7.2.0",
     "fela-layout-debugger": "^5.0.0",
     "fela-perf": "^5.0.0",
     "fela-plugin-validator": "^5.0.0",
@@ -85,14 +80,14 @@
     "deploy": "yarn firebase:backup && yarn build && cd dist/web && firebase deploy && cd ../..",
     "deploy:database": "firebase login && firebase deploy --only database",
     "firebase:backup": "firebase login && node scripts/firebase-backup",
-    "lint": "prettier --write \"**/*.(ts|tsx|json)\" && eslint --fix \"**/*.(ts|tsx|json)\"",
+    "lint": "prettier --write \"**/*.(js|jsx|ts|tsx|json)\"",
     "precommit": "lint-staged",
     "start": "cross-env WEB=true parcel src/web/index.html",
     "start:extension": "cross-env EXTENSION=true parcel src/extension/index.html",
     "start:ui": "UI=true parcel src/ui/index.html"
   },
   "lint-staged": {
-    "**/*.{ts,tsx,json}": [
+    "**/*.{js,jsx,ts,tsx,json}": [
       "prettier --write",
       "git add"
     ]

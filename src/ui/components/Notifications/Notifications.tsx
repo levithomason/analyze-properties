@@ -34,7 +34,6 @@ class Notifications extends React.Component {
     const { ElementType, styles, theme, cards, ...rest } = this.props
 
     return (
-      // eslint-disable-next-line react/jsx-key
       <ElementType {...rest}>{_.map(card => <NotificationCard {...card} />, cards)}</ElementType>
     )
   }

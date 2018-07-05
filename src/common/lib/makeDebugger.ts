@@ -11,10 +11,8 @@ if (process.env.NODE_ENV !== 'production') {
   try {
     DEBUG = window.localStorage.debug
   } catch (e) {
-    /* eslint-disable no-console */
     console.error('Could not enable debug.')
     console.error(e)
-    /* eslint-enable no-console */
   }
 
   // enable what ever settings we got from storage
