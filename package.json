@@ -3,6 +3,25 @@
   "version": "1.2.2",
   "private": true,
   "homepage": "https://analyze.properties",
+  "scripts": {
+    "build": "cross-env WEB=true parcel build src/web/index.html --out-dir dist/web",
+    "build:extension": "cross-env EXTENSION=true parcel build src/extension/index.html --out-dir dist/extension",
+    "build:ui": "cross-env UI=true parcel build src/ui/index.html --out-dir dist/ui",
+    "deploy": "yarn firebase:backup && yarn build && cd dist/web && firebase deploy && cd ../..",
+    "deploy:database": "firebase login && firebase deploy --only database",
+    "firebase:backup": "firebase login && node scripts/firebase-backup",
+    "lint": "prettier --write \"**/*.{js,jsx,ts,tsx,json}\"",
+    "precommit": "lint-staged",
+    "start": "cross-env WEB=true parcel src/web/index.html",
+    "start:extension": "cross-env EXTENSION=true parcel src/extension/index.html",
+    "start:ui": "UI=true parcel src/ui/index.html"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
@@ -72,24 +91,5 @@
     "typescript-eslint-parser": "^16.0.0",
     "utf": "^1.0.0",
     "utf8": "^2.1.2"
-  },
-  "scripts": {
-    "build": "cross-env WEB=true parcel build src/web/index.html --out-dir dist/web",
-    "build:extension": "cross-env EXTENSION=true parcel build src/extension/index.html --out-dir dist/extension",
-    "build:ui": "cross-env UI=true parcel build src/ui/index.html --out-dir dist/ui",
-    "deploy": "yarn firebase:backup && yarn build && cd dist/web && firebase deploy && cd ../..",
-    "deploy:database": "firebase login && firebase deploy --only database",
-    "firebase:backup": "firebase login && node scripts/firebase-backup",
-    "lint": "prettier --write \"**/*.{js,jsx,ts,tsx,json}\"",
-    "precommit": "lint-staged",
-    "start": "cross-env WEB=true parcel src/web/index.html",
-    "start:extension": "cross-env EXTENSION=true parcel src/extension/index.html",
-    "start:ui": "UI=true parcel src/ui/index.html"
-  },
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,json}": [
-      "prettier --write",
-      "git add"
-    ]
   }
 }
