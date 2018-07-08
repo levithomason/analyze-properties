@@ -36,7 +36,10 @@ class FirebaseListAdapter {
 
   @computed
   get asJS() {
-    return toJS(this._map)
+    return Array.from(this._map.keys()).reduce((acc, next) => {
+      acc[next] = this._map.get(next).asJS
+      return acc
+    }, {})
   }
 
   @action
