@@ -6,11 +6,16 @@ import sessionStore from './sessionStore'
 
 export class AnalysesStore extends FirebaseListAdapter {
   constructor() {
-    super(Analysis, `/analyses`)
-
+    super()
     reaction(() => {
       return sessionStore.currentUser && sessionStore.currentUser.key
-    }, this.reset)
+    }, this.init.bind(this))
+  }
+
+  init() {
+    if (sessionStore.currentUser) {
+      super.init(Analysis, `/analyses/${sessionStore.currentUser.key}`)
+    }
   }
 
   @computed

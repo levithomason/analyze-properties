@@ -16,21 +16,25 @@ class FirebaseListAdapter {
   protected key: string
   protected path: string
   private readonly _debug: Function
-  private readonly _ref: firebase.database.Reference
+  private _ref: firebase.database.Reference
   ItemAdapter: FirebaseMapAdapter
 
   @observable isPulling = false
   @observable isPushing = false
   @observable protected readonly _map = new Map()
 
-  constructor(ItemAdapter = FirebaseMapAdapter, pathOrRef) {
+  constructor(ItemAdapter = FirebaseMapAdapter, pathOrRef?) {
     this.childClassName = this.constructor.name
     this._debug = makeDebugger(`transport:FirebaseListAdapter:(${this.childClassName})`)
+    this.init(ItemAdapter, pathOrRef)
+  }
+
+  init(ItemAdapter, pathOrRef) {
+    if (!pathOrRef) return
 
     this._ref = typeof pathOrRef === 'string' ? firebase.database().ref(pathOrRef) : pathOrRef
     this.key = this._ref.key
     this.path = getPath(this._ref)
-
     this.ItemAdapter = ItemAdapter
   }
 
