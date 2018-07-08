@@ -1,6 +1,6 @@
 # Analyze Properties
 
-This repo contains 4 projects:
+This repo contains a few projects:
 
 - `src/extension` Chrome extension
 - `src/ui` A UI component lib
@@ -26,15 +26,14 @@ yarn firebase:login   # login to the CLI (required)
 
 Develop on an app:
 ```
+yarn start            # starts the web app
 yarn start:extension
-yarn start:mobile
 yarn start:ui
-yarn start:web
 ```
 
 Build an app:
 ```
+yarn build            # builds the web app
 yarn build:extension
 yarn build:ui
-yarn build:web
 ```
