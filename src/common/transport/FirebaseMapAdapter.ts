@@ -25,7 +25,7 @@ class FirebaseMapAdapter {
 
   constructor(pathOrRef, initialValue = {}) {
     this.childClassName = this.constructor.name
-    this._debug = makeDebugger(`transport:FirebaseListAdapter:(${this.childClassName})`)
+    this._debug = makeDebugger(`transport:FirebaseMapAdapter:(${this.childClassName})`)
 
     this._ref = _.isString(pathOrRef) ? firebase.database().ref(pathOrRef) : pathOrRef
     this.key = this._ref.key

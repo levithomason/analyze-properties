@@ -1,7 +1,6 @@
 import { makeDebugger } from '../lib'
-import { crunch, PMT } from '../resources/rei'
 import { FirebaseMapAdapter } from '../transport'
-import { action, computed } from 'mobx'
+import { computed } from 'mobx'
 
 const debug = makeDebugger('stores:user')
 
@@ -14,6 +13,10 @@ class Analysis extends FirebaseMapAdapter implements IAnalysis {
   @computed
   get favorite() {
     return this._map.get('favorite')
+  }
+
+  set favorite(val) {
+    this._map.set('favorite', val)
   }
 
   @computed

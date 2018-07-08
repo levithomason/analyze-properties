@@ -2,8 +2,6 @@ import _ from 'lodash/fp'
 import * as React from 'react'
 import { withRoute } from 'react-router5'
 
-import AnalysisStats from '../../common/components/AnalysisStats'
-import FavoriteButton from '../../common/components/FavoriteButton'
 import Trend from '../../common/components/Trend'
 import AnalysisWorksheet from '../../common/components/AnalysisWorksheet'
 import AnalysesTable from '../../common/components/AnalysesTable'
@@ -44,12 +42,6 @@ class Analyses extends React.Component {
             boxShadow: '0 0 3em rgba(0, 0, 0, 0.2)',
           }}
         >
-          {/*<AnalysisStats propertyId={propertyId} />*/}
-
-          {/*<div style={{ padding: '1em' }}>*/}
-          {/*<FavoriteButton propertyId={propertyId} fluid />*/}
-          {/*</div>*/}
-
           <div style={{ flex: '1' }}>
             <Trend propertyId={propertyId} />
 

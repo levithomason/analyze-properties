@@ -27,7 +27,6 @@ const createIndex = ({ styles = {}, importRoot }) => {
 
   // Style Renderer
   const rendererConfig = {
-    selectorPrefix: 'ap_',
     enhancers: [],
     plugins: [
       friendlyPseudoClass(), // Use JS-friendly pseudo classes (i.e. onHover vs ':hover')

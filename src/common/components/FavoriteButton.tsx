@@ -1,60 +1,42 @@
-import cx from 'classnames'
-import _ from 'lodash/fp'
+import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { connect as felaConnect } from 'react-fela'
-import { connect as reduxConnect } from 'react-redux'
-import { firebaseConnect } from 'react-redux-firebase'
 
 import Button from '../../ui/components/Button'
-import theme from '../../ui/styles/theme'
+import { AnalysesStore } from '../stores/analysesStore'
 
-const rules = {
-  icon: ({ icon }) => ({
-    color: theme.textColors.red.hex(),
-    // marginRight: icon ? '0' : '0.325em',
-    // verticalAlign: 'middle',
-    // height: '1em',
-  }),
-  text: ({ icon }) => {
-    return Object.assign(
-      {},
-      icon && {
-        display: 'none',
-      },
-    )
-  },
+interface IFavoriteButtonProps {
+  analysesStore: AnalysesStore
+  propertyId: string
+  icon?: boolean
 }
 
-class FavoriteButton extends React.Component {
-  handleClick = () => {
-    const { analysis, auth, firebase, propertyId } = this.props
-    firebase.set(`/analyses/${auth.uid}/${propertyId}/favorite`, !analysis.favorite)
+@inject('analysesStore')
+@observer
+class FavoriteButton extends React.Component<IFavoriteButtonProps> {
+  get analysis() {
+    const { analysesStore, propertyId } = this.props
+
+    return analysesStore.getByPropertyId(propertyId)
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return _.get('analysis.favorite', this.props) !== _.get('analysis.favorite', nextProps)
+  handleClick = () => {
+    this.analysis.favorite = !this.analysis.favorite
   }
 
   render() {
-    const { analysis, auth, dispatch, firebase, icon, propertyId, styles, ...rest } = this.props
+    if (!this.analysis) return null
 
-    if (!analysis) return null
+    const { analysesStore, icon, propertyId, ...rest } = this.props
 
-    const classes = analysis.favorite ? 'fa fa-heart' : 'fa fa-heart-o'
+    const iconClass = this.analysis.favorite ? 'fa-heart' : 'fa-heart-o'
 
     return (
       <Button basic={icon} icon onClick={this.handleClick} {...rest}>
-        <i className={cx(classes, styles.icon)} /> <span className={styles.text}>Favorite</span>
+        <i className={`fa ${iconClass}`} />
+        {!icon && 'Favorite'}
       </Button>
     )
   }
 }
 
-export default _.flow(
-  felaConnect(rules),
-  firebaseConnect(['/analyses']),
-  reduxConnect(({ firebase: { auth, data: { analyses } } }, { propertyId }) => ({
-    analysis: _.get([auth.uid, propertyId], analyses),
-    auth,
-  })),
-)(FavoriteButton)
+export default FavoriteButton
