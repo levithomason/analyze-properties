@@ -19,11 +19,13 @@ import store from './modules/store'
 import * as stores from './stores'
 import './styles/global.scss'
 
-const createIndex = ({ styles = {}, importRoot }) => {
+const createIndex = ({ styles = {}, importRoot, mountNode }) => {
   // Mount node
-  const mountNode = document.createElement('div')
-  mountNode.id = 'analyze-properties'
-  document.body.appendChild(mountNode)
+  if (!mountNode) {
+    mountNode = document.createElement('div')
+    mountNode.id = 'analyze-properties'
+    document.body.appendChild(mountNode)
+  }
 
   // Style Renderer
   const rendererConfig = {

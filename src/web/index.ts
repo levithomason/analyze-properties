@@ -6,6 +6,7 @@ import 'semantic-ui-css/semantic.css'
 import createIndex from '../common/createIndex'
 
 const render = createIndex({
+  mountNode: document.getElementById('app'),
   importRoot: () => import('./components/Root'),
   styles: {
     htmlBody: {
