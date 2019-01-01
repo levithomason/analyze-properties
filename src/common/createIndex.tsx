@@ -5,9 +5,8 @@ import { Provider as ReactReduxProvider } from 'react-redux'
 import { Provider as MobXProvider } from 'mobx-react'
 
 import { createRenderer } from 'fela'
-import { Provider as FelaProvider, ThemeProvider } from 'react-fela'
+import { RendererProvider, ThemeProvider } from 'react-fela'
 // style plugins
-import LVHA from 'fela-plugin-lvha'
 import friendlyPseudoClass from 'fela-plugin-friendly-pseudo-class'
 import placeholderPrefixer from 'fela-plugin-placeholder-prefixer'
 import prefixer from 'fela-plugin-prefixer'
@@ -32,23 +31,17 @@ const createIndex = ({ styles = {}, importRoot, mountNode }) => {
     enhancers: [],
     plugins: [
       friendlyPseudoClass(), // Use JS-friendly pseudo classes (i.e. onHover vs ':hover')
-      LVHA(), // Sorts pseudo classes according to LVH(F)A
       placeholderPrefixer(), // Adds all ::placeholder prefixes
       prefixer(), // Adds all vendor prefixes to the styles
       fallbackValue(), // Resolves arrays of fallback values (required after prefixer)
+      process.env.NODE_ENV !== 'production' &&
+        validator({
+          // Enforces object validation for keyframes and rules.
+          logInvalid: true,
+          deleteInvalid: true,
+        }),
       unit(), // Automatically adds units to values if needed
     ],
-  }
-
-  // Dev
-  if (process.env.NODE_ENV !== 'production') {
-    rendererConfig.plugins = [
-      ...rendererConfig.plugins,
-      validator({
-        logInvalid: true,
-        deleteInvalid: true,
-      }),
-    ]
   }
 
   const styleRenderer = createRenderer(rendererConfig)
@@ -64,7 +57,7 @@ const createIndex = ({ styles = {}, importRoot, mountNode }) => {
           <MobXProvider {...stores}>
             <ReactReduxProvider store={store}>
               <ThemeProvider theme={theme}>
-                <FelaProvider renderer={styleRenderer}>
+                <RendererProvider renderer={styleRenderer}>
                   <div>
                     <Root />
                     {process.env.NODE_ENV !== 'production' &&
@@ -72,7 +65,7 @@ const createIndex = ({ styles = {}, importRoot, mountNode }) => {
                         position: { bottom: 0, right: '1em' },
                       })}
                   </div>
-                </FelaProvider>
+                </RendererProvider>
               </ThemeProvider>
             </ReactReduxProvider>
           </MobXProvider>,

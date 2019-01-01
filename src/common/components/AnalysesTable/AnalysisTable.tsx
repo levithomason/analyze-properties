@@ -9,6 +9,7 @@ import { Checkbox, Icon, Input, Label, Menu } from 'semantic-ui-react'
 import AnalysesTableRow from './AnalysesTableRow'
 import COLUMNS from './COLUMNS'
 import tableStyles from './tableStyles'
+import { Analysis } from '../../models'
 
 export interface IAnalysesTableProps {
   onRowClick?: Function
@@ -17,10 +18,19 @@ export interface IAnalysesTableProps {
   analyses?: object
 }
 
-class AnalysesTable extends React.Component<IAnalysesTableProps> {
+export interface IAnalysesTableState {
+  analyses: Analysis[]
+  onlyFavorites: boolean
+  searchQuery: string
+  sortBy: string
+  sortDirection: 'asc' | 'desc'
+}
+
+class AnalysesTable extends React.Component<IAnalysesTableProps, IAnalysesTableState> {
   state = {
     analyses: null,
     onlyFavorites: true,
+    searchQuery: '',
     sortBy: null,
     sortDirection: null,
   }
@@ -50,20 +60,29 @@ class AnalysesTable extends React.Component<IAnalysesTableProps> {
   sortAnalysesByBestDeal = analyses => {
     const isFirstSort = _.isEmpty(this.state.analyses) && !_.isEmpty(analyses)
 
-    const sortedAnalyses = _.flow(
-      _.orderBy(
-        ..._.unzip([
-          ['favorite', 'desc'],
-          ['cashOnCash', 'desc'],
-          ['cashNeeded', 'asc'],
-          ['cashFlow', 'desc'],
-          // ['capRate', 'desc'],
-          // ['rentToValue', 'desc'],
-          ['grossRentMultiplier', 'desc'],
-          // ['debtServiceCoverageRatio', 'desc'],
-        ]),
-      ),
-    )(analyses)
+    const sortedAnalyses = _.orderBy(
+      [
+        'favorite',
+        'cashOnCash',
+        'cashNeeded',
+        'cashFlow',
+        // 'capRate',
+        'rentToValue',
+        // 'grossRentMultiplier',
+        // 'debtServiceCoverageRatio',
+      ],
+      [
+        'desc',
+        'desc',
+        'asc',
+        'desc',
+        // 'desc',
+        'desc',
+        // 'desc',
+        // 'desc',
+      ],
+      analyses,
+    )
 
     if (isFirstSort) {
       _.invokeArgs('onInitialSort', [null, { ...this.props, analyses: sortedAnalyses }], this.props)
@@ -73,7 +92,7 @@ class AnalysesTable extends React.Component<IAnalysesTableProps> {
   }
 
   sortBy = sortBy => () => {
-    this.setState((prevState, props) => {
+    this.setState((prevState: IAnalysesTableState) => {
       // changed headers, sort ascending
       // same header, toggle direction
       const sortDirection =
