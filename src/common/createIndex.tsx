@@ -41,7 +41,7 @@ const createIndex = ({ styles = {}, importRoot, mountNode }) => {
           deleteInvalid: true,
         }),
       unit(), // Automatically adds units to values if needed
-    ],
+    ].filter(Boolean),
     selectorPrefix: 'ap-',
     devMode: process.env.NODE_ENV !== 'production',
   }
