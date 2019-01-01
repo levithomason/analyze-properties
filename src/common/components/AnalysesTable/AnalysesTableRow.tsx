@@ -11,6 +11,7 @@ import tableStyles from './tableStyles'
 import FavoriteButton from '../../components/FavoriteButton'
 import theme from '../../../ui/styles/theme'
 import * as rei from '../../resources/rei'
+import { Analysis } from '../../stores'
 
 const overlayTextStyle = {
   position: 'absolute',
@@ -33,7 +34,7 @@ const overlayTextStyle = {
 
 export interface IAnalysesTableRowProps {
   active?: boolean
-  analysis?: object
+  analysis?: Analysis
   criteria?: object
   onClick?: Function
 }
@@ -56,7 +57,7 @@ class AnalysesTableRow extends React.Component<IAnalysesTableRowProps> {
       this.props.active !== nextProps.active ||
       _.some(col => currAnalysis[col.key] !== nextAnalysis[col.key], COLUMNS) ||
       _.some(col => currCriteria[col.key] !== nextCriteria[col.key], COLUMNS) ||
-      _.some(key => currCriteria[key] !== nextCriteria[key], analysisKeys)
+      _.some(key => currAnalysis[key] !== nextAnalysis[key], analysisKeys)
     )
   }
 

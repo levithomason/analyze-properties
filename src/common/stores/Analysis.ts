@@ -5,9 +5,9 @@ import { computed } from 'mobx'
 const debug = makeDebugger('stores:user')
 
 class Analysis extends FirebaseMapAdapter implements IAnalysis {
-  constructor(pathOrRef, initialValue?: IAnalysis) {
-    super(pathOrRef, initialValue)
-    debug('new Analysis()', pathOrRef, initialValue)
+  constructor(path, initialValue?: IAnalysis) {
+    super(path, initialValue)
+    debug('new Analysis()', path, initialValue)
   }
 
   @computed

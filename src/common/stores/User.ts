@@ -6,9 +6,9 @@ import { FirebaseMapAdapter } from '../transport'
 const debug = makeDebugger('stores:user')
 
 class User extends FirebaseMapAdapter {
-  constructor(pathOrRef, initialValue?) {
-    super(pathOrRef, initialValue)
-    debug('new User()', pathOrRef, initialValue)
+  constructor(path, initialValue?) {
+    super(path, initialValue)
+    debug('new User()', path, initialValue)
   }
 
   @computed

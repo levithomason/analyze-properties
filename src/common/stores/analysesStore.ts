@@ -6,11 +6,21 @@ import sessionStore from './sessionStore'
 
 export class AnalysesStore extends FirebaseListAdapter {
   constructor() {
-    super(Analysis, `/analyses`)
+    super()
+    this.mountAtCurrentUser()
 
     reaction(() => {
       return sessionStore.currentUser && sessionStore.currentUser.key
-    }, this.reset)
+    }, this.handleUserChange)
+  }
+
+  handleUserChange = () => this.mountAtCurrentUser()
+
+  mountAtCurrentUser = () => {
+    if (sessionStore.currentUser && sessionStore.currentUser.key) {
+      this.mount(Analysis, `/analyses/${sessionStore.currentUser.key}`)
+      this.reset()
+    }
   }
 
   @computed
@@ -24,7 +34,8 @@ export class AnalysesStore extends FirebaseListAdapter {
   }
 
   getByPropertyId(propertyId: string): Analysis {
-    return this._map.get(propertyId) || null
+    // TODO: normalize property Ids to strings...
+    return this._map.get(propertyId) || this._map.get(String(propertyId)) || null
   }
 }
 

@@ -5,7 +5,7 @@ import Button from '../../ui/components/Button'
 import { AnalysesStore } from '../stores/analysesStore'
 
 interface IFavoriteButtonProps {
-  analysesStore: AnalysesStore
+  analysesStore?: AnalysesStore
   propertyId: string
   icon?: boolean
 }
@@ -21,17 +21,16 @@ class FavoriteButton extends React.Component<IFavoriteButtonProps> {
 
   handleClick = () => {
     this.analysis.favorite = !this.analysis.favorite
+    this.analysis.pushOnce()
   }
 
   render() {
-    if (!this.analysis) return null
+    const { icon } = this.props
 
-    const { analysesStore, icon, propertyId, ...rest } = this.props
-
-    const iconClass = this.analysis.favorite ? 'fa-heart' : 'fa-heart-o'
+    const iconClass = this.analysis && this.analysis.favorite ? 'fa-heart' : 'fa-heart-o'
 
     return (
-      <Button basic={icon} icon onClick={this.handleClick} {...rest}>
+      <Button basic={icon} color="red" icon onClick={this.handleClick} disabled={!this.analysis}>
         <i className={`fa ${iconClass}`} />
         {!icon && 'Favorite'}
       </Button>

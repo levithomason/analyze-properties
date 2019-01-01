@@ -5,6 +5,10 @@ import { firebase } from '../modules/firebase'
 import { makeDebugger } from '../lib/index'
 import { getPath } from './firebaseUtils'
 
+export type FirebaseMapAdapterConstructor = {
+  new (path?: string, initialValue?: object): FirebaseMapAdapter
+}
+
 /**
  * Creates a MobX store (observable Map) that mirrors the firebase data at a path or ref.
  * Can push/pull changes to/from the server.
@@ -17,26 +21,30 @@ class FirebaseMapAdapter {
   private _lastChangeFromServer = { type: null, name: null, newValue: null }
   private _localObserver = null
   private readonly _debug: Function
-  private readonly _ref: firebase.database.Reference
-  protected readonly _map: ObservableMap
+  private _ref: firebase.database.Reference
+  protected _map: ObservableMap
 
   @observable isPulling = false
   @observable isPushing = false
 
-  constructor(pathOrRef, initialValue = {}) {
+  constructor(path: string, initialValue: object = {}) {
     this.childClassName = this.constructor.name
     this._debug = makeDebugger(`transport:FirebaseMapAdapter:(${this.childClassName})`)
 
-    this._ref = _.isString(pathOrRef) ? firebase.database().ref(pathOrRef) : pathOrRef
-    this.key = this._ref.key
-    this.path = getPath(this._ref)
-
-    this._map = observable(new Map(_.toPairs(initialValue)))
+    this.mount(path, initialValue)
   }
 
   @computed
   get asJS() {
     return toJS(this._map)
+  }
+
+  mount(path: string, initialValue: object = {}) {
+    this._ref = firebase.database().ref(path)
+    this.key = this._ref.key
+    this.path = getPath(this._ref)
+
+    this._map = observable(new Map(_.toPairs(initialValue)))
   }
 
   /** Persist the map to the server. */

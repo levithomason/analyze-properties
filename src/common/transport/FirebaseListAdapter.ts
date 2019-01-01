@@ -1,9 +1,9 @@
 import _ from 'lodash/fp'
-import { action, computed, observable, ObservableMap, runInAction, toJS } from 'mobx'
+import { action, computed, observable, runInAction } from 'mobx'
 
 import { firebase } from '../modules/firebase'
 import { makeDebugger } from '../lib'
-import FirebaseMapAdapter from './FirebaseMapAdapter'
+import FirebaseMapAdapter, { FirebaseMapAdapterConstructor } from './FirebaseMapAdapter'
 import { getPath } from './firebaseUtils'
 
 /**
@@ -16,22 +16,18 @@ class FirebaseListAdapter {
   protected key: string
   protected path: string
   private readonly _debug: Function
-  private readonly _ref: firebase.database.Reference
-  ItemAdapter: FirebaseMapAdapter
+  private _ref: firebase.database.Reference
+  ItemAdapter: FirebaseMapAdapterConstructor
 
   @observable isPulling = false
   @observable isPushing = false
   @observable protected readonly _map = new Map()
 
-  constructor(ItemAdapter = FirebaseMapAdapter, pathOrRef) {
+  constructor(ItemAdapter = FirebaseMapAdapter, path?) {
     this.childClassName = this.constructor.name
     this._debug = makeDebugger(`transport:FirebaseListAdapter:(${this.childClassName})`)
 
-    this._ref = typeof pathOrRef === 'string' ? firebase.database().ref(pathOrRef) : pathOrRef
-    this.key = this._ref.key
-    this.path = getPath(this._ref)
-
-    this.ItemAdapter = ItemAdapter
+    this.mount(ItemAdapter, path)
   }
 
   @computed
@@ -54,6 +50,14 @@ class FirebaseListAdapter {
   removeItem = key => {
     this._debug('removeItem')
     this._map.delete(key)
+  }
+
+  mount = (ItemAdapter = FirebaseMapAdapter, path) => {
+    this._ref = firebase.database().ref(path)
+    this.key = this._ref.key
+    this.path = getPath(this._ref)
+
+    this.ItemAdapter = ItemAdapter
   }
 
   /** Fetch the list from the server and replace item adapters for each child. */

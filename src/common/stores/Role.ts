@@ -6,9 +6,9 @@ import { FirebaseMapAdapter } from '../transport'
 const debug = makeDebugger('stores:role')
 
 export class Role extends FirebaseMapAdapter {
-  constructor(pathOrRef, initialValue?) {
-    super(pathOrRef, initialValue)
-    debug('new Role()', pathOrRef, initialValue)
+  constructor(path, initialValue?) {
+    super(path, initialValue)
+    debug('new Role()', path, initialValue)
   }
 
   @computed

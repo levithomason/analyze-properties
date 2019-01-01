@@ -42,6 +42,8 @@ const createIndex = ({ styles = {}, importRoot, mountNode }) => {
         }),
       unit(), // Automatically adds units to values if needed
     ],
+    selectorPrefix: 'ap-',
+    devMode: process.env.NODE_ENV !== 'production',
   }
 
   const styleRenderer = createRenderer(rendererConfig)
