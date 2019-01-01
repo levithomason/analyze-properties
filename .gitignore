@@ -1,5 +1,6 @@
 *.log*
 .cache/
+.firebase/
 
 .yarn-cache/
 coverage/
