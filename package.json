@@ -59,8 +59,7 @@
     "redux": "^3.6.0",
     "redux-router5": "^6.0.2",
     "router5": "^6.2.4",
-    "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.84.0",
+    "semantic-ui-react": "^0.86.0",
     "tslib": "^1.9.3",
     "uuid": "^3.1.0"
   },

@@ -10,7 +10,7 @@ import User from './User'
 import userStore from './userStore'
 
 mobx.configure({
-  enforceActions: true, // only allow state changes in an @action
+  enforceActions: 'always', // only allow state changes in an @action
 })
 
 export { Analysis }
@@ -23,7 +23,7 @@ export { User }
 export { userStore }
 
 if (process.env.NODE_ENV !== 'production') {
-  window.stores = {
+  ;(window as any).stores = {
     analysesStore,
     roleStore,
     routerStore,

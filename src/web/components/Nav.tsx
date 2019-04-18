@@ -3,11 +3,12 @@ import { inject, observer } from 'mobx-react'
 import * as React from 'react'
 import { Link } from 'react-router5'
 
-import { Button, Image, Menu } from 'semantic-ui-react'
+import { Image, Menu } from 'semantic-ui-react'
 
 import Logo from '../../common/components/Logo'
 import { RoleStore } from '../../common/stores/roleStore'
 import { SessionStore } from '../../common/stores/sessionStore'
+import LogoutButton from '../../common/components/LogoutButton'
 
 export interface INavProps {
   profile?: object
@@ -29,11 +30,6 @@ const menuItemStyle = { background: 'none' }
 @inject('sessionStore')
 @observer
 class Nav extends React.Component<INavProps> {
-  handleLogout = () => {
-    const { sessionStore } = this.props
-    sessionStore.logout()
-  }
-
   render() {
     const { roleStore, sessionStore } = this.props
     const { currentUser } = sessionStore
@@ -43,9 +39,10 @@ class Nav extends React.Component<INavProps> {
     const isSuperAdmin = roleStore.isUserInRole(currentUser.key, 'superAdmin')
 
     return (
-      <Menu borderless color="blue" fixed="top" style={menuStyle}>
+      <Menu borderless color="blue" style={menuStyle}>
         <Menu.Item style={menuItemStyle} as="div" header>
-          <Logo />&emsp;Analyze Properties
+          <Logo />
+          &emsp;Analyze Properties
         </Menu.Item>
 
         <Menu.Item style={menuItemStyle} as={Link} routeName="analyses" content="Analyses" />
@@ -63,7 +60,7 @@ class Nav extends React.Component<INavProps> {
             {_.get('displayName', currentUser)}
           </Menu.Item>
           <Menu.Item style={menuItemStyle}>
-            <Button onClick={this.handleLogout}>Logout</Button>
+            <LogoutButton />
           </Menu.Item>
         </Menu.Menu>
       </Menu>

@@ -1,16 +1,25 @@
+import { inject } from 'mobx-react'
 import * as React from 'react'
 import { firebaseConnect } from 'react-redux-firebase'
+import { Button } from 'semantic-ui-react'
 
-import Button from '../../ui/components/Button'
+import { SessionStore } from '../stores/sessionStore'
+import router from '../router'
 
-class LogoutButton extends React.Component {
+interface LogoutButtonProps {
+  sessionStore: SessionStore
+}
+
+@inject('sessionStore')
+class LogoutButton extends React.Component<LogoutButtonProps> {
   handleLogout = () => {
-    const { firebase } = this.props
-    firebase.logout()
+    const { sessionStore } = this.props
+    sessionStore.logout()
+    router.navigate('/')
   }
 
   render() {
-    const { firebase, ...rest } = this.props
+    const { sessionStore, ...rest } = this.props
     return (
       <Button {...rest} onClick={this.handleLogout}>
         Logout
