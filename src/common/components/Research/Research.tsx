@@ -16,15 +16,6 @@ class Research extends React.Component<ResearchProps> {
     url: '',
   }
 
-  handleClick = e => {
-    if (e.metaKey) return
-
-    e.preventDefault()
-    e.stopPropagation()
-
-    this.setState({ open: true, url: e.target.href })
-  }
-
   handleClose = () => this.setState({ open: false })
 
   render() {
@@ -71,13 +62,40 @@ class Research extends React.Component<ResearchProps> {
                     },
                   },
                   {
-                    key: 'zillow',
+                    key: 'zillow-rent',
+                    content: (
+                      <span>
+                        <Icon name="money" size="small" /> Zillow Rent Comp{' '}
+                        <Icon name="external" size="small" />
+                      </span>
+                    ),
+                    onClick: () => {
+                      this.setState({
+                        url: `https://www.zillow.com/rental-manager/rent-comp-estimator/`,
+                      })
+                    },
+                  },
+                  {
+                    key: 'rentometer',
+                    href: `https://rentometer.com/`,
+                    target: '_blank',
+                    rel: 'nofollow noreferrer',
+                    children: (
+                      <span>
+                        <Icon name="money" size="small" /> Rentometer{' '}
+                        <Icon name="external" size="small" />
+                      </span>
+                    ),
+                  },
+                  {
+                    key: 'zillow-values',
                     href: `https://www.zillow.com/${city}-${state}/home-values`,
                     target: '_blank',
                     rel: 'nofollow noreferrer',
                     children: (
                       <span>
-                        Zillow Home Values <Icon name={'external'} size={'small'} />
+                        <Icon name="chart line" size="small" /> Zillow Home Values{' '}
+                        <Icon name="external" size="small" />
                       </span>
                     ),
                   },
