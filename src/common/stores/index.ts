@@ -10,7 +10,7 @@ import User from './User'
 import userStore from './userStore'
 
 mobx.configure({
-  enforceActions: true, // only allow state changes in an @action
+  enforceActions: 'always', // only allow state changes in an @action
 })
 
 export { Analysis }

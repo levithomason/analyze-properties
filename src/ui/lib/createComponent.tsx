@@ -73,7 +73,7 @@ const createComponent = (config = {}) => WrappedComponent => {
     }
 
     render() {
-      const { as, className, styles, theme, relaxed, ...rest } = this.props
+      const { as, className, rules, styles, theme, relaxed, ...rest } = this.props
 
       return (
         <WrappedComponent

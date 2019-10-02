@@ -1,7 +1,7 @@
 import _ from 'lodash/fp'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { Link } from 'react-router5'
+import { Link, withRoute } from 'react-router5'
 
 import { Button, Image, Menu } from 'semantic-ui-react'
 
@@ -29,7 +29,7 @@ const menuItemStyle = { background: 'none' }
 @inject('sessionStore')
 @observer
 class Nav extends React.Component<INavProps> {
-  handleLogout = () => {
+  handleLogoutClick = () => {
     const { sessionStore } = this.props
     sessionStore.logout()
   }
@@ -45,7 +45,8 @@ class Nav extends React.Component<INavProps> {
     return (
       <Menu borderless color="blue" fixed="top" style={menuStyle}>
         <Menu.Item style={menuItemStyle} as="div" header>
-          <Logo />&emsp;Analyze Properties
+          <Logo />
+          &emsp;Analyze Properties
         </Menu.Item>
 
         <Menu.Item style={menuItemStyle} as={Link} routeName="analyses" content="Analyses" />
@@ -63,7 +64,7 @@ class Nav extends React.Component<INavProps> {
             {_.get('displayName', currentUser)}
           </Menu.Item>
           <Menu.Item style={menuItemStyle}>
-            <Button onClick={this.handleLogout}>Logout</Button>
+            <Button onClick={this.handleLogoutClick}>Logout</Button>
           </Menu.Item>
         </Menu.Menu>
       </Menu>
@@ -71,4 +72,4 @@ class Nav extends React.Component<INavProps> {
   }
 }
 
-export default Nav
+export default withRoute(Nav)

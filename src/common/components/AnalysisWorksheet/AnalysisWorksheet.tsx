@@ -12,6 +12,13 @@ import Slider from '../../../ui/components/Slider'
 import { usd, percent, perMonth } from '../../../common/lib'
 import * as rei from '../../../common/resources/rei'
 
+export type AnalysisWorksheetProps = {
+  propertyId: string
+  analysis
+  auth
+  firebase
+}
+
 const textAreaStyle = {
   display: 'block',
   margin: 0,
@@ -24,7 +31,7 @@ const textAreaStyle = {
   resize: 'none',
 }
 
-class AnalysisWorksheet extends React.Component {
+class AnalysisWorksheet extends React.Component<AnalysisWorksheetProps> {
   handleBooleanChange = key => e => {
     console.debug('AnalysisWorksheet.handleBooleanChange()')
     const { checked } = e.target

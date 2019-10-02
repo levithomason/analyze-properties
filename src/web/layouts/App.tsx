@@ -5,6 +5,7 @@ import Login from '../../common/layouts/Login'
 import { makeDebugger } from '../../common/lib'
 
 import Nav from '../components/Nav'
+import Calculator from '../views/Calculator'
 import Analyses from '../views/Analyses'
 import Settings from '../views/Settings'
 import Users from '../views/Users'
@@ -16,6 +17,7 @@ const rootStyle = {
 
 const routeComponents = {
   analyses: Analyses,
+  calculator: Calculator,
   login: Login,
   settings: Settings,
   users: Users,

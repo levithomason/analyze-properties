@@ -1,7 +1,9 @@
 declare var process: {
   env: {
-    NODE_ENV: string
-    EXTENSION: string
     DEV: string
+    EXTENSION: string
+    NODE_ENV: string
+    PORT: string
+    ZWSID: string
   }
 }

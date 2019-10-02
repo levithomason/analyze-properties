@@ -15,16 +15,17 @@ const debug = makeDebugger('router')
 // We export the config so we can add more properties and access the config directly.
 export const routes = [
   {
+    name: 'calculator',
+    path: '/',
+  },
+  {
     name: 'users',
     path: '/users',
     canActivate: router => (toState, fromState, done) => {
       const isSuperAdmin = roleStore.isUserInRole(sessionStore.currentUser.key, 'superAdmin')
+
       debug('canActivate /users', isSuperAdmin)
-
-      if (isSuperAdmin) return isSuperAdmin
-
-      debug('currentUser !superAdmin, redirect to analyses')
-      return Promise.reject({ redirect: { name: 'analyses' } })
+      return isSuperAdmin || Promise.reject({ redirect: { name: 'analyses' } })
     },
   },
   {
@@ -70,6 +71,6 @@ router
   .usePlugin(listenersPlugin())
   .usePlugin(browserPlugin({ useHash: false }))
   .usePlugin(mobxPlugin(routerStore))
-  .start('/login')
+  .start('/')
 
 export default router

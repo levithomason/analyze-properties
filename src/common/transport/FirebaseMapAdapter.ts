@@ -24,10 +24,14 @@ class FirebaseMapAdapter {
   private _ref: firebase.database.Reference
   protected _map: ObservableMap
 
-  @observable isPulling = false
-  @observable isPushing = false
+  @observable isPulling: boolean
+  @observable isPushing: boolean
 
   constructor(path: string, initialValue: object = {}) {
+    runInAction(() => {
+      this.isPulling = false
+      this.isPushing = false
+    })
     this.childClassName = this.constructor.name
     this._debug = makeDebugger(`transport:FirebaseMapAdapter:(${this.childClassName})`)
 
