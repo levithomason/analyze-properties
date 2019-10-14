@@ -1,0 +1,32 @@
+/**************************************
+* Body
+**************************************/
+body {
+  padding: 1rem;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+/**************************************
+* Table
+**************************************/
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+table th,
+td {
+  padding: 0.25rem 1rem;
+}
+
+table th {
+  text-align: left;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+table td {
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}

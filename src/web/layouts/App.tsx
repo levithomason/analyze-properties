@@ -11,10 +11,6 @@ import Settings from '../views/Settings'
 import Users from '../views/Users'
 import ValidRoles from '../views/ValidRoles'
 
-const rootStyle = {
-  padding: '5em 1em 0 1em',
-}
-
 const routeComponents = {
   analyses: Analyses,
   calculator: Calculator,
@@ -34,9 +30,21 @@ class App extends React.Component {
     debug('route', route)
 
     return (
-      <div style={rootStyle}>
-        <Nav />
-        {React.createElement(routeComponents[route.name])}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ flex: '0 0 auto' }}>
+          <Nav />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flex: '0 0 auto',
+            height: 'calc(100vh - 80px)',
+            overflow: 'hidden',
+          }}
+        >
+          {React.createElement(routeComponents[route.name])}
+        </div>
       </div>
     )
   }

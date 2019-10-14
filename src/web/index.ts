@@ -1,7 +1,7 @@
 // import 'normalize.css'
 // import '../ui/styles/ui.scss'
-import 'font-awesome/css/font-awesome.css'
-import 'semantic-ui-css/semantic.css'
+// import 'font-awesome/css/font-awesome.css'
+import 'semantic-ui/dist/semantic.css'
 
 import createIndex from '../common/createIndex'
 

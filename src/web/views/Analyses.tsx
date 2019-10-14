@@ -2,10 +2,11 @@ import _ from 'lodash/fp'
 import * as React from 'react'
 import { withRoute } from 'react-router5'
 
-import Trend from '../../common/components/Trend'
+import router from '../../common/router'
 import AnalysisWorksheet from '../../common/components/AnalysisWorksheet'
 import AnalysesTable from '../../common/components/AnalysesTable'
-import router from '../../common/router'
+import Research from '../../common/components/Research'
+import Trend from '../../common/components/Trend'
 
 class Analyses extends React.Component {
   state = {}
@@ -29,33 +30,31 @@ class Analyses extends React.Component {
     const propertyId = this.getPropertyId()
 
     return (
-      <div>
+      <>
         <div
           style={{
-            position: 'fixed',
-            top: '57px',
-            bottom: 0,
-            left: 0,
+            flex: '0 0 auto',
             width: '20em',
             overflowX: 'hidden',
             overflowY: 'auto',
-            boxShadow: '0 0 3em rgba(0, 0, 0, 0.2)',
+            boxShadow: '0 0 1em rgba(0, 0, 0, 0.2)',
           }}
         >
-          <div style={{ flex: '1' }}>
+          <div style={{ flex: 1, overflowX: 'hidden', overflowY: 'auto' }}>
             <Trend propertyId={propertyId} />
-
+            <Research propertyId={propertyId} />
             <AnalysisWorksheet propertyId={propertyId} />
           </div>
         </div>
-        <div style={{ marginLeft: '20em', paddingLeft: '1em' }}>
+
+        <div style={{ flex: 1, padding: '0 1em', overflowX: 'hidden', overflowY: 'auto' }}>
           <AnalysesTable
             selectedPropertyId={propertyId}
             onRowClick={this.handleRowClick}
             onInitialSort={this.handleInitialSort}
           />
         </div>
-      </div>
+      </>
     )
   }
 }

@@ -19,8 +19,8 @@ class FirebaseListAdapter {
   private _ref: firebase.database.Reference
   ItemAdapter: FirebaseMapAdapterConstructor
 
-  @observable isPulling = false
-  @observable isPushing = false
+  @observable isPulling: boolean
+  @observable isPushing: boolean
   @observable protected readonly _map = new Map()
 
   constructor(ItemAdapter = FirebaseMapAdapter, path?) {

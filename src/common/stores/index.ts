@@ -23,7 +23,7 @@ export { User }
 export { userStore }
 
 if (process.env.NODE_ENV !== 'production') {
-  window.stores = {
+  ;(window as any).stores = {
     analysesStore,
     roleStore,
     routerStore,
