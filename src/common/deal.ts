@@ -169,13 +169,15 @@ class Loan {
 
 class Partner {
   name: string
+  profitShare: number
+  lossShare: number
   capitalShare: number
-  ownership: number
 
-  constructor(name, capitalShare, ownership) {
+  constructor(name, profitShare, lossShare, capitalShare) {
     this.name = name
+    this.profitShare = profitShare
+    this.lossShare = lossShare
     this.capitalShare = capitalShare
-    this.ownership = ownership
   }
 }
 
@@ -434,9 +436,9 @@ export default class Deal {
         get() {
           return this.partners.reduce((acc, next) => {
             const myCashNeeded = usd(this.cashNeeded * next.capitalShare)
-            const myMonthlyCashFlow = usd(this.monthlyCashFlow * next.ownership)
-            const myAnnualCashFlow = usd(this.annualCashFlow * next.ownership)
-            const myNetOperatingIncome = usd(this.netOperatingIncome * next.ownership)
+            const myMonthlyCashFlow = usd(this.monthlyCashFlow * next.profitShare)
+            const myAnnualCashFlow = usd(this.annualCashFlow * next.profitShare)
+            const myNetOperatingIncome = usd(this.netOperatingIncome * next.profitShare)
             const myCashOnCash = percent(myAnnualCashFlow / myCashNeeded)
 
             acc.push({
@@ -498,8 +500,8 @@ export default class Deal {
     return this
   }
 
-  addPartner(name, capitalShare, ownership) {
-    this.partners.push(new Partner(name, capitalShare, ownership))
+  addPartner(name, profitShare, lossShare, capitalShare) {
+    this.partners.push(new Partner(name, profitShare, lossShare, capitalShare))
     return this
   }
 }

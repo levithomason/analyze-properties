@@ -1,17 +1,26 @@
 import Deal from '../common/deal'
 import { html, render } from 'lit-html'
-import { usd, percent } from '../common/lib'
+import { usd, percent, ratio } from '../common/lib'
 
 const getFormatter = key => {
-  if (/rate|ownership|capitalShare|cashOnCash|interest/i.test(key)) return percent
-  if (/amount|income|total|cashNeeded|cashFlow|payment|balance|principle/i.test(key)) return usd
+  if (/ratio|toValue/i.test(key)) return ratio
+  if (/rate|ownership|share|cashOnCash/i.test(key)) return percent
+  if (/amount|income|total|cash|payment|balance|principle|interest/i.test(key)) return usd
+
+  if (/rule/i.test(key)) {
+    return x =>
+      html`
+        <div class="ui-indicator ${x ? 'positive' : 'negative'}">${x}</div>
+      `
+  }
 
   return x => x
 }
 
-const table = rows => {
+const table = (rows, { title, total } = {}) => {
+  const rowsArr = [].concat(rows).filter(Boolean)
   const totals = {}
-  const headers = rows.reduce((uniqueHeaders, row) => {
+  const headers = rowsArr.reduce((uniqueHeaders, row) => {
     Object.keys(row).forEach((header, i) => {
       if (!uniqueHeaders.includes(header)) {
         uniqueHeaders.push(header)
@@ -25,6 +34,10 @@ const table = rows => {
   }, [])
 
   return html`
+    ${title &&
+      html`
+        <h3 style="margin-bottom:0;">${title}</h3>
+      `}
     <table>
       <thead>
         <tr>
@@ -37,7 +50,7 @@ const table = rows => {
         </tr>
       </thead>
       <tbody>
-        ${rows.map(
+        ${rowsArr.map(
           row =>
             html`
               <tr>
@@ -45,8 +58,6 @@ const table = rows => {
                   const formatter = getFormatter(header)
                   const value = row[header]
                   if (i > 0) {
-                    console.log('TOTAL', totals, header, value)
-
                     totals[header] += value
                   }
 
@@ -57,17 +68,20 @@ const table = rows => {
               </tr>
             `,
         )}
-        <tr>
-          <td><strong>TOTAL</strong></td>
-          ${headers.slice(1).map(header => {
-            const formatter = getFormatter(header)
-            const value = totals[header]
+        ${total &&
+          html`
+            <tr>
+              <td><strong>TOTAL</strong></td>
+              ${headers.slice(1).map(header => {
+                const formatter = getFormatter(header)
+                const value = totals[header]
 
-            return html`
-              <td>${formatter(value)}</td>
-            `
-          })}
-        </tr>
+                return html`
+                  <td><strong>${formatter(value)}</strong></td>
+                `
+              })}
+            </tr>
+          `}
       </tbody>
     </table>
   `
@@ -93,32 +107,49 @@ const helloTemplate = () => {
     .addExpense('Management', 0.1)
     .addAmortizedLoan('HELOC', 0.25, 0, 0.0499, 180)
     .addAmortizedLoan('Bank', 0.75, 0.25, 0.04875, 360)
-    .addPartner('Levi', 0.4, 0.5)
-    .addPartner('Tyrone', 0.6, 0.5)
+    .addPartner('Levi', 0.5, 0.5, 0.4)
+    .addPartner('Tyrone', 0.5, 0.5, 0.6)
 
   const content = JSON.stringify(deal, null, 2)
 
   return html`
-    <h3>Rental Units</h3>
-    ${table(deal.rentalUnits)}
+    ${table(deal.analysis, {
+      title: 'Analysis',
+    })}
+    ${table(deal.rules, {
+      title: 'Rules',
+    })}
 
-    <h3>Repairs</h3>
-    ${table(deal.repairs)}
+    <hr />
 
-    <h3>Expenses</h3>
-    ${table(deal.expenses)}
-
-    <h3>Loans</h3>
-    ${table(deal.loans)}
-
-    <h3>Partners</h3>
-    ${table(deal.partners)}
-
-    <h3>Partnership</h3>
-    ${table(deal.partnership)}
-
-    <h3>Amortization Schedule</h3>
-    ${table(deal.amortizationSchedule)}
+    ${table(deal.rentalUnits, {
+      title: 'Rental Units',
+      total: true,
+    })}
+    ${table(deal.repairs, {
+      title: 'Repairs',
+      total: true,
+    })}
+    ${table(deal.expenses, {
+      title: 'Expenses',
+      total: true,
+    })}
+    ${table(deal.loans, {
+      title: 'Loans',
+      total: true,
+    })}
+    ${table(deal.partners, {
+      title: 'Partners',
+      total: true,
+    })}
+    ${table(deal.partnership, {
+      title: 'Partnership',
+      total: true,
+    })}
+    ${table(deal.amortizationSchedule, {
+      title: 'Amortization Schedule',
+      total: true,
+    })}
 
     <pre>${content}</pre>
   `
